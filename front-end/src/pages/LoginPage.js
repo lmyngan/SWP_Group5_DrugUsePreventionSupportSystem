@@ -9,8 +9,9 @@ const LoginPage = () => {
       <div className="login-box">
         <h2>Login</h2>
         <form className="login-form">
-          <input type="email" placeholder="Email" required />
-          <input type="password" placeholder="Password" required />
+          <input type="email" id="email" placeholder="Email" required />
+          <input type="password" id="password" placeholder="Password" required />
+          <div className="forgot-text"><Link to="/reset-password">Forgot Password?</Link></div>
           <button type="submit">Login</button>
         </form>
         <p className="register-text">
@@ -22,4 +23,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-

@@ -18,14 +18,21 @@
 }
 
 .login-box h2 {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+  font-size: 35px;
   color: #333;
+  text-align: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .login-form input {
-  width: 100%;
   padding: 12px;
-  margin: 12px 0;
+  margin: 5px 0;
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 16px;
@@ -40,11 +47,21 @@
   border-radius: 6px;
   font-size: 16px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s;
 }
 
 .login-form button:hover {
   background-color: #0056b3;
+}
+
+.forgot-text {
+  text-align: right;
+  margin-bottom: 15px;
+}
+
+.forgot-text :link {
+  color: #007bff;
+  text-decoration: none;
 }
 
 .register-text {
@@ -60,4 +77,3 @@
 .register-text a:hover {
   text-decoration: underline;
 }
-
