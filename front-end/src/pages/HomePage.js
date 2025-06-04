@@ -1,73 +1,72 @@
-// src/pages/HomePage.js
 import React from 'react';
-import './HomePage.css';
-
-const blogVideos = [
-  {
-    id: 1,
-    title: ' How to say "No" to drugs??',
-    uploader: 'Ms.Marrie',
-    videoUrl: 'https://www.youtube.com/embed/a_frdvO7f44', // Thay bằng link nhúng thật
-    description: 'Share practical ways to turn down drug offers from friends...',
-    comments: [
-      'Helpful tips, thank you!',
-      'Thanks for sharing your experience',
-    ],
-  },
-  {
-    id: 2,
-    title: 'Story of overcoming temptation',
-    uploader: 'Mr.David',
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', // Thay bằng link nhúng thật
-    description: 'A young man s true experience of being lured and how he overcame it...',
-    comments: [
-      'Admire your strong spirit!',
-      'What a touching story',
-    ],
-  },
-];
+import "./HomePage.css"
 
 const HomePage = () => {
   return (
     <div className="homepage">
-      <section id="gioithieu" className="section">
-        <h2>Free Truth About Drugs E-Courses</h2>
-        <p>
-          This series of interactive Truth About Drugs courses has been designed so you can learn the truth about drugs at your own pace...
-        </p>
+      {/* Hero Section - Chỉ giữ phần chính */}
+      <section className="hero-section">
+        <div className="hero-content">
+          <h1>Your Journey to Recovery Starts Here</h1>
+          <p>
+            Empowering individuals and families with knowledge, support, and hope in the fight against drug addiction.
+          </p>
+          <div className="hero-buttons">
+            <button className="btn-primary">Get Help Now</button>
+            <button className="btn-secondary">Learn More</button>
+          </div>
+        </div>
+        <div className="hero-image">
+          <img src="/placeholder.svg?height=400&width=600" alt="Recovery Support" />
+        </div>
       </section>
 
-      <section id="blog" className="section">
-        <h2>Blog Sharing Expenriece</h2>
-        {blogVideos.map((video) => (
-          <div key={video.id} className="blog-post">
-            <h3>{video.title}</h3>
-            <p><strong>Author:</strong> {video.uploader}</p>
-            <div className='video-wrapper'>
-            <iframe
-              width="100%"
-              height="315"
-              src={video.videoUrl}
-              title={video.title}
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
+      {/* Quick Overview Section */}
+      <section className="overview-section">
+        <div className="container">
+          <h2>What We Offer</h2>
+          <div className="overview-grid">
+            <div className="overview-card">
+              <div className="overview-icon">👥</div>
+              <h3>Who We Are</h3>
+              <p>Learn about our mission and the people behind DrugsCare.</p>
+              <a href="/whoweare" className="overview-link">Learn More</a>
             </div>
-            <p>{video.description}</p>
-            <div className="comments">
-              <strong> Comments:</strong>
-              <ul>
-                {video.comments.map((comment, index) => (
-                  <li key={index}>- {comment}</li>
-                ))}
-              </ul>
+            <div className="overview-card">
+              <div className="overview-icon">📚</div>
+              <h3>Free Courses</h3>
+              <p>Access our comprehensive drug education courses for free.</p>
+              <a href="/freecourse" className="overview-link">Start Learning</a>
+            </div>
+            <div className="overview-card">
+              <div className="overview-icon">🩺</div>
+              <h3>Expert Mentors</h3>
+              <p>Connect with our professional mentors and specialists.</p>
+              <a href="/mentor" className="overview-link">Meet Experts</a>
+            </div>
+            <div className="overview-card">
+              <div className="overview-icon">✍️</div>
+              <h3>Community Blog</h3>
+              <p>Read and share real recovery stories and experiences.</p>
+              <a href="/blog" className="overview-link">Read Stories</a>
             </div>
           </div>
-        ))}
+        </div>
+      </section>
+
+      {/* Call to Action Section */}
+      <section className="cta-section">
+        <div className="container">
+          <h2>Ready to Start Your Recovery Journey?</h2>
+          <p>Don't wait another day. Take the first step towards a healthier, drug-free life.</p>
+          <div className="cta-buttons">
+            <button className="btn-primary">Get Support Now</button>
+            <button className="btn-outline">Call Our Hotline</button>
+          </div>
+        </div>
       </section>
     </div>
-  );
-};
+  )
+}
 
-export default HomePage;
+export default HomePage
