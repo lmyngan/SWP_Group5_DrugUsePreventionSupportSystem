@@ -41,11 +41,25 @@
   gap: 15px;
 }
 
+.search-container {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 30px;
+  padding: 5px;
+}
+
 .search-box {
-  padding: 6px 10px;
-  border-radius: 4px;
+  width: 83%;
   border: none;
   outline: none;
+}
+
+.search-button {
+  width: 30px;
+  background-color: white;
+  border: none;
+  cursor: pointer;
 }
 
 .auth-buttons {

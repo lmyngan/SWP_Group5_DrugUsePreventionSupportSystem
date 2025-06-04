@@ -33,25 +33,32 @@
 .login-form input {
   padding: 12px;
   margin: 5px 0;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  border: 0px;
+  border-bottom: 2px solid #b6b6b6;
   font-size: 16px;
+}
+
+.login-form input:focus {
+  background-color: #fcfcfcf0;
+  border-color: #00695c;
+  outline: none;
+  transition: all 0.5s;
 }
 
 .login-form button {
   width: 100%;
   padding: 12px;
-  background-color: #007bff;
+  background-color: #00695c;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s;
 }
 
 .login-form button:hover {
-  background-color: #0056b3;
+  background-color: #005b43;
 }
 
 .forgot-text {

@@ -2,7 +2,8 @@
 import React from 'react';
 import './Navbar.css';
 import { Link } from 'react-router-dom';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 const Navbar = () => {
   return (
     <nav className="navbar">
@@ -18,7 +19,10 @@ const Navbar = () => {
       </ul>
 
       <div className="right-section">
-        <input type="text" placeholder="Search..." className="search-box" />
+        <div className="search-container">
+          <input type="text" placeholder="Search..." className="search-box" />
+          <button type="submit" className="search-button"><FontAwesomeIcon icon={faSearch} /></button>
+        </div>
         <div className="auth-buttons">
           <a href="/login" className="auth-link">Login</a>
           <a href="/register" className="auth-link">Register</a>
