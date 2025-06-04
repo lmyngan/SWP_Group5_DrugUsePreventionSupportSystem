@@ -10,7 +10,7 @@ const Navbar = () => {
       <div className="logo">DrugsCare</div>
 
       <ul className="nav-links">
-        <li><a href="#introduction">Who we are?</a></li>
+        <li><Link to="/who-we-are">Who we are?</Link></li>
         <li><a href="#course">Free Courses</a></li>
         <li><a href="#baocao">Mentor</a></li>
         <li><a href="#Blog">Blog</a></li>
