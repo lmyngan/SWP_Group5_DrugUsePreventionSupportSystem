@@ -13,7 +13,7 @@ const Navbar = () => {
         <li><a href="#introduction">Who we are?</a></li>
         <li><a href="#course">Free Courses</a></li>
         <li><a href="#baocao">Mentor</a></li>
-        <li><a href="#Blog">Blog</a></li>
+        <li><a href="/blog">Blog</a></li>
       </ul>
 
       <div className="right-section">
