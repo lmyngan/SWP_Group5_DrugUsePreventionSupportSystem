@@ -1,9 +1,12 @@
 // src/App.js
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
-import BlogPage from './pages/BlogPage';
+import WhoWeAre from './pages/WhoWeAre';
+import FreeCourse from './pages/FreeCourse';
+import Mentor from './pages/Mentor';
+import Blog from './pages/BlogPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import './App.css';
@@ -15,7 +18,10 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/whoweare" element={<WhoWeAre />} />
+          <Route path="/freecourse" element={<FreeCourse />} />
+          <Route path="/mentor" element={<Mentor />} />
+          <Route path="/blog" element={<Blog />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
         </Routes>

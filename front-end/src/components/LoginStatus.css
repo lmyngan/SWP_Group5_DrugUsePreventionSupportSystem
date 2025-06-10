@@ -1,0 +1,116 @@
+.login-status-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.status-toggle {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.status-toggle:hover {
+  background: #5a6fd8;
+  transform: translateY(-2px);
+}
+
+.status-details {
+  position: absolute;
+  bottom: 50px;
+  right: 0;
+  width: 280px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.status-header {
+  background: #f8f9fa;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+}
+
+.status-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #2c3e50;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+}
+
+.status-content {
+  padding: 15px;
+}
+
+.status-item {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.status-label {
+  font-weight: bold;
+  color: #666;
+}
+
+.status-value {
+  color: #2c3e50;
+}
+
+.status-value.logged-in {
+  color: #2ecc71;
+  font-weight: bold;
+}
+
+.status-value.logged-out {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.status-actions {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+}
+
+.status-btn {
+  padding: 8px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+}
+
+.status-btn.login {
+  background: #667eea;
+  color: white;
+}
+
+.status-btn.logout {
+  background: #e74c3c;
+  color: white;
+  border: none;
+}
+
+.status-btn:hover {
+  opacity: 0.9;
+}
