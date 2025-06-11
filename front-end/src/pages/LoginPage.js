@@ -15,7 +15,7 @@ const LoginPage = () => {
       alert('Login successful!');
     }
     if (email === 'admin@gmail.com' && password === '1') {
-      navigate('/');
+      navigate('/dashboard');
       alert('Login successful!');
     }
   };
@@ -55,13 +55,6 @@ const LoginPage = () => {
             </svg>
           </div>
 
-          <div className='social-login'>
-            <button>Google</button>
-            <button>Facebook</button>
-            <button>Twitter</button>
-            <button>GitHub</button>
-          </div>
-
           <div className="forgot-password">
             <label><input type="checkbox" /> Remember Me</label>
             <Link to="/forgot-password">Forgot Password?</Link>
@@ -70,6 +63,11 @@ const LoginPage = () => {
           <button type="submit" className='btn'>Login</button>
 
         </form>
+
+        <div className='social-login'>
+          <button>Google</button>
+          <button>Facebook</button>
+        </div>
 
         <div className="register-link">
           <p>
