@@ -12,7 +12,9 @@ const Navbar = () => {
       </div>
 
       <ul className="nav-links">
-        <li><a href="#introduction">Who we are?</a></li>
+        <li>
+    <Link to="/whoweare">Who we are?</Link>
+       </li>
         <li><a href="#course">Free Courses</a></li>
         <li><a href="#baocao">Mentor</a></li>
         <li><a href="/blog">Blog</a></li>
