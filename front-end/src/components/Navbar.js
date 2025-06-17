@@ -1,5 +1,4 @@
 // src/components/Navbar.js
-import React from 'react';
 import './Navbar.css';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,7 +7,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="logo">
-        <Link to="/" className="title-logo">DrugsCare</Link>
+        <Link to="/">DrugsCare</Link>
       </div>
 
       <ul className="nav-links">

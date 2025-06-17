@@ -1,86 +1,172 @@
 /* src/pages/LoginPage.css */
+@keyframes slideUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 90vh;
-  background: #f5f5f5;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  min-height: 93.2vh;
+  padding: 5% 0;
+}
+
+/* Thêm pattern background tùy chọn */
+.login-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  z-index: 1;
 }
 
 .login-box {
-  background-color: #ffffff;
+  /* Hiệu ứng blur glass chính */
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   padding: 40px 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   width: 100%;
   max-width: 400px;
   text-align: center;
+  position: relative;
+  z-index: 2;
+  animation: slideUp 0.5s ease-out;
 }
 
-.login-box h2 {
-  margin-bottom: 20px;
-  font-size: 35px;
-  color: #333;
+.login-form h1 {
+  color: indigo;
+  font-size: 36px;
   text-align: center;
 }
 
-.login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.login-form input {
-  padding: 12px;
-  margin: 5px 0;
-  border: 0px;
-  border-bottom: 2px solid #b6b6b6;
-  font-size: 16px;
-}
-
-.login-form input:focus {
-  background-color: #fcfcfcf0;
-  border-color: #00695c;
-  outline: none;
-  transition: all 0.5s;
-}
-
-.login-form button {
+.login-form .input-box {
+  position: relative;
+  margin: 10px 0;
   width: 100%;
-  padding: 12px;
-  background-color: #00695c;
-  color: white;
+  height: 50px;
+  margin: 30px 0;
+}
+
+.input-box input {
+  width: 100%;
+  height: 100%;
+  background: transparent;
   border: none;
-  border-radius: 10px;
+  outline: none;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 40px;
   font-size: 16px;
+  color: white;
+  padding: 20px 45px 20px 20px;
+}
+
+.input-box input::placeholder {
+  color: white;
+}
+
+.input-box svg {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: auto;
+  fill: white;
+}
+
+.login-box .social-login {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+  padding-bottom: 20px;
+}
+
+.social-login button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  flex: 1;
+  margin: 0 5px;
+  height: 45px;
+  background: rgba(255, 255, 255, 0.436);
+  border: none;
+  outline: none;
+  border-radius: 40px;
   cursor: pointer;
-  transition: all 0.3s;
 }
 
-.login-form button:hover {
-  background-color: #005b43;
+.login-box .forgot-password {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14.5px;
+  margin: -15px 0 15px;
 }
 
-.forgot-text {
-  text-align: right;
-  margin-bottom: 15px;
+.login-box label input {
+  accent-color: white;
+  margin-right: 3px;
 }
 
-.forgot-text :link {
-  color: #007bff;
+.login-box :link {
+  color: white;
   text-decoration: none;
 }
 
-.register-text {
-  margin-top: 16px;
+.login-box :link:hover {
+  text-decoration: underline;
+}
+
+.login-box .btn {
+  width: 100%;
+  height: 45px;
+  background: white;
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 16px;
   color: #333;
+  font-weight: 600;
 }
 
-.register-text a {
-  color: #007bff;
+.btn:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transition: 0.3s;
+}
+
+.login-box .register-link {
+  font-size: 14.5px;
+  text-align: center;
+  margin: 20px 0 15px;
+}
+
+.register-link p :link {
+  color: white;
   text-decoration: none;
+  font-weight: 600;
 }
 
-.register-text a:hover {
+.register-link p :link:hover {
   text-decoration: underline;
 }
