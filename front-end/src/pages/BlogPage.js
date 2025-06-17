@@ -51,91 +51,91 @@ const Blog = () => {
 
   const blogPosts = hasContent
     ? [
-        {
-          id: 1,
-          title: "How to Recognize Signs of Drug Use in Teenagers",
-          excerpt:
-            "A guide for parents and teachers to identify early warning signs of substance use in children and adolescents...",
-          image: "/placeholder.svg?height=200&width=300",
-          category: "Parents",
-          author: "Dr. Sarah Johnson",
-          date: "March 15, 2024",
-          readTime: "5 min read",
-          views: "1,234",
-        },
-        {
-          id: 2,
-          title: "Peer Pressure Resistance Skills for Students",
-          excerpt: "Effective strategies to help students confidently say 'no' to drugs and harmful substances...",
-          image: "/placeholder.svg?height=200&width=300",
-          category: "Students",
-          author: "Prof. Michael Chen",
-          date: "March 12, 2024",
-          readTime: "7 min read",
-          views: "2,156",
-        },
-        {
-          id: 3,
-          title: "The Impact of Drugs on Brain and Health",
-          excerpt: "Scientific research on the serious damage that drugs cause to the nervous system...",
-          image: "/placeholder.svg?height=200&width=300",
-          category: "University Students",
-          author: "Dr. Emily Rodriguez",
-          date: "March 10, 2024",
-          readTime: "10 min read",
-          views: "987",
-        },
-        {
-          id: 4,
-          title: "Drug Prevention Education Programs",
-          excerpt: "Introduction to effective educational programs being implemented in schools...",
-          image: "/placeholder.svg?height=200&width=300",
-          category: "Teachers",
-          author: "Ms. Lisa Thompson",
-          date: "March 8, 2024",
-          readTime: "6 min read",
-          views: "1,543",
-        },
-        {
-          id: 5,
-          title: "Psychological Support for Families Affected by Addiction",
-          excerpt: "How to provide psychological support and care for family members affected by addiction...",
-          image: "/placeholder.svg?height=200&width=300",
-          category: "Parents",
-          author: "Dr. James Wilson",
-          date: "March 5, 2024",
-          readTime: "8 min read",
-          views: "876",
-        },
-        {
-          id: 6,
-          title: "The Role of Community in Drug Prevention",
-          excerpt: "The importance of active community participation in drug prevention and social harm reduction...",
-          image: "/placeholder.svg?height=200&width=300",
-          category: "Community",
-          author: "Mr. Robert Kim",
-          date: "March 3, 2024",
-          readTime: "9 min read",
-          views: "1,234",
-        },
-      ]
+      {
+        id: 1,
+        title: "How to Recognize Signs of Drug Use in Teenagers",
+        excerpt:
+          "A guide for parents and teachers to identify early warning signs of substance use in children and adolescents...",
+        image: "/placeholder.svg?height=200&width=300",
+        category: "Parents",
+        author: "Dr. Sarah Johnson",
+        date: "March 15, 2024",
+        readTime: "5 min read",
+        views: "1,234",
+      },
+      {
+        id: 2,
+        title: "Peer Pressure Resistance Skills for Students",
+        excerpt: "Effective strategies to help students confidently say 'no' to drugs and harmful substances...",
+        image: "/placeholder.svg?height=200&width=300",
+        category: "Students",
+        author: "Prof. Michael Chen",
+        date: "March 12, 2024",
+        readTime: "7 min read",
+        views: "2,156",
+      },
+      {
+        id: 3,
+        title: "The Impact of Drugs on Brain and Health",
+        excerpt: "Scientific research on the serious damage that drugs cause to the nervous system...",
+        image: "/placeholder.svg?height=200&width=300",
+        category: "University Students",
+        author: "Dr. Emily Rodriguez",
+        date: "March 10, 2024",
+        readTime: "10 min read",
+        views: "987",
+      },
+      {
+        id: 4,
+        title: "Drug Prevention Education Programs",
+        excerpt: "Introduction to effective educational programs being implemented in schools...",
+        image: "/placeholder.svg?height=200&width=300",
+        category: "Teachers",
+        author: "Ms. Lisa Thompson",
+        date: "March 8, 2024",
+        readTime: "6 min read",
+        views: "1,543",
+      },
+      {
+        id: 5,
+        title: "Psychological Support for Families Affected by Addiction",
+        excerpt: "How to provide psychological support and care for family members affected by addiction...",
+        image: "/placeholder.svg?height=200&width=300",
+        category: "Parents",
+        author: "Dr. James Wilson",
+        date: "March 5, 2024",
+        readTime: "8 min read",
+        views: "876",
+      },
+      {
+        id: 6,
+        title: "The Role of Community in Drug Prevention",
+        excerpt: "The importance of active community participation in drug prevention and social harm reduction...",
+        image: "/placeholder.svg?height=200&width=300",
+        category: "Community",
+        author: "Mr. Robert Kim",
+        date: "March 3, 2024",
+        readTime: "9 min read",
+        views: "1,234",
+      },
+    ]
     : []
 
   const recentPosts = hasContent
     ? [
-        {
-          title: "ASSIST Test - Assessing Risk of Substance Use",
-          date: "March 16, 2024",
-        },
-        {
-          title: "Recovery Story: From Darkness to Light",
-          date: "March 14, 2024",
-        },
-        {
-          title: "How to Use the DrugsCare App",
-          date: "March 13, 2024",
-        },
-      ]
+      {
+        title: "ASSIST Test - Assessing Risk of Substance Use",
+        date: "March 16, 2024",
+      },
+      {
+        title: "Recovery Story: From Darkness to Light",
+        date: "March 14, 2024",
+      },
+      {
+        title: "How to Use the DrugsCare App",
+        date: "March 13, 2024",
+      },
+    ]
     : []
 
   return (
@@ -175,7 +175,7 @@ const Blog = () => {
                 <div className="not-logged-in">
                   <p>Login to share your posts</p>
                   <div className="auth-buttons">
-                    
+
                     <a href="/login" className="btn-login-real">
                       🔑 Login
                     </a>
@@ -295,7 +295,7 @@ const Blog = () => {
                       <button className="btn-primary" onClick={handleAddPost}>
                         {isLoggedIn ? "📝 Add Sample Articles" : "📝 Login to Write Posts"}
                       </button>
-                      
+
                     </div>
 
                     {/* Login prompt for non-logged users */}
@@ -327,7 +327,7 @@ const Blog = () => {
                         <p>Complete ASSIST or CRAFFT tests to assess your risk level</p>
                         <button className="suggestion-btn">Start Test</button>
                       </div>
-                     
+
                       <div className="suggestion-card">
                         <div className="suggestion-icon">👨‍⚕️</div>
                         <h4>Consult Specialists</h4>
@@ -452,14 +452,14 @@ const Blog = () => {
               <div className="sidebar-widget">
                 <h3>🔗 Quick Links</h3>
                 <div className="quick-links">
-                  
+
                   <a href="/mentor" className="quick-link">
                     👨‍⚕️ Consult Specialists
                   </a>
                   <a href="/whoweare" className="quick-link">
                     ℹ️ About Us
                   </a>
-                  <a href="#" className="quick-link">
+                  <a href="/" className="quick-link">
                     📞 Support Hotline
                   </a>
                 </div>

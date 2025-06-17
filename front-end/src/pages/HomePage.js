@@ -3,6 +3,7 @@ import "./HomePage.css"
 const HomePage = () => {
   return (
     <div className="homepage">
+
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-content">
@@ -11,7 +12,9 @@ const HomePage = () => {
             Empowering individuals and families with knowledge, support, and hope in the fight against drug addiction.
           </p>
           <div className="hero-buttons">
-            <button className="btn-primary">Get Help Now</button>
+            <button className="btn-primary">
+              <a href="/survey">Get Help Now</a>
+            </button>
             <button className="btn-secondary">Learn More</button>
           </div>
         </div>
@@ -130,22 +133,22 @@ const HomePage = () => {
               <h3>PARTNERS & COOPERATION</h3>
               <ul className="footer-links">
                 <li>
-                  <a href="#">Ministry of Health</a>
+                  <a href="/">Ministry of Health</a>
                 </li>
                 <li>
-                  <a href="#">Ministry of Education and Training</a>
+                  <a href="/">Ministry of Education and Training</a>
                 </li>
                 <li>
-                  <a href="#">Social Evils Prevention Center</a>
+                  <a href="/">Social Evils Prevention Center</a>
                 </li>
                 <li>
-                  <a href="#">Vietnam Red Cross Society</a>
+                  <a href="/">Vietnam Red Cross Society</a>
                 </li>
                 <li>
-                  <a href="#">Medical and Pharmaceutical Universities</a>
+                  <a href="/">Medical and Pharmaceutical Universities</a>
                 </li>
                 <li>
-                  <a href="#">World Health Organization (WHO)</a>
+                  <a href="/">World Health Organization (WHO)</a>
                 </li>
               </ul>
             </div>
@@ -156,19 +159,19 @@ const HomePage = () => {
               <div className="random-articles">
                 <article className="footer-article">
                   <h4>
-                    <a href="#">How to Recognize Signs of Drug Use in Teenagers</a>
+                    <a href="/">How to Recognize Signs of Drug Use in Teenagers</a>
                   </h4>
                   <span className="article-date">📅 March 24, 2024</span>
                 </article>
                 <article className="footer-article">
                   <h4>
-                    <a href="#">ASSIST Test - Tool for Assessing Substance Use Risk</a>
+                    <a href="/">ASSIST Test - Tool for Assessing Substance Use Risk</a>
                   </h4>
                   <span className="article-date">📅 March 22, 2024</span>
                 </article>
                 <article className="footer-article">
                   <h4>
-                    <a href="#">The Role of Family in Preventing Social Evils</a>
+                    <a href="/">The Role of Family in Preventing Social Evils</a>
                   </h4>
                   <span className="article-date">📅 March 20, 2024</span>
                 </article>
@@ -209,16 +212,16 @@ const HomePage = () => {
             <div className="footer-bottom-content">
               <p>&copy; 2024 DrugsCare.com - Social Evils Prevention Platform. All rights reserved.</p>
               <div className="social-links">
-                <a href="#" aria-label="Facebook">
+                <a href="/" aria-label="Facebook">
                   📘
                 </a>
-                <a href="#" aria-label="YouTube">
+                <a href="/" aria-label="YouTube">
                   📺
                 </a>
-                <a href="#" aria-label="Email">
+                <a href="/" aria-label="Email">
                   📧
                 </a>
-                <a href="#" aria-label="Phone">
+                <a href="/" aria-label="Phone">
                   📞
                 </a>
               </div>

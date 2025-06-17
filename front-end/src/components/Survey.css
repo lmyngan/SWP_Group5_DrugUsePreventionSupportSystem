@@ -1,0 +1,53 @@
+.survey-box {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    padding: 2rem;
+    margin: 2rem auto;
+    max-width: 600px;
+}
+
+.survey-box h2 {
+    font-weight: bold;
+}
+
+.survey-box hr {
+    
+}
+
+.survey-title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+}
+
+.survey-question {
+    margin-bottom: 2rem;
+}
+
+.survey-question h2 {
+    font-size: 1.2rem;
+    color: #444;
+    margin-bottom: 1rem;
+}
+
+.form-check {
+    margin: 0.5rem 0;
+}
+
+.survey-submit-btn {
+    width: 100%;
+    padding: 1rem;
+    background: #4A90E2;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.survey-submit-btn:hover {
+    background: #357ABD;
+}
