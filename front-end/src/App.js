@@ -9,7 +9,7 @@ import Mentor from './pages/Mentor';
 import Blog from './pages/BlogPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/DashBoard';
 import Survey from './components/Survey';
 import './App.css';
 
