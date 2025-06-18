@@ -44,14 +44,14 @@ const Navbar = ({ navigateTo, currentPage }) => {
           DrugsCare
         </div>
 
-        {/* Mobile menu button */}
-        <button className="mobile-menu-btn" onClick={toggleMenu}>
-          <span className={`hamburger ${isMenuOpen ? "active" : ""}`}>
-            <span></span>
-            <span></span>
-            <span></span>
-          </span>
-        </button>
+      <ul className="nav-links">
+        <li>
+    <Link to="/whoweare">Who we are?</Link>
+       </li>
+        <li><a href="#course">Free Courses</a></li>
+        <li><a href="#baocao">Mentor</a></li>
+        <li><a href="/blog">Blog</a></li>
+      </ul>
 
         {/* Navigation Links */}
         <ul className={`nav-links ${isMenuOpen ? "active" : ""}`}>
