@@ -1,7 +1,7 @@
 
 "use client"
 
-import "./LoginPage.css"
+import "../styles/LoginPage.css"
 import { useState } from "react"
 
 const Login = () => {

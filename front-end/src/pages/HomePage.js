@@ -1,4 +1,4 @@
-import "./HomePage.css"
+import "../styles/HomePage.css"
 
 const HomePage = () => {
   return (
@@ -16,7 +16,7 @@ const HomePage = () => {
           </div>
         </div>
         <div className="hero-image">
-          <img src="/placeholder.svg?height=400&width=600" alt="Recovery Support" />
+          <img src="/images./placeholder.svg?height=400&width=600" alt="Recovery Support" />
         </div>
       </section>
 
@@ -40,6 +40,7 @@ const HomePage = () => {
               <a href="/freetest" className="overview-link">
                 Start Learning
               </a>
+              
             </div>
             <div className="overview-card">
               <div className="overview-icon">🩺</div>

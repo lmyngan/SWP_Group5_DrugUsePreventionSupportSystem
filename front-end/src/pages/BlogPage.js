@@ -1,6 +1,6 @@
 "use client"
 
-import "./BlogPage.css"
+import "../styles/BlogPage.css"
 import { useState, useEffect } from "react"
 import LoginStatus from "../components/LoginStatus"
 
@@ -21,15 +21,14 @@ const Blog = () => {
     }
   }, [])
 
-  // Handle "Add Post" click
-  const handleAddPost = () => {
+const handleAddPost = () => {
     if (!isLoggedIn) {
       // Redirect to login page
       window.location.href = "/login"
       return
     }
-    // If logged in, add sample posts
-    setHasContent(true)
+    // If logged in, redirect to add post page
+    window.location.href = "/addpost"
   }
 
   // Simulate login (for testing)
@@ -162,8 +161,8 @@ const Blog = () => {
                       <span className="user-role">{user.role}</span>
                     </div>
                   </div>
-                  <div className="user-actions">
-                    <button className="btn-write-post" onClick={() => setHasContent(true)}>
+                 <div className="user-actions">
+                    <button className="btn-write-post" onClick={handleAddPost}>
                       ✍️ Write Post
                     </button>
                     <button className="btn-logout" onClick={handleLogout}>
@@ -198,7 +197,6 @@ const Blog = () => {
         </div>
       </section>
 
-      {/* Main Content */}
       <section className="blog-content">
         <div className="container">
           <div className="blog-layout">
@@ -292,7 +290,7 @@ const Blog = () => {
                       The blog currently has no content. Please come back later or explore other features of DrugsCare.
                     </p>
                     <div className="empty-actions">
-                      <button className="btn-primary" onClick={handleAddPost}>
+                      <button className="btn-write-post" onClick={handleAddPost}>
                         {isLoggedIn ? "📝 Add Sample Articles" : "📝 Login to Write Posts"}
                       </button>
                       
