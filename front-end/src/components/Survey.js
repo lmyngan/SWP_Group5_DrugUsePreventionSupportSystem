@@ -64,10 +64,10 @@ const Survey = () => {
             navigate('/');
         } else if (totalScore <= 30) {
             riskLevel = "Moderate Risk";
-            alert(`Your total score is: ${totalScore}\nRisk Level: ${riskLevel}\nYou must login to book an appointment with a consultant.`);
+            alert(`Your total score is: ${totalScore}\nRisk Level: ${riskLevel}\nYou should login to book an appointment with a consultant.`);
         } else {
             riskLevel = "High Risk";
-            alert(`Your total score is: ${totalScore}\nRisk Level: ${riskLevel}\nYou must login to book an appointment with a consultant.`);
+            alert(`Your total score is: ${totalScore}\nRisk Level: ${riskLevel}\nYou should login to book an appointment with a consultant.`);
         }
         console.log('Survey answers:', answers);
         console.log('Total score:', totalScore);
