@@ -1,0 +1,262 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\Chi\\OneDrive\\Documents\\Tài liệu chuyên ngành\\SWP391\\SWP_Group5_DrugUsePreventionSupportSystem\\back-end\\DrugsPrevention\\DrugsPrevention_API.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\Chi\\OneDrive\\Documents\\Tài liệu chuyên ngành\\SWP391\\SWP_Group5_DrugUsePreventionSupportSystem\\back-end\\DrugsPrevention\\DrugsPrevention_API.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Chi\\OneDrive\\Documents\\Tài liệu chuyên ngành\\SWP391\\SWP_Group5_DrugUsePreventionSupportSystem\\back-end\\DrugsPrevention\\DrugsPrevention_API.csproj",
+        "projectName": "DrugsPrevention_API",
+        "projectPath": "C:\\Users\\Chi\\OneDrive\\Documents\\Tài liệu chuyên ngành\\SWP391\\SWP_Group5_DrugUsePreventionSupportSystem\\back-end\\DrugsPrevention\\DrugsPrevention_API.csproj",
+        "packagesPath": "C:\\Users\\Chi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Chi\\OneDrive\\Documents\\Tài liệu chuyên ngành\\SWP391\\SWP_Group5_DrugUsePreventionSupportSystem\\back-end\\DrugsPrevention\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Chi\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\Chi\\OneDrive\\Documents\\Tài liệu chuyên ngành\\SWP391\\SWP_Group5_DrugUsePreventionSupportSystem\\back-end\\DrugsPrevention_Data\\DrugsPrevention_Data.csproj": {
+                "projectPath": "C:\\Users\\Chi\\OneDrive\\Documents\\Tài liệu chuyên ngành\\SWP391\\SWP_Group5_DrugUsePreventionSupportSystem\\back-end\\DrugsPrevention_Data\\DrugsPrevention_Data.csproj"
+              },
+              "C:\\Users\\Chi\\OneDrive\\Documents\\Tài liệu chuyên ngành\\SWP391\\SWP_Group5_DrugUsePreventionSupportSystem\\back-end\\DrugsPrevention_Service\\DrugsPrevention_Service.csproj": {
+                "projectPath": "C:\\Users\\Chi\\OneDrive\\Documents\\Tài liệu chuyên ngành\\SWP391\\SWP_Group5_DrugUsePreventionSupportSystem\\back-end\\DrugsPrevention_Service\\DrugsPrevention_Service.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.3, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.6.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.411/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Chi\\OneDrive\\Documents\\Tài liệu chuyên ngành\\SWP391\\SWP_Group5_DrugUsePreventionSupportSystem\\back-end\\DrugsPrevention_Data\\DrugsPrevention_Data.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Chi\\OneDrive\\Documents\\Tài liệu chuyên ngành\\SWP391\\SWP_Group5_DrugUsePreventionSupportSystem\\back-end\\DrugsPrevention_Data\\DrugsPrevention_Data.csproj",
+        "projectName": "DrugsPrevention_Data",
+        "projectPath": "C:\\Users\\Chi\\OneDrive\\Documents\\Tài liệu chuyên ngành\\SWP391\\SWP_Group5_DrugUsePreventionSupportSystem\\back-end\\DrugsPrevention_Data\\DrugsPrevention_Data.csproj",
+        "packagesPath": "C:\\Users\\Chi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Chi\\OneDrive\\Documents\\Tài liệu chuyên ngành\\SWP391\\SWP_Group5_DrugUsePreventionSupportSystem\\back-end\\DrugsPrevention_Data\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Chi\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.3, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.411/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Chi\\OneDrive\\Documents\\Tài liệu chuyên ngành\\SWP391\\SWP_Group5_DrugUsePreventionSupportSystem\\back-end\\DrugsPrevention_Service\\DrugsPrevention_Service.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Chi\\OneDrive\\Documents\\Tài liệu chuyên ngành\\SWP391\\SWP_Group5_DrugUsePreventionSupportSystem\\back-end\\DrugsPrevention_Service\\DrugsPrevention_Service.csproj",
+        "projectName": "DrugsPrevention_Service",
+        "projectPath": "C:\\Users\\Chi\\OneDrive\\Documents\\Tài liệu chuyên ngành\\SWP391\\SWP_Group5_DrugUsePreventionSupportSystem\\back-end\\DrugsPrevention_Service\\DrugsPrevention_Service.csproj",
+        "packagesPath": "C:\\Users\\Chi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Chi\\OneDrive\\Documents\\Tài liệu chuyên ngành\\SWP391\\SWP_Group5_DrugUsePreventionSupportSystem\\back-end\\DrugsPrevention_Service\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Chi\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\Chi\\OneDrive\\Documents\\Tài liệu chuyên ngành\\SWP391\\SWP_Group5_DrugUsePreventionSupportSystem\\back-end\\DrugsPrevention_Data\\DrugsPrevention_Data.csproj": {
+                "projectPath": "C:\\Users\\Chi\\OneDrive\\Documents\\Tài liệu chuyên ngành\\SWP391\\SWP_Group5_DrugUsePreventionSupportSystem\\back-end\\DrugsPrevention_Data\\DrugsPrevention_Data.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.3, )"
+            },
+            "ServiceStack": {
+              "target": "Package",
+              "version": "[8.8.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.411/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

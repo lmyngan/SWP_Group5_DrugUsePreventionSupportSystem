@@ -1,0 +1,45 @@
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\Test Connect FE - BE\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\bin\Debug\net8.0\DrugsPrevention_Data.deps.json
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\Test Connect FE - BE\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\bin\Debug\net8.0\DrugsPrevention_Data.runtimeconfig.json
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\Test Connect FE - BE\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\bin\Debug\net8.0\DrugsPrevention_Data.dll
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\Test Connect FE - BE\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\bin\Debug\net8.0\DrugsPrevention_Data.pdb
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\Test Connect FE - BE\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.csproj.AssemblyReference.cache
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\Test Connect FE - BE\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\Test Connect FE - BE\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.AssemblyInfoInputs.cache
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\Test Connect FE - BE\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.AssemblyInfo.cs
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\Test Connect FE - BE\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.csproj.CoreCompileInputs.cache
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\Test Connect FE - BE\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.sourcelink.json
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\Test Connect FE - BE\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.dll
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\Test Connect FE - BE\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\obj\Debug\net8.0\refint\DrugsPrevention_Data.dll
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\Test Connect FE - BE\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.pdb
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\Test Connect FE - BE\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.genruntimeconfig.cache
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\Test Connect FE - BE\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\obj\Debug\net8.0\ref\DrugsPrevention_Data.dll
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem - Copy\back-end\DrugsPrevention_Data\bin\Debug\net8.0\DrugsPrevention_Data.deps.json
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem - Copy\back-end\DrugsPrevention_Data\bin\Debug\net8.0\DrugsPrevention_Data.runtimeconfig.json
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem - Copy\back-end\DrugsPrevention_Data\bin\Debug\net8.0\DrugsPrevention_Data.dll
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem - Copy\back-end\DrugsPrevention_Data\bin\Debug\net8.0\DrugsPrevention_Data.pdb
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem - Copy\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.csproj.AssemblyReference.cache
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem - Copy\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem - Copy\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.AssemblyInfoInputs.cache
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem - Copy\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.AssemblyInfo.cs
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem - Copy\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.csproj.CoreCompileInputs.cache
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem - Copy\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.sourcelink.json
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem - Copy\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.dll
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem - Copy\back-end\DrugsPrevention_Data\obj\Debug\net8.0\refint\DrugsPrevention_Data.dll
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem - Copy\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.pdb
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem - Copy\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.genruntimeconfig.cache
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem - Copy\back-end\DrugsPrevention_Data\obj\Debug\net8.0\ref\DrugsPrevention_Data.dll
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\bin\Debug\net8.0\DrugsPrevention_Data.deps.json
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\bin\Debug\net8.0\DrugsPrevention_Data.runtimeconfig.json
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\bin\Debug\net8.0\DrugsPrevention_Data.dll
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\bin\Debug\net8.0\DrugsPrevention_Data.pdb
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.csproj.AssemblyReference.cache
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.AssemblyInfoInputs.cache
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.AssemblyInfo.cs
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.csproj.CoreCompileInputs.cache
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.sourcelink.json
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.dll
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\obj\Debug\net8.0\refint\DrugsPrevention_Data.dll
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.pdb
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\obj\Debug\net8.0\DrugsPrevention_Data.genruntimeconfig.cache
+C:\Users\Chi\OneDrive\Documents\Tài liệu chuyên ngành\SWP391\SWP_Group5_DrugUsePreventionSupportSystem\back-end\DrugsPrevention_Data\obj\Debug\net8.0\ref\DrugsPrevention_Data.dll
