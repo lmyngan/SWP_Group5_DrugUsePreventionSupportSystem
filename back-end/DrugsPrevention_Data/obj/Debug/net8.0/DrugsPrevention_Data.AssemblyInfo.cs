@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DrugsPrevention_Data")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+59cefa36f057b7496e4a4201b61067fe418ec545")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+421bcb709e8beda6f8ce6072a8e5e1c57108177f")]
 [assembly: System.Reflection.AssemblyProductAttribute("DrugsPrevention_Data")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DrugsPrevention_Data")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
