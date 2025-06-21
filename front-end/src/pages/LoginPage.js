@@ -1,7 +1,5 @@
 // src/pages/LoginPage.js
-"use client"
-
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { authApi } from '../service/api';
 import './LoginPage.css';

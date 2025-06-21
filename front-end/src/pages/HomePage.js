@@ -1,8 +1,40 @@
-import "./HomePage.css"
+import useSurveyModal from "../hooks/useSurveyModal";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./HomePage.css";
 
 const HomePage = () => {
+  const { showModal, handleYes, handleCancel } = useSurveyModal();
+
   return (
     <div className="homepage">
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div
+            className={`bg-white rounded-lg shadow-lg w-full max-w-md transition-all duration-300 transform animate-slideUp`}
+          >
+            <div className="px-6 py-4 border-b">
+              <h5 className="text-xl font-semibold text-gray-800">Khảo sát nhanh</h5>
+            </div>
+            <div className="px-6 py-4">
+              <p className="text-gray-700">Bạn có muốn tham gia khảo sát không?</p>
+            </div>
+            <div className="px-6 py-4 flex justify-end gap-2 border-t">
+              <button
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+                onClick={handleYes}
+              >
+                Yes
+              </button>
+              <button
+                className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 transition"
+                onClick={handleCancel}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Hero Section */}
       <section className="hero-section">

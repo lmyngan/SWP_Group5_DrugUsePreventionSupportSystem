@@ -1,5 +1,4 @@
 // src/App.js
-import React from 'react';
 import Navbar from './components/Navbar';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
@@ -9,7 +8,6 @@ import Mentor from './pages/Mentor';
 import Blog from './pages/BlogPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import Dashboard from './pages/Dashboard';
 import Survey from './components/Survey';
 import './App.css';
 
@@ -33,7 +31,7 @@ function App() {
               </Routes>
             </>
           } />
-          <Route path="/dashboard" element={<Dashboard />} />
+
         </Routes>
       </div>
     </Router>
