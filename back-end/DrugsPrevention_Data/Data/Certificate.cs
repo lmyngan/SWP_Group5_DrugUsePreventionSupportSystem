@@ -11,8 +11,11 @@ namespace DrugsPrevention_Data.Data
     public class Certificate
     {
         [Key]
+        [Column("certificate_id")]
         public int CertificateId { get; set; }
+        [Column("consultant_id")]
         public int ConsultantId { get; set; }
+        [Column("certificate_name")]
         public string CertificateName { get; set; }
 
         [ForeignKey(nameof(ConsultantId))]

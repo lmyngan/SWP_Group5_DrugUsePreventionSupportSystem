@@ -29,8 +29,8 @@ namespace DrugsPrevention_Data
         public DbSet<Consultant> Consultants { get; set; }
         public DbSet<Certificate> Certificates { get; set; }
         public DbSet<Notifications> Notifications { get; set; }
-        public DbSet<Program> Programs { get; set; }
-        public DbSet<ProgramParticipation> ProgramParticipations { get; set; }
+        public DbSet<Event> Events { get; set; }
+        public DbSet<EventParticipation> EventParticipations { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Blogs> Blogs { get; set; }
@@ -114,14 +114,14 @@ namespace DrugsPrevention_Data
                 .HasForeignKey(c => c.ConsultantId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // ProgramParticipation -> Program & Account
-            modelBuilder.Entity<ProgramParticipation>()
-                .HasOne(p => p.Program)
-                .WithMany()
-                .HasForeignKey(p => p.ProgramId)
+            // EventParticipation -> Event & Account
+            modelBuilder.Entity<EventParticipation>()
+                .HasOne(p => p.Event)
+                .WithMany(e => e.Participations)
+                .HasForeignKey(p => p.EventId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<ProgramParticipation>()
+            modelBuilder.Entity<EventParticipation>()
                 .HasOne(p => p.Account)
                 .WithMany()
                 .HasForeignKey(p => p.AccountId)
@@ -130,7 +130,7 @@ namespace DrugsPrevention_Data
             // Schedule -> Consultant
             modelBuilder.Entity<Schedule>()
                 .HasOne(s => s.Consultant)
-                .WithMany()
+                .WithMany(c => c.Schedules)
                 .HasForeignKey(s => s.ConsultantId)
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -143,7 +143,7 @@ namespace DrugsPrevention_Data
 
             modelBuilder.Entity<Appointment>()
                 .HasOne(a => a.Account)
-                .WithMany()
+                .WithMany(a => a.Appointments)
                 .HasForeignKey(a => a.AccountId)
                 .OnDelete(DeleteBehavior.Restrict);
 
