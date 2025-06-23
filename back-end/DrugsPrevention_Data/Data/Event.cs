@@ -8,19 +8,26 @@ using System.Threading.Tasks;
 
 namespace DrugsPrevention_Data.Data
 {
-    public class Program
+    public class Event
     {
         [Key]
-        public int ProgramId { get; set; }
+        [Column("event_id")]
+        public int EventId { get; set; }
+        [Column("name")]
         public string Name { get; set; }
+        [Column("description")]
         public string Description { get; set; }
+        [Column("date")]
         public DateTime Date { get; set; }
+        [Column("location")]
         public string Location { get; set; }
+        [Column("created_by")]
         public int CreatedBy { get; set; }
+        [Column("type")]
         public string Type { get; set; }
 
         [ForeignKey(nameof(CreatedBy))]
         public Accounts Creator { get; set; }
-        public ICollection<ProgramParticipation> Participations { get; set; }
+        public ICollection<EventParticipation> Participations { get; set; }
     }
 }

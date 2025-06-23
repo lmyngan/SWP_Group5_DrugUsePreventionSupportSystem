@@ -11,14 +11,23 @@ namespace DrugsPrevention_Data.Data
     public class TestQuestion
     {
         [Key]
+        [Column("question_id")]
         public int QuestionId { get; set; }
+
+        [Column("test_id")]
         public int TestId { get; set; }
+
+        [Column("question_text")]
         public string QuestionText { get; set; }
+
+        [Column("question_type")]
         public string QuestionType { get; set; }
 
         [ForeignKey(nameof(TestId))]
         public Test Test { get; set; }
+
         public ICollection<TestOption> Options { get; set; }
         public ICollection<TestAnswer> Answers { get; set; }
     }
+
 }

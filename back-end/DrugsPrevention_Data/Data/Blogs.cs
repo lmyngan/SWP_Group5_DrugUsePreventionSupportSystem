@@ -11,12 +11,19 @@ namespace DrugsPrevention_Data.Data
     public class Blogs
     {
         [Key]
+        [Column("blog_id")]
         public int BlogId { get; set; }
+        [Column("author_id")]
         public int AuthorId { get; set; }
+        [Column("categories")]
         public int Categories { get; set; }
+        [Column("title")]
         public string Title { get; set; }
+        [Column("content")]
         public string Content { get; set; }
+        [Column("rate")]
         public float Rate { get; set; }
+        [Column("created_at")]
         public DateTime CreatedAt { get; set; }
 
         [ForeignKey(nameof(AuthorId))]

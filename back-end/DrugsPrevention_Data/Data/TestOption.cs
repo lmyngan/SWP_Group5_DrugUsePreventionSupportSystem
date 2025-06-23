@@ -11,11 +11,20 @@ namespace DrugsPrevention_Data.Data
     public class TestOption
     {
         [Key]
+        [Column("option_id")]
         public int OptionId { get; set; }
+
+        [Column("question_id")]
         public int QuestionId { get; set; }
+
+        [Column("option_text")]
         public string OptionText { get; set; }
+
+        [Column("score")]
+        public int Score { get; set; }
 
         [ForeignKey(nameof(QuestionId))]
         public TestQuestion Question { get; set; }
     }
+
 }
