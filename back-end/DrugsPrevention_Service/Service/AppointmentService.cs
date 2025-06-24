@@ -9,6 +9,7 @@ using DrugsPrevention_Data.Repositories.Irepositories;
 using DrugsPrevention_Data;
 using DrugsPrevention_Service.Service.Iservice;
 using Microsoft.EntityFrameworkCore;
+using DrugsPrevention_Data.DTO.Schedule;
 
 namespace DrugsPrevention_Service.Service
 {
@@ -75,6 +76,22 @@ namespace DrugsPrevention_Service.Service
             }
 
             throw new Exception("No available time slot");
+        }
+        public async Task<List<ScheduleDTO>> GetSchedulesByConsultantIdAsync(int consultantId)
+        {
+            var schedules = await _context.Schedules
+                .Where(s => s.ConsultantId == consultantId)
+                .Select(s => new ScheduleDTO
+                {
+                    ScheduleId = s.ScheduleId,
+                    AvailableDate = s.AvailableDate,
+                    StartTime = s.StartTime,
+                    EndTime = s.EndTime,
+                    Slot = s.Slot
+                })
+                .ToListAsync();
+
+            return schedules;
         }
     }
 }
