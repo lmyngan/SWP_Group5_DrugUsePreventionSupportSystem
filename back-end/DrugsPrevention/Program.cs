@@ -38,6 +38,8 @@ namespace DrugsPrevention
             builder.Services.AddScoped<ITestRepository, TestRepository>();
             builder.Services.AddScoped<IAppointmentService, AppointmentService>();
             builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+            builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
