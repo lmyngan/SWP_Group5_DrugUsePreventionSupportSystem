@@ -63,5 +63,9 @@ namespace DrugsPrevention_Data.Repositories
         {
             await _context.SaveChangesAsync();
         }
+        public async Task<Accounts> GetAccountByIdAsync(int accountId)
+        {
+            return await _context.Accounts.FirstOrDefaultAsync(a => a.AccountId == accountId);
+        }
     }
 }
