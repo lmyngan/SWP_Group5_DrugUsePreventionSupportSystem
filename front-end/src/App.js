@@ -13,7 +13,9 @@ import FreeCourse from "./pages/FreeCourse"
 import Mentor from "./pages/Mentor"
 import Event from "./pages/EventPage"
 import Login from "./pages/LoginPage"
+import Register from "./pages/RegisterPage"
 import AddPost from "./pages/AddPost"
+import Survey from "./pages/Survey"
 
 const App = () => {
   // State để quản lý trang hiện tại
@@ -56,8 +58,12 @@ const App = () => {
         return <Mentor />
       case "event":
         return <Event />
+      case "survey":
+        return <Survey />
       case "login":
         return <Login />
+      case "register":
+        return <Register />
       case "addpost":
         return <AddPost />
       default:

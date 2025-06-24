@@ -1,4 +1,3 @@
-
 // src/services/api.js
 import axios from 'axios';
 
@@ -17,13 +16,13 @@ export const authApi = {
         try {
             // Log request payload for debugging
             console.log('Login Request Payload:', {
-                accountName: credentials.accountname,
-                password: credentials.password
+                Accountname: credentials.accountname,
+                Password: credentials.password
             });
 
             const response = await api.post('/api/Auth/Login', {
-                accountName: credentials.accountname,  // Changed from userName to accountName
-                password: credentials.password
+                Accountname: credentials.accountname,
+                Password: credentials.password
             });
 
             // Log successful response
@@ -81,6 +80,13 @@ export const accountApi = {
 
     getById: async (id) => {
         const response = await axios.get(`${API_BASE_URL}/account/${id}`);
+        return response.data;
+    }
+};
+
+export const userApi = {
+    getById: async (accountId) => {
+        const response = await api.get(`/api/Account/${accountId}`);
         return response.data;
     }
 };

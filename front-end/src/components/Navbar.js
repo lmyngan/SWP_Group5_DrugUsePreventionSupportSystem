@@ -45,7 +45,7 @@ const Navbar = ({ navigateTo, currentPage }) => {
           DrugsCare
         </div>
 
-     
+
 
         {/* Navigation Links */}
         <ul className={`nav-links ${isMenuOpen ? "active" : ""}`}>
@@ -68,7 +68,7 @@ const Navbar = ({ navigateTo, currentPage }) => {
           <li>
             <button
               className={`nav-link ${currentPage === "assessment" ? "active" : ""}`}
-              onClick={() => handleNavigation("assessment")}
+              onClick={() => handleNavigation("survey")}
             >
               Assessment
             </button>
@@ -102,7 +102,7 @@ const Navbar = ({ navigateTo, currentPage }) => {
               <div className="user-menu">
                 <div className="user-info">
                   <span className="user-avatar">👤</span>
-                  <span className="user-name">{user?.name}</span>
+                  <span className="user-name">Hello, {user?.accountName}.</span>
                 </div>
                 <div className="user-dropdown">
                   <button className="dropdown-item" onClick={() => handleNavigation("addpost")}>
