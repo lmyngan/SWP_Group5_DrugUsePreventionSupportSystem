@@ -11,7 +11,7 @@ import HomePage from "./pages/HomePage"
 import WhoWeAre from "./pages/WhoWeAre"
 import FreeCourse from "./pages/FreeCourse"
 import Mentor from "./pages/Mentor"
-import Blog from "./pages/BlogPage"
+import Event from "./pages/EventPage"
 import Login from "./pages/LoginPage"
 import AddPost from "./pages/AddPost"
 
@@ -54,8 +54,8 @@ const App = () => {
         return <FreeCourse />
       case "mentor":
         return <Mentor />
-      case "blog":
-        return <Blog />
+      case "event":
+        return <Event />
       case "login":
         return <Login />
       case "addpost":

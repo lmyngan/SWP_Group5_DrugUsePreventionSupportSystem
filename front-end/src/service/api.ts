@@ -1,22 +1,86 @@
+
+// src/services/api.js
 import axios from 'axios';
-import { ApiResponse, ApiError } from './types/index.ts';
 
-const API_BASE_URL = 'https://api.example.com'; // Replace with your API base URL
+const API_BASE_URL = 'http://localhost:5187';
 
-export const fetchData = async (endpoint: string): Promise<ApiResponse | ApiError> => {
-    try {
-        const response = await axios.get(`${API_BASE_URL}${endpoint}`);
-        return response.data;
-    } catch (error) {
-        return { error: error.message };
+const api = axios.create({
+    baseURL: API_BASE_URL,
+    headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    }
+});
+
+export const authApi = {
+    login: async (credentials) => {
+        try {
+            // Log request payload for debugging
+            console.log('Login Request Payload:', {
+                accountName: credentials.accountname,
+                password: credentials.password
+            });
+
+            const response = await api.post('/api/Auth/Login', {
+                accountName: credentials.accountname,  // Changed from userName to accountName
+                password: credentials.password
+            });
+
+            // Log successful response
+            console.log('Login Response:', response.data);
+            return response.data;
+        } catch (error) {
+            // Enhanced error logging
+            console.error('Login Error:', {
+                status: error.response?.status,
+                data: error.response?.data,
+                message: error.message,
+                requestPayload: error.config?.data
+            });
+            throw error;
+        }
+    },
+
+    register: async (userData) => {
+        try {
+            // Format date to yyyy-MM-dd
+            const date = new Date(userData.dateOfBirth);
+            const formattedDate = date.toISOString().split('T')[0];
+
+            const requestData = {
+                Accountname: userData.email.trim(),      // Đúng tên trường backend
+                Password: userData.password.trim(),
+                FullName: userData.fullName.trim(),
+                DateOfBirth: formattedDate,
+                Address: userData.address.trim(),
+                Gender: userData.gender,
+                RoleName: "USER"                        // Đúng tên trường backend
+            };
+
+            console.log('Register Request Payload:', JSON.stringify(requestData, null, 2));
+
+            const response = await api.post('/api/Auth/Register', requestData);
+            return response.data;
+        } catch (error) {
+            console.error('Register Error Details:', {
+                status: error.response?.status,
+                validationErrors: error.response?.data?.errors,
+                message: error.response?.data?.message,
+                rawError: error.response?.data
+            });
+            throw error;
+        }
     }
 };
 
-export const postData = async (endpoint: string, data: any): Promise<ApiResponse | ApiError> => {
-    try {
-        const response = await axios.post(`${API_BASE_URL}${endpoint}`, data);
+export const accountApi = {
+    getAll: async () => {
+        const response = await axios.get(`${API_BASE_URL}/account`);
         return response.data;
-    } catch (error) {
-        return { error: error.message };
+    },
+
+    getById: async (id) => {
+        const response = await axios.get(`${API_BASE_URL}/account/${id}`);
+        return response.data;
     }
 };

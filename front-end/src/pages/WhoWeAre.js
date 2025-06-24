@@ -1,6 +1,6 @@
 import React from 'react';
 import { CheckCircle, Users, GraduationCap, Heart, ArrowRight, Mail, Shield, FileText, Home } from 'lucide-react';
-import './WhoWeAre.css';
+import '../styles/WhoWeAre.css';
 
 // Button Component
 const Button = ({ children, variant = 'default', size = 'default', className = '', onClick, ...props }) => {

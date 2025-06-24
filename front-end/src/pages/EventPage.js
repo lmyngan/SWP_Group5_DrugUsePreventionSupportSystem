@@ -1,10 +1,10 @@
 "use client"
 
-import "../styles/BlogPage.css"
+import "../styles/EventPage.css"
 import { useState, useEffect } from "react"
 import LoginStatus from "../components/LoginStatus"
 
-const Blog = () => {
+const Event = () => {
   const categories = ["All Posts", "Students", "University Students", "Parents", "Teachers", "Specialists", "Community"]
 
   // Simulate login status and content
@@ -48,7 +48,7 @@ const handleAddPost = () => {
     localStorage.removeItem("user")
   }
 
-  const blogPosts = hasContent
+  const eventPosts = hasContent
     ? [
         {
           id: 1,
@@ -138,13 +138,13 @@ const handleAddPost = () => {
     : []
 
   return (
-    <div className="blog-page">
+    <div className="event-page">
       {/* Header */}
-      <section className="blog-header">
+      <section className="event-header">
         <div className="container">
-          <div className="blog-header-content">
-            <div className="blog-title">
-              <h1>Knowledge Sharing Blog</h1>
+          <div className="event-header-content">
+            <div className="event-title">
+              <h1>Knowledge Sharing Event</h1>
               <p>
                 A place to share knowledge, experiences, and stories about drug prevention and social harm reduction
               </p>
@@ -190,21 +190,21 @@ const handleAddPost = () => {
           {/* Search Bar */}
           <div className="search-section">
             <div className="search-bar">
-              <input type="text" placeholder="Search articles..." />
+              <input type="text" placeholder="Search Blogs..." />
               <button className="search-btn">🔍</button>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="blog-content">
+      <section className="event-content">
         <div className="container">
-          <div className="blog-layout">
+          <div className="event-layout">
             {/* Main Content Area */}
             <div className="main-content">
               {/* Categories Filter */}
               <div className="categories-filter">
-                <h3>📂 Article Categories</h3>
+                <h3>📂 Blogs Categories</h3>
                 <div className="category-tags">
                   {categories.map((category, index) => (
                     <button key={index} className={`category-tag ${index === 0 ? "active" : ""}`}>
@@ -219,7 +219,7 @@ const handleAddPost = () => {
                 <>
                   {/* Featured Post */}
                   <div className="featured-post">
-                    <h2>📌 Featured Article</h2>
+                    <h2>📌 Featured Blogs</h2>
                     <div className="featured-card">
                       <div className="featured-image">
                         <img src="/placeholder.svg?height=300&width=500" alt="Featured post" />
@@ -241,11 +241,11 @@ const handleAddPost = () => {
                     </div>
                   </div>
 
-                  {/* Blog Posts Grid */}
+                  {/*Event Posts Grid */}
                   <div className="posts-section">
-                    <h2>📝 Latest Articles</h2>
+                    <h2>📝 Latest Blogs</h2>
                     <div className="posts-grid">
-                      {blogPosts.map((post) => (
+                      {eventPosts.map((post) => (
                         <article key={post.id} className="post-card">
                           <div className="post-image">
                             <img src={post.image || "/placeholder.svg"} alt={post.title} />
@@ -285,13 +285,13 @@ const handleAddPost = () => {
                 <div className="empty-state">
                   <div className="empty-state-content">
                     <div className="empty-icon">📝</div>
-                    <h2>No Articles Yet</h2>
+                    <h2>No Blogs Yet</h2>
                     <p>
-                      The blog currently has no content. Please come back later or explore other features of DrugsCare.
+                      The Event currently has no blog. Please come back later or explore other features of DrugsCare.
                     </p>
                     <div className="empty-actions">
                       <button className="btn-write-post" onClick={handleAddPost}>
-                        {isLoggedIn ? "📝 Add Sample Articles" : "📝 Login to Write Posts"}
+                        {isLoggedIn ? "📝 Add Sample Blogs" : "📝 Login to Write Posts"}
                       </button>
                       
                     </div>
@@ -301,7 +301,7 @@ const handleAddPost = () => {
                       <div className="login-prompt">
                         <div className="login-prompt-content">
                           <h3>🔐 You're Not Logged In</h3>
-                          <p>To share articles and join the community, please login or create a new account.</p>
+                          <p>To share blogs and join the community, please login or create a new account.</p>
                           <div className="login-prompt-actions">
                             <a href="/login" className="btn-login-prompt">
                               🔑 Login Now
@@ -342,18 +342,18 @@ const handleAddPost = () => {
 
             {/* Sidebar */}
             <aside className="sidebar">
-              {/* About Blog */}
+              {/* About Event */}
               <div className="sidebar-widget">
-                <h3>📖 About DrugsCare Blog</h3>
-                <div className="about-blog">
+                <h3>📖 About DrugsCare Event</h3>
+                <div className="about-event">
                   <p>
-                    A blog sharing professional knowledge about drug prevention and social harm reduction, supporting
+                    A event sharing professional knowledge about drug prevention and social harm reduction, supporting
                     the community in education and awareness raising.
                   </p>
-                  <div className="blog-stats">
+                  <div className="event-stats">
                     <div className="stat-item">
                       <strong>{hasContent ? "500+" : "0"}</strong>
-                      <span>Articles</span>
+                      <span>Blogs</span>
                     </div>
                     <div className="stat-item">
                       <strong>{hasContent ? "10K+" : "0"}</strong>
@@ -380,9 +380,9 @@ const handleAddPost = () => {
                     <div className="join-benefits">
                       <h4>Benefits of joining:</h4>
                       <ul>
-                        <li>✍️ Share articles</li>
+                        <li>✍️ Share blogs</li>
                         <li>💬 Comment and discuss</li>
-                        <li>📚 Save favorite articles</li>
+                        <li>📚 Save favorite blogs</li>
                         <li>🔔 Receive notifications</li>
                       </ul>
                     </div>
@@ -392,7 +392,7 @@ const handleAddPost = () => {
 
               {/* Recent Posts */}
               <div className="sidebar-widget">
-                <h3>🕒 Recent Articles</h3>
+                <h3>🕒 Recent Blogs</h3>
                 <div className="recent-posts">
                   {hasContent ? (
                     recentPosts.map((post, index) => (
@@ -403,8 +403,8 @@ const handleAddPost = () => {
                     ))
                   ) : (
                     <div className="empty-recent">
-                      <p>No recent articles</p>
-                      <small>New articles will appear here</small>
+                      <p>No recent blogs</p>
+                      <small>New blogs will appear here</small>
                     </div>
                   )}
                 </div>
@@ -428,7 +428,7 @@ const handleAddPost = () => {
                   ) : (
                     <div className="empty-tags">
                       <p>No tags yet</p>
-                      <small>Tags will be created from articles</small>
+                      <small>Tags will be created from blogs</small>
                     </div>
                   )}
                 </div>
@@ -438,7 +438,7 @@ const handleAddPost = () => {
               <div className="sidebar-widget">
                 <h3>📧 Subscribe to Newsletter</h3>
                 <div className="newsletter">
-                  <p>Receive notifications about new articles and useful information</p>
+                  <p>Receive notifications about new blogs and useful information</p>
                   <div className="newsletter-form">
                     <input type="email" placeholder="Your email" />
                     <button className="subscribe-btn">Subscribe</button>
@@ -473,4 +473,4 @@ const handleAddPost = () => {
   )
 }
 
-export default Blog
+export default Event

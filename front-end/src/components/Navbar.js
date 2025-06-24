@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import "./Navbar.css"
 
+
 const Navbar = ({ navigateTo, currentPage }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -44,14 +45,7 @@ const Navbar = ({ navigateTo, currentPage }) => {
           DrugsCare
         </div>
 
-      <ul className="nav-links">
-        <li>
-    <Link to="/whoweare">Who we are?</Link>
-       </li>
-        <li><a href="#course">Free Courses</a></li>
-        <li><a href="#baocao">Mentor</a></li>
-        <li><a href="/blog">Blog</a></li>
-      </ul>
+     
 
         {/* Navigation Links */}
         <ul className={`nav-links ${isMenuOpen ? "active" : ""}`}>
@@ -73,26 +67,26 @@ const Navbar = ({ navigateTo, currentPage }) => {
           </li>
           <li>
             <button
-              className={`nav-link ${currentPage === "freecourse" ? "active" : ""}`}
-              onClick={() => handleNavigation("freecourse")}
+              className={`nav-link ${currentPage === "assessment" ? "active" : ""}`}
+              onClick={() => handleNavigation("assessment")}
             >
-              Free Courses
+              Assessment
             </button>
           </li>
           <li>
             <button
-              className={`nav-link ${currentPage === "mentor" ? "active" : ""}`}
-              onClick={() => handleNavigation("mentor")}
+              className={`nav-link ${currentPage === "consultant" ? "active" : ""}`}
+              onClick={() => handleNavigation("consultant")}
             >
-              Mentors
+              Consultant
             </button>
           </li>
           <li>
             <button
-              className={`nav-link ${currentPage === "blog" ? "active" : ""}`}
-              onClick={() => handleNavigation("blog")}
+              className={`nav-link ${currentPage === "event" ? "active" : ""}`}
+              onClick={() => handleNavigation("event")}
             >
-              Blog
+              Event
             </button>
           </li>
         </ul>
