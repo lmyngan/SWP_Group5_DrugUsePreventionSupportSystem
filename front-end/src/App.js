@@ -14,6 +14,7 @@ import Mentor from "./pages/Mentor"
 import Event from "./pages/EventPage"
 import Login from "./pages/LoginPage"
 import Register from "./pages/RegisterPage"
+import ProfileUser from "./pages/ProfileUser"
 import AddPost from "./pages/AddPost"
 import Survey from "./pages/Survey"
 
@@ -64,8 +65,11 @@ const App = () => {
         return <Login />
       case "register":
         return <Register />
+      case "profile":
+        return <ProfileUser />
       case "addpost":
         return <AddPost />
+
       default:
         return <HomePage /> // Fallback về trang chủ
     }

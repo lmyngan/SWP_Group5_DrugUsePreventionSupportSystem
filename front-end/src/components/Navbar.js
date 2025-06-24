@@ -32,9 +32,9 @@ const Navbar = ({ navigateTo, currentPage }) => {
   }
 
   // Toggle mobile menu
-  const toggleMenu = () => {
+  /*const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
-  }
+  }*/
 
   return (
     <nav className="navbar">
@@ -104,7 +104,7 @@ const Navbar = ({ navigateTo, currentPage }) => {
                   <span className="user-name">Hello, {user.fullName}.</span>
                 </div>
                 <div className="user-dropdown">
-                  <button className="dropdown-item" onClick={() => handleNavigation("")}>
+                  <button className="dropdown-item" onClick={() => handleNavigation("profile")}>
                     Profile
                   </button>
                   <button className="dropdown-item" onClick={() => handleNavigation("addpost")}>
