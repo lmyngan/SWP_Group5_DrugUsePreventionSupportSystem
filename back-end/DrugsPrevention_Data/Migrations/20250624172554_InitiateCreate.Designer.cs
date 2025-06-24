@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DrugsPrevention_Data.Migrations
 {
     [DbContext(typeof(DrugsPrevention_DBContext))]
-    [Migration("20250624150350_InitiateCreate")]
+    [Migration("20250624172554_InitiateCreate")]
     partial class InitiateCreate
     {
         /// <inheritdoc />
@@ -205,7 +205,7 @@ namespace DrugsPrevention_Data.Migrations
 
                     b.HasIndex("ConsultantId");
 
-                    b.ToTable("Certificates");
+                    b.ToTable("Certificate");
                 });
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.Consultant", b =>
@@ -278,7 +278,7 @@ namespace DrugsPrevention_Data.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("Events");
+                    b.ToTable("Event");
                 });
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.EventParticipation", b =>
@@ -319,7 +319,7 @@ namespace DrugsPrevention_Data.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("EventParticipations");
+                    b.ToTable("EventParticipation");
                 });
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.Notifications", b =>
@@ -533,7 +533,7 @@ namespace DrugsPrevention_Data.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("TestOptions");
+                    b.ToTable("TestOption");
                 });
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.TestQuestion", b =>
@@ -563,7 +563,7 @@ namespace DrugsPrevention_Data.Migrations
 
                     b.HasIndex("TestId");
 
-                    b.ToTable("TestQuestions");
+                    b.ToTable("TestQuestion");
                 });
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.TestResult", b =>

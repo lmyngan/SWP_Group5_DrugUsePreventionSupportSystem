@@ -42,5 +42,12 @@ namespace DrugsPrevention_API.Controllers
 
             return Ok(result);
         }
+        [HttpGet("result/{resultId}")]
+        public async Task<IActionResult> GetUserTestResult(int resultId)
+        {
+            var result = await _testService.GetTestResultDetailsAsync(resultId);
+            if (result == null) return NotFound();
+            return Ok(result);
+        }
     }
 }

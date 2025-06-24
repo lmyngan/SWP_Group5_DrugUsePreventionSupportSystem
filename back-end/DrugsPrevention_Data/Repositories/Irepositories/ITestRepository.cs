@@ -11,5 +11,6 @@ namespace DrugsPrevention_Data.Repositories.Irepositories
     {
         Task<TestResultDTO> SubmitTestAsync(TestSubmissionDTO submission);
         Task<TestResponseDTO> GetTestByIdAsync(int testId);
+        Task<UserTestResultDTO> GetTestResultDetailsAsync(int resultId);
     }
 }
