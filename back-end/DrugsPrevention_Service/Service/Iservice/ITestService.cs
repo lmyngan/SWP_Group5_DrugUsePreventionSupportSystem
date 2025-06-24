@@ -10,5 +10,6 @@ namespace DrugsPrevention_Service.Service.Iservice
     public interface ITestService
     {
         Task<TestResultDTO> SubmitTestAsync(TestSubmissionDTO submission);
+        Task<TestResponseDTO> GetTestByIdAsync(int testId);
     }
 }

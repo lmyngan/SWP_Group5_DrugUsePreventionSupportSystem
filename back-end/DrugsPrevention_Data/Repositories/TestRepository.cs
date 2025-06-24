@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DrugsPrevention_Data.Data;
+﻿using DrugsPrevention_Data.Data;
 using DrugsPrevention_Data.DTO.Test;
 using DrugsPrevention_Data.Repositories.Irepositories;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DrugsPrevention_Data.Repositories
 {
@@ -18,16 +16,14 @@ namespace DrugsPrevention_Data.Repositories
             _context = context;
         }
 
-        public async Task<DTO.Test.TestResultDTO> SubmitTestAsync(TestSubmissionDTO submission)
+        public async Task<TestResultDTO> SubmitTestAsync(TestSubmissionDTO submission)
         {
-            // Dummy logic: risk level = high if any answer is "Yes"
             var riskLevel = submission.Answers.Any(a => a.AnswerText.ToLower() == "yes") ? "high" : "low";
             var recommendation = riskLevel == "high" ? "Seek professional help." : "Maintain current lifestyle.";
 
             if (submission.AccountId.HasValue)
             {
-                // Lưu kết quả khảo sát
-                var result = new Data.TestResult
+                var result = new TestResult
                 {
                     AccountId = submission.AccountId.Value,
                     TestId = submission.TestId,
@@ -53,10 +49,28 @@ namespace DrugsPrevention_Data.Repositories
                 await _context.SaveChangesAsync();
             }
 
-            return new DTO.Test.TestResultDTO
+            return new TestResultDTO
             {
                 RiskLevel = riskLevel,
                 Recommendation = recommendation
+            };
+        }
+
+        public async Task<TestResponseDTO> GetTestByIdAsync(int testId)
+        {
+            var test = await _context.Tests.Include(t => t.CreatedByAccount)
+                .FirstOrDefaultAsync(t => t.TestId == testId);
+
+            if (test == null) return null;
+
+            return new TestResponseDTO
+            {
+                TestId = test.TestId,
+                Name = test.Name,
+                Description = test.Description,
+                CreatedAt = test.CreatedAt,
+                CreatedBy = test.CreatedBy,
+                CreatedByName = test.CreatedByAccount?.FullName
             };
         }
     }

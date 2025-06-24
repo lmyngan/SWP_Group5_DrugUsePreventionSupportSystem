@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DrugsPrevention_Data.Migrations
 {
     [DbContext(typeof(DrugsPrevention_DBContext))]
-    [Migration("20250623183130_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250624150350_InitiateCreate")]
+    partial class InitiateCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -447,9 +447,6 @@ namespace DrugsPrevention_Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TestId"));
 
-                    b.Property<int?>("AccountsAccountId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnName("created_at");
@@ -470,11 +467,9 @@ namespace DrugsPrevention_Data.Migrations
 
                     b.HasKey("TestId");
 
-                    b.HasIndex("AccountsAccountId");
-
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("Tests");
+                    b.ToTable("Test");
                 });
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.TestAnswer", b =>
@@ -752,17 +747,13 @@ namespace DrugsPrevention_Data.Migrations
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.Test", b =>
                 {
-                    b.HasOne("DrugsPrevention_Data.Data.Accounts", null)
+                    b.HasOne("DrugsPrevention_Data.Data.Accounts", "CreatedByAccount")
                         .WithMany("CreatedTests")
-                        .HasForeignKey("AccountsAccountId");
-
-                    b.HasOne("DrugsPrevention_Data.Data.Accounts", "Account")
-                        .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Account");
+                    b.Navigation("CreatedByAccount");
                 });
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.TestAnswer", b =>
