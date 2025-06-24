@@ -52,9 +52,9 @@ const HomePage = () => {
             </div>
             <div className="overview-card">
               <div className="overview-icon">✍️</div>
-              <h3>Community Blog</h3>
+              <h3>Community Event</h3>
               <p>Read and share real recovery stories and experiences.</p>
-              <a href="/blog" className="overview-link">
+              <a href="/event" className="overview-link">
                 Read Stories
               </a>
             </div>
@@ -176,7 +176,7 @@ const HomePage = () => {
               </div>
             </div>
 
-            {/* Blog Info */}
+           
             <div className="footer-section">
               <h3>ABOUT DRUGSCARE</h3>
               <ul className="footer-info">
