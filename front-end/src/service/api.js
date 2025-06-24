@@ -1,92 +1,39 @@
-// src/services/api.js
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
 const API_BASE_URL = 'http://localhost:5187';
 
-const api = axios.create({
-    baseURL: API_BASE_URL,
-    headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-    }
-});
+// LOGIN
+export const loginUser = async (credentials) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/auth/login`, credentials);
+        const token = response.data.token || response.data.Token;
 
-export const authApi = {
-    login: async (credentials) => {
-        try {
-            // Log request payload for debugging
-            console.log('Login Request Payload:', {
-                Accountname: credentials.accountname,
-                Password: credentials.password
-            });
+        const decoded = jwtDecode(token);
+        const accountId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
 
-            const response = await api.post('/api/Auth/Login', {
-                Accountname: credentials.accountname,
-                Password: credentials.password
-            });
-
-            // Log successful response
-            console.log('Login Response:', response.data);
-            return response.data;
-        } catch (error) {
-            // Enhanced error logging
-            console.error('Login Error:', {
-                status: error.response?.status,
-                data: error.response?.data,
-                message: error.message,
-                requestPayload: error.config?.data
-            });
-            throw error;
-        }
-    },
-
-    register: async (userData) => {
-        try {
-            // Format date to yyyy-MM-dd
-            const date = new Date(userData.dateOfBirth);
-            const formattedDate = date.toISOString().split('T')[0];
-
-            const requestData = {
-                Accountname: userData.email.trim(),      // Đúng tên trường backend
-                Password: userData.password.trim(),
-                FullName: userData.fullName.trim(),
-                DateOfBirth: formattedDate,
-                Address: userData.address.trim(),
-                Gender: userData.gender,
-                RoleName: "USER"                        // Đúng tên trường backend
-            };
-
-            console.log('Register Request Payload:', JSON.stringify(requestData, null, 2));
-
-            const response = await api.post('/api/Auth/Register', requestData);
-            return response.data;
-        } catch (error) {
-            console.error('Register Error Details:', {
-                status: error.response?.status,
-                validationErrors: error.response?.data?.errors,
-                message: error.response?.data?.message,
-                rawError: error.response?.data
-            });
-            throw error;
-        }
+        return { token, accountId };
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
     }
 };
 
-export const accountApi = {
-    getAll: async () => {
-        const response = await axios.get(`${API_BASE_URL}/account`);
+//REGISTER
+export const registerUser = async (data) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/auth/register`, data);
         return response.data;
-    },
-
-    getById: async (id) => {
-        const response = await axios.get(`${API_BASE_URL}/account/${id}`);
-        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
     }
 };
 
-export const userApi = {
-    getById: async (accountId) => {
-        const response = await api.get(`/api/Account/${accountId}`);
+// GET ACCOUNT INFO
+export const getUserById = async (accountId) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/account/${accountId}`);
         return response.data;
+    } catch (error) {
+        return { error: error.message };
     }
 };

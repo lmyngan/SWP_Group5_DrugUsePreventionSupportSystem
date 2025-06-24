@@ -1,9 +1,8 @@
 // src/pages/RegisterPage.js
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { authApi } from '../service/api';
+import { registerUser } from '../service/api';
 import '../styles/RegisterPage.css';
-import { Modal, Button } from 'react-bootstrap';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -16,7 +15,6 @@ const RegisterPage = () => {
     gender: 'Male'
   });
   const [error, setError] = useState('');
-  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -30,6 +28,7 @@ const RegisterPage = () => {
     e.preventDefault();
     setError('');
 
+    // Validation
     if (!formData.email || !formData.email.trim()) {
       setError('Username is required');
       return;
@@ -52,31 +51,39 @@ const RegisterPage = () => {
     }
 
     try {
-      const response = await authApi.register(formData);
-      console.log('Registration successful:', response);
-      setShowModal(true);
+      // Map đúng tên trường backend yêu cầu
+      const payload = {
+        accountname: formData.email,
+        password: formData.password,
+        fullName: formData.fullName,
+        dateOfBirth: formData.dateOfBirth,
+        gender: formData.gender,
+        address: formData.address,
+        roleName: "User" // hoặc bỏ nếu backend không yêu cầu
+      };
+      const response = await registerUser(payload);
+      if (response.error) {
+        setError(response.error);
+      } else {
+        alert('Registration successful! Please login.');
+        navigate('/login');
+      }
     } catch (error) {
-      console.error('Registration error:', error);
-      const errorMessage = error.response?.data?.errors
-        ? Object.values(error.response.data.errors).flat().join('\n')
-        : error.response?.data?.message
-        || error.response?.data?.title
-        || 'Registration failed. Please try again.';
-      setError(errorMessage);
+      setError('Registration failed. Please try again.');
     }
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-    navigate('/login');
   };
 
   return (
     <div className="register-container">
+
       <div className="register-box">
+
         <form className="register-form" onSubmit={handleSubmit}>
+
           <h1>Register</h1>
+
           {error && <div className="error-message">{error}</div>}
+
           <div className="input-box">
             <input
               type="text"
@@ -86,6 +93,7 @@ const RegisterPage = () => {
               onChange={handleChange}
               required />
           </div>
+
           <div className="input-box">
             <input
               type="password"
@@ -95,6 +103,7 @@ const RegisterPage = () => {
               onChange={handleChange}
               required />
           </div>
+
           <div className="input-box">
             <input
               type="password"
@@ -104,6 +113,7 @@ const RegisterPage = () => {
               onChange={handleChange}
               required />
           </div>
+
           <div className="input-box">
             <input
               type="text"
@@ -113,6 +123,7 @@ const RegisterPage = () => {
               onChange={handleChange}
               required />
           </div>
+
           <div className="input-box">
             <input
               type="date"
@@ -122,6 +133,7 @@ const RegisterPage = () => {
               required
             />
           </div>
+
           <div className="input-box">
             <input
               type="text"
@@ -131,6 +143,7 @@ const RegisterPage = () => {
               onChange={handleChange}
               required />
           </div>
+
           <div className="input-box">
             <select
               name="gender"
@@ -142,36 +155,22 @@ const RegisterPage = () => {
               <option value="Female">Female</option>
             </select>
           </div>
+
           <button type="submit" className='btn'>Register</button>
+
         </form>
+
         <div className="login-link">
           <p>
             Do you have an account? <Link to="/login">Login</Link>
           </p>
         </div>
+
       </div>
 
-      {/* Modal thông báo đăng ký thành công */}
-      <Modal show={showModal} onHide={handleCloseModal} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Registration Successful</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Registration successful! Please login.
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" onClick={handleCloseModal}>
-            Go to Login
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </div>
+
   );
 };
 
 export default RegisterPage;
-
-/*<div style={{ padding: '50px', textAlign: 'center' }}>
-      <h2>Register Page</h2>
-      <p>This is where the registration form will be.</p>
-    </div> */

@@ -58,6 +58,7 @@ const Survey = () => {
         e.preventDefault();
         const totalScore = calculateScore(answers);
         setScore(totalScore);
+        localStorage.setItem('surveyTotalScore', totalScore);
         let riskLevel = "";
         if (totalScore <= 10) {
             riskLevel = "Low Risk";

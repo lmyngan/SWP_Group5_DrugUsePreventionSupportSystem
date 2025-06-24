@@ -1,20 +1,19 @@
-"use client"
-
-import { useState, useEffect } from "react"
-import "./Navbar.css"
+import { useState, useEffect } from "react";
+import "./Navbar.css";
 
 
 const Navbar = ({ navigateTo, currentPage }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [user, setUser] = useState(null)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
 
   // Check login status
   useEffect(() => {
-    const storedUser = localStorage.getItem("user")
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      setIsLoggedIn(true)
-      setUser(JSON.parse(storedUser))
+      setIsLoggedIn(true);
+      const userObj = JSON.parse(storedUser);
+      setUser(userObj);
     }
   }, [])
 
@@ -102,14 +101,17 @@ const Navbar = ({ navigateTo, currentPage }) => {
               <div className="user-menu">
                 <div className="user-info">
                   <span className="user-avatar">👤</span>
-                  <span className="user-name">Hello, {user?.accountName}.</span>
+                  <span className="user-name">Hello, {user.fullName}.</span>
                 </div>
                 <div className="user-dropdown">
+                  <button className="dropdown-item" onClick={() => handleNavigation("")}>
+                    Profile
+                  </button>
                   <button className="dropdown-item" onClick={() => handleNavigation("addpost")}>
-                    ✍️ Write Post
+                    Write Post
                   </button>
                   <button className="dropdown-item" onClick={handleLogout}>
-                    🚪 Logout
+                    Logout
                   </button>
                 </div>
               </div>
