@@ -10,5 +10,6 @@ namespace DrugsPrevention_Data.Repositories.Irepositories
     public interface ITestRepository
     {
         Task<TestResultDTO> SubmitTestAsync(TestSubmissionDTO submission);
+        Task<TestResponseDTO> GetTestByIdAsync(int testId);
     }
 }

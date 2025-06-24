@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DrugsPrevention_Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitiateCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -156,7 +156,7 @@ namespace DrugsPrevention_Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tests",
+                name: "Test",
                 columns: table => new
                 {
                     test_id = table.Column<int>(type: "int", nullable: false)
@@ -164,19 +164,13 @@ namespace DrugsPrevention_Data.Migrations
                     name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    created_by = table.Column<int>(type: "int", nullable: false),
-                    AccountsAccountId = table.Column<int>(type: "int", nullable: true)
+                    created_by = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tests", x => x.test_id);
+                    table.PrimaryKey("PK_Test", x => x.test_id);
                     table.ForeignKey(
-                        name: "FK_Tests_Accounts_AccountsAccountId",
-                        column: x => x.AccountsAccountId,
-                        principalTable: "Accounts",
-                        principalColumn: "account_id");
-                    table.ForeignKey(
-                        name: "FK_Tests_Accounts_created_by",
+                        name: "FK_Test_Accounts_created_by",
                         column: x => x.created_by,
                         principalTable: "Accounts",
                         principalColumn: "account_id",
@@ -274,9 +268,9 @@ namespace DrugsPrevention_Data.Migrations
                 {
                     table.PrimaryKey("PK_TestQuestions", x => x.question_id);
                     table.ForeignKey(
-                        name: "FK_TestQuestions_Tests_test_id",
+                        name: "FK_TestQuestions_Test_test_id",
                         column: x => x.test_id,
-                        principalTable: "Tests",
+                        principalTable: "Test",
                         principalColumn: "test_id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -304,9 +298,9 @@ namespace DrugsPrevention_Data.Migrations
                         principalColumn: "account_id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_TestResult_Tests_test_id",
+                        name: "FK_TestResult_Test_test_id",
                         column: x => x.test_id,
-                        principalTable: "Tests",
+                        principalTable: "Test",
                         principalColumn: "test_id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -486,6 +480,11 @@ namespace DrugsPrevention_Data.Migrations
                 column: "consultant_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Test_created_by",
+                table: "Test",
+                column: "created_by");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TestAnswer_question_id",
                 table: "TestAnswer",
                 column: "question_id");
@@ -514,16 +513,6 @@ namespace DrugsPrevention_Data.Migrations
                 name: "IX_TestResult_test_id",
                 table: "TestResult",
                 column: "test_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tests_AccountsAccountId",
-                table: "Tests",
-                column: "AccountsAccountId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tests_created_by",
-                table: "Tests",
-                column: "created_by");
         }
 
         /// <inheritdoc />
@@ -566,7 +555,7 @@ namespace DrugsPrevention_Data.Migrations
                 name: "Consultant");
 
             migrationBuilder.DropTable(
-                name: "Tests");
+                name: "Test");
 
             migrationBuilder.DropTable(
                 name: "Accounts");

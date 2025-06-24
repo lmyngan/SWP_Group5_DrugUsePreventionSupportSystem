@@ -23,5 +23,10 @@ namespace DrugsPrevention_Service.Service
         {
             return await _testRepository.SubmitTestAsync(submission);
         }
+
+        public async Task<TestResponseDTO> GetTestByIdAsync(int testId)
+        {
+            return await _testRepository.GetTestByIdAsync(testId);
+        }
     }
 }

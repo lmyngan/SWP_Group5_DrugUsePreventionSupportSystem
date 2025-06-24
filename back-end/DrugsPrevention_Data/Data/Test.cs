@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace DrugsPrevention_Data.Data
 {
+    [Table("Test")]
     public class Test
     {
         [Key]
@@ -27,7 +28,7 @@ namespace DrugsPrevention_Data.Data
         public int CreatedBy { get; set; }
 
         [ForeignKey(nameof(CreatedBy))]
-        public Accounts Account { get; set; }
+        public Accounts CreatedByAccount { get; set; }
 
         public ICollection<TestQuestion> Questions { get; set; }
         public ICollection<TestResult> Results { get; set; }
