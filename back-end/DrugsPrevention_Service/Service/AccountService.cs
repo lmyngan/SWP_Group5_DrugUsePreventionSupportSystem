@@ -82,8 +82,15 @@ namespace DrugsPrevention_Service.Service
             return new AccountResponseDTO
             {
                 AccountId = user.AccountId,
-                FullName = user.FullName
+                Accountname = user.Accountname,
+                FullName = user.FullName,
+                DateOfBirth = user.DateOfBirth,
+                Gender = user.Gender,
+                Address = user.Address,
+                RoleId = user.RoleId,
+                CreatedAt = user.CreatedAt
             };
         }
+
     }
 }
