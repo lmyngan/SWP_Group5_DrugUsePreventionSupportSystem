@@ -28,5 +28,20 @@ namespace DrugsPrevention_API.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        [HttpGet("consultant/{consultantId}/schedules")]
+        public async Task<IActionResult> GetSchedules(int consultantId)
+        {
+            try
+            {
+                var result = await _service.GetSchedulesByConsultantIdAsync(consultantId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
     }
 }
