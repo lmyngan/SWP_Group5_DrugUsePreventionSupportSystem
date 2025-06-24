@@ -39,6 +39,8 @@ namespace DrugsPrevention
             builder.Services.AddScoped<IAuthRepository, AuthRepository>();
             builder.Services.AddScoped<ITestService, TestService>();
             builder.Services.AddScoped<ITestRepository, TestRepository>();
+            builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+            builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();

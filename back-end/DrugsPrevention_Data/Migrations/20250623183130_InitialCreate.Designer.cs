@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DrugsPrevention_Data.Migrations
 {
     [DbContext(typeof(DrugsPrevention_DBContext))]
-    [Migration("20250617115514_InitMigration")]
-    partial class InitMigration
+    [Migration("20250623183130_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -82,60 +82,66 @@ namespace DrugsPrevention_Data.Migrations
                 {
                     b.Property<int>("AppointmentId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("appointment_id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AppointmentId"));
 
                     b.Property<int>("AccountId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AccountsAccountId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("account_id");
 
                     b.Property<int>("ConsultantId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("consultant_id");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
 
                     b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("time");
+                        .HasColumnType("time")
+                        .HasColumnName("end_time");
 
                     b.Property<string>("Notes")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("notes");
 
-                    b.Property<float>("Price")
-                        .HasColumnType("real");
+                    b.Property<double>("Price")
+                        .HasColumnType("float")
+                        .HasColumnName("price");
 
                     b.Property<int>("ScheduleId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("schedule_id");
 
                     b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("time");
+                        .HasColumnType("time")
+                        .HasColumnName("start_time");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("status");
 
                     b.HasKey("AppointmentId");
 
                     b.HasIndex("AccountId");
 
-                    b.HasIndex("AccountsAccountId");
-
                     b.HasIndex("ConsultantId");
 
                     b.HasIndex("ScheduleId");
 
-                    b.ToTable("Appointments");
+                    b.ToTable("Appointment");
                 });
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.Blogs", b =>
                 {
                     b.Property<int>("BlogId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("blog_id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BlogId"));
 
@@ -143,24 +149,30 @@ namespace DrugsPrevention_Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("AuthorId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("author_id");
 
                     b.Property<int>("Categories")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("categories");
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("content");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
 
                     b.Property<float>("Rate")
-                        .HasColumnType("real");
+                        .HasColumnType("real")
+                        .HasColumnName("rate");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("title");
 
                     b.HasKey("BlogId");
 
@@ -175,16 +187,19 @@ namespace DrugsPrevention_Data.Migrations
                 {
                     b.Property<int>("CertificateId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("certificate_id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CertificateId"));
 
                     b.Property<string>("CertificateName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("certificate_name");
 
                     b.Property<int>("ConsultantId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("consultant_id");
 
                     b.HasKey("CertificateId");
 
@@ -197,51 +212,145 @@ namespace DrugsPrevention_Data.Migrations
                 {
                     b.Property<int>("ConsultantId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("consultant_id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ConsultantId"));
 
                     b.Property<int>("AccountId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("account_id");
 
                     b.Property<string>("Certificate")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("certificate");
 
-                    b.Property<float>("Price")
-                        .HasColumnType("real");
+                    b.Property<double>("Price")
+                        .HasColumnType("float")
+                        .HasColumnName("price");
 
                     b.HasKey("ConsultantId");
 
                     b.HasIndex("AccountId");
 
-                    b.ToTable("Consultants");
+                    b.ToTable("Consultant");
+                });
+
+            modelBuilder.Entity("DrugsPrevention_Data.Data.Event", b =>
+                {
+                    b.Property<int>("EventId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("event_id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EventId"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("date");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("location");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("type");
+
+                    b.HasKey("EventId");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.ToTable("Events");
+                });
+
+            modelBuilder.Entity("DrugsPrevention_Data.Data.EventParticipation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int")
+                        .HasColumnName("account_id");
+
+                    b.Property<int?>("AccountsAccountId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EventId")
+                        .HasColumnType("int")
+                        .HasColumnName("event_id");
+
+                    b.Property<string>("Feedback")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("feedback");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("status");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("AccountsAccountId");
+
+                    b.HasIndex("EventId");
+
+                    b.ToTable("EventParticipations");
                 });
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.Notifications", b =>
                 {
                     b.Property<int>("NotificationId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("notification_id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NotificationId"));
 
                     b.Property<int>("AccountId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("account_id");
 
                     b.Property<int?>("AccountsAccountId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
 
                     b.Property<string>("Message")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("message");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("status");
 
                     b.HasKey("NotificationId");
 
@@ -250,84 +359,6 @@ namespace DrugsPrevention_Data.Migrations
                     b.HasIndex("AccountsAccountId");
 
                     b.ToTable("Notifications");
-                });
-
-            modelBuilder.Entity("DrugsPrevention_Data.Data.Program", b =>
-                {
-                    b.Property<int>("ProgramId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProgramId"));
-
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ProgramId");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.ToTable("Programs");
-                });
-
-            modelBuilder.Entity("DrugsPrevention_Data.Data.ProgramParticipation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AccountsAccountId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Feedback")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ProgramId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProgramId1")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
-
-                    b.HasIndex("AccountsAccountId");
-
-                    b.HasIndex("ProgramId");
-
-                    b.HasIndex("ProgramId1");
-
-                    b.ToTable("ProgramParticipations");
                 });
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.Role", b =>
@@ -375,42 +406,44 @@ namespace DrugsPrevention_Data.Migrations
                 {
                     b.Property<int>("ScheduleId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("schedule_id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ScheduleId"));
 
                     b.Property<DateTime>("AvailableDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasColumnName("available_date");
 
                     b.Property<int>("ConsultantId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ConsultantId1")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("consultant_id");
 
                     b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("time");
+                        .HasColumnType("time")
+                        .HasColumnName("end_time");
 
                     b.Property<int>("Slot")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("slot");
 
                     b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("time");
+                        .HasColumnType("time")
+                        .HasColumnName("start_time");
 
                     b.HasKey("ScheduleId");
 
                     b.HasIndex("ConsultantId");
 
-                    b.HasIndex("ConsultantId1");
-
-                    b.ToTable("Schedules");
+                    b.ToTable("Schedule");
                 });
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.Test", b =>
                 {
                     b.Property<int>("TestId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("test_id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TestId"));
 
@@ -418,18 +451,22 @@ namespace DrugsPrevention_Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
 
                     b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("created_by");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("description");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("name");
 
                     b.HasKey("TestId");
 
@@ -444,22 +481,27 @@ namespace DrugsPrevention_Data.Migrations
                 {
                     b.Property<int>("AnswerId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("answer_id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AnswerId"));
 
                     b.Property<string>("AnswerText")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("answer_text");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
 
                     b.Property<int>("QuestionId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("question_id");
 
                     b.Property<int>("ResultId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("result_id");
 
                     b.HasKey("AnswerId");
 
@@ -467,23 +509,30 @@ namespace DrugsPrevention_Data.Migrations
 
                     b.HasIndex("ResultId");
 
-                    b.ToTable("TestAnswers");
+                    b.ToTable("TestAnswer");
                 });
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.TestOption", b =>
                 {
                     b.Property<int>("OptionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("option_id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OptionId"));
 
                     b.Property<string>("OptionText")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("option_text");
 
                     b.Property<int>("QuestionId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("question_id");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int")
+                        .HasColumnName("score");
 
                     b.HasKey("OptionId");
 
@@ -496,20 +545,24 @@ namespace DrugsPrevention_Data.Migrations
                 {
                     b.Property<int>("QuestionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("question_id");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QuestionId"));
 
                     b.Property<string>("QuestionText")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("question_text");
 
                     b.Property<string>("QuestionType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("question_type");
 
                     b.Property<int>("TestId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("test_id");
 
                     b.HasKey("QuestionId");
 
@@ -545,6 +598,10 @@ namespace DrugsPrevention_Data.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("risk_level");
 
+                    b.Property<int>("Score")
+                        .HasColumnType("int")
+                        .HasColumnName("score");
+
                     b.Property<int>("TestId")
                         .HasColumnType("int")
                         .HasColumnName("test_id");
@@ -572,14 +629,10 @@ namespace DrugsPrevention_Data.Migrations
             modelBuilder.Entity("DrugsPrevention_Data.Data.Appointment", b =>
                 {
                     b.HasOne("DrugsPrevention_Data.Data.Accounts", "Account")
-                        .WithMany()
+                        .WithMany("Appointments")
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("DrugsPrevention_Data.Data.Accounts", null)
-                        .WithMany("Appointment")
-                        .HasForeignKey("AccountsAccountId");
 
                     b.HasOne("DrugsPrevention_Data.Data.Consultant", "Consultant")
                         .WithMany("Appointments")
@@ -637,6 +690,40 @@ namespace DrugsPrevention_Data.Migrations
                     b.Navigation("Account");
                 });
 
+            modelBuilder.Entity("DrugsPrevention_Data.Data.Event", b =>
+                {
+                    b.HasOne("DrugsPrevention_Data.Data.Accounts", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+                });
+
+            modelBuilder.Entity("DrugsPrevention_Data.Data.EventParticipation", b =>
+                {
+                    b.HasOne("DrugsPrevention_Data.Data.Accounts", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("DrugsPrevention_Data.Data.Accounts", null)
+                        .WithMany("EventParticipation")
+                        .HasForeignKey("AccountsAccountId");
+
+                    b.HasOne("DrugsPrevention_Data.Data.Event", "Event")
+                        .WithMany("Participations")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Event");
+                });
+
             modelBuilder.Entity("DrugsPrevention_Data.Data.Notifications", b =>
                 {
                     b.HasOne("DrugsPrevention_Data.Data.Accounts", "Account")
@@ -652,55 +739,13 @@ namespace DrugsPrevention_Data.Migrations
                     b.Navigation("Account");
                 });
 
-            modelBuilder.Entity("DrugsPrevention_Data.Data.Program", b =>
-                {
-                    b.HasOne("DrugsPrevention_Data.Data.Accounts", "Creator")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Creator");
-                });
-
-            modelBuilder.Entity("DrugsPrevention_Data.Data.ProgramParticipation", b =>
-                {
-                    b.HasOne("DrugsPrevention_Data.Data.Accounts", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("DrugsPrevention_Data.Data.Accounts", null)
-                        .WithMany("ProgramParticipation")
-                        .HasForeignKey("AccountsAccountId");
-
-                    b.HasOne("DrugsPrevention_Data.Data.Program", "Program")
-                        .WithMany()
-                        .HasForeignKey("ProgramId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("DrugsPrevention_Data.Data.Program", null)
-                        .WithMany("Participations")
-                        .HasForeignKey("ProgramId1");
-
-                    b.Navigation("Account");
-
-                    b.Navigation("Program");
-                });
-
             modelBuilder.Entity("DrugsPrevention_Data.Data.Schedule", b =>
                 {
                     b.HasOne("DrugsPrevention_Data.Data.Consultant", "Consultant")
-                        .WithMany()
+                        .WithMany("Schedules")
                         .HasForeignKey("ConsultantId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("DrugsPrevention_Data.Data.Consultant", null)
-                        .WithMany("Schedules")
-                        .HasForeignKey("ConsultantId1");
 
                     b.Navigation("Consultant");
                 });
@@ -782,15 +827,15 @@ namespace DrugsPrevention_Data.Migrations
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.Accounts", b =>
                 {
-                    b.Navigation("Appointment");
+                    b.Navigation("Appointments");
 
                     b.Navigation("Blogs");
 
                     b.Navigation("CreatedTests");
 
-                    b.Navigation("Notifications");
+                    b.Navigation("EventParticipation");
 
-                    b.Navigation("ProgramParticipation");
+                    b.Navigation("Notifications");
 
                     b.Navigation("TestResults");
                 });
@@ -804,7 +849,7 @@ namespace DrugsPrevention_Data.Migrations
                     b.Navigation("Schedules");
                 });
 
-            modelBuilder.Entity("DrugsPrevention_Data.Data.Program", b =>
+            modelBuilder.Entity("DrugsPrevention_Data.Data.Event", b =>
                 {
                     b.Navigation("Participations");
                 });

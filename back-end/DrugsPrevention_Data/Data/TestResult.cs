@@ -13,21 +13,32 @@ namespace DrugsPrevention_Data.Data
         [Key]
         [Column("result_id")]
         public int ResultId { get; set; }
+
         [Column("account_id")]
         public int AccountId { get; set; }
+
         [Column("test_id")]
         public int TestId { get; set; }
+
         [Column("risk_level")]
         public string RiskLevel { get; set; }
+
         [Column("recommended")]
         public string Recommended { get; set; }
+
         [Column("assessed_at")]
         public DateTime AssessedAt { get; set; }
 
+        [Column("score")]
+        public int Score { get; set; }
+
         [ForeignKey(nameof(AccountId))]
         public Accounts Account { get; set; }
+
         [ForeignKey(nameof(TestId))]
         public Test Test { get; set; }
+
         public ICollection<TestAnswer> Answers { get; set; }
     }
+
 }

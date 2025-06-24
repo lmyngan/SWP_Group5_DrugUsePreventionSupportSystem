@@ -8,18 +8,29 @@ using System.Threading.Tasks;
 
 namespace DrugsPrevention_Data.Data
 {
-    public class ProgramParticipation
+    public class EventParticipation
     {
         [Key]
+        [Column("id")]
         public int Id { get; set; }
+
+        [Column("account_id")]
         public int AccountId { get; set; }
-        public int ProgramId { get; set; }
+
+        [Column("event_id")]
+        public int EventId { get; set; }
+
+        [Column("status")]
         public string Status { get; set; }
+
+        [Column("feedback")]
         public string Feedback { get; set; }
 
         [ForeignKey(nameof(AccountId))]
         public Accounts Account { get; set; }
-        [ForeignKey(nameof(ProgramId))]
-        public Program Program { get; set; }
+
+        [ForeignKey(nameof(EventId))]
+        public Event Event { get; set; }
     }
+
 }
