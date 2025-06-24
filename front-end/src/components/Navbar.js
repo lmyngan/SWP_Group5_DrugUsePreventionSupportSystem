@@ -1,9 +1,20 @@
 // src/components/Navbar.js
 import './Navbar.css';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { Button } from 'react-bootstrap';
+
 const Navbar = () => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) setUser(JSON.parse(storedUser));
+    else setUser(null);
+  }, []);
+
   return (
     <nav className="navbar">
       <div className="logo">
@@ -23,8 +34,25 @@ const Navbar = () => {
           <button type="submit" className="search-button"><FontAwesomeIcon icon={faSearch} /></button>
         </div>
         <div className="auth-buttons">
-          <a href="/login" className="auth-link">Login</a>
-          <a href="/register" className="auth-link">Register</a>
+          {!user ? (
+            <>
+              <a href="/login" className="auth-link">Login</a>
+              <a href="/register" className="auth-link">Register</a>
+            </>
+          ) : (
+            <>
+              <span className="user-name">Hello, {user.accountName || user.fullName}.</span>
+              <Button variant="primary"
+                onClick={() => {
+                  localStorage.removeItem("user");
+                  localStorage.removeItem("token");
+                  window.location.reload();
+                }}
+              >
+                Logout
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </nav>

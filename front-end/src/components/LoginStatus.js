@@ -49,7 +49,7 @@ const LoginStatus = () => {
               <>
                 <div className="status-item">
                   <span className="status-label">User:</span>
-                  <span className="status-value">{user.name}</span>
+                  <span className="status-value">{user.fullName}</span>
                 </div>
                 <div className="status-item">
                   <span className="status-label">Role:</span>

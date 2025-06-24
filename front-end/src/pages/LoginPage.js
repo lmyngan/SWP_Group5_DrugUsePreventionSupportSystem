@@ -27,12 +27,13 @@ const LoginPage = () => {
       // Tạo user object và lưu vào localStorage
       const user = {
         accountName: accountName,
+        password: password,
         // Thêm các thông tin user khác nếu cần
       };
       localStorage.setItem('user', JSON.stringify(user));
 
       // Chuyển hướng sau khi đăng nhập thành công
-      navigate('/');
+
       alert('Login successful!');
     } catch (error) {
       console.error('Login failed:', error);

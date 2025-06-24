@@ -2,12 +2,13 @@
 import './Survey.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
+import { Form, Button, Modal } from 'react-bootstrap';
 
 const Survey = () => {
     const [answers, setAnswers] = useState(0);
     const [score, setScore] = useState(0);
+    const [showModal, setShowModal] = useState(false);
+    const [modalContent, setModalContent] = useState({});
     const navigate = useNavigate();
 
     const scoreSystem = {
@@ -60,17 +61,41 @@ const Survey = () => {
         let riskLevel = "";
         if (totalScore <= 10) {
             riskLevel = "Low Risk";
-            alert(`Your total score is: ${totalScore}\nRisk Level: ${riskLevel}`);
-            navigate('/');
+            setModalContent({
+                title: "Survey Result",
+                body: `Your total score is: ${totalScore}\nRisk Level: ${riskLevel}`,
+                showLogin: false
+            });
+            setShowModal(true);
         } else if (totalScore <= 30) {
             riskLevel = "Moderate Risk";
-            alert(`Your total score is: ${totalScore}\nRisk Level: ${riskLevel}\nYou should login to book an appointment with a consultant.`);
+            setModalContent({
+                title: "Survey Result",
+                body: `Your total score is: ${totalScore}\nRisk Level: ${riskLevel}\nYou should login to book an appointment with a consultant.`,
+                showLogin: false
+            });
+            setShowModal(true);
         } else {
             riskLevel = "High Risk";
-            alert(`Your total score is: ${totalScore}\nRisk Level: ${riskLevel}\nYou should login to book an appointment with a consultant.`);
+            setModalContent({
+                title: "Survey Result",
+                body: `Your total score is: ${totalScore}\nRisk Level: ${riskLevel}\nYou should login to book an appointment with a consultant.`,
+                showLogin: true
+            });
+            setShowModal(true);
         }
         console.log('Survey answers:', answers);
         console.log('Total score:', totalScore);
+    };
+
+    const handleLogin = () => {
+        setShowModal(false);
+        navigate('/login');
+    };
+
+    const handleClose = () => {
+        setShowModal(false);
+        if (score <= 10) navigate('/');
     };
 
     const handleChange = (e) => {
@@ -1046,6 +1071,34 @@ const Survey = () => {
                     Submit Survey
                 </Button>
             </Form>
+
+            {/* Modal for result */}
+            <Modal show={showModal} onHide={handleClose} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>{modalContent.title}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {modalContent.body && modalContent.body.split('\n').map((line, idx) => (
+                        <div key={idx}>{line}</div>
+                    ))}
+                </Modal.Body>
+                <Modal.Footer>
+                    {modalContent.showLogin ? (
+                        <>
+                            <Button variant="primary" onClick={handleLogin}>
+                                Login
+                            </Button>
+                            <Button variant="secondary" onClick={handleClose}>
+                                Cancel
+                            </Button>
+                        </>
+                    ) : (
+                        <Button variant="secondary" onClick={handleClose}>
+                            Close
+                        </Button>
+                    )}
+                </Modal.Footer>
+            </Modal>
         </div>
     )
 }
