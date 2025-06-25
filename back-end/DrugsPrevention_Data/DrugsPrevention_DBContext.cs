@@ -55,8 +55,8 @@ namespace DrugsPrevention_Data
 
             // Test -> Account
             modelBuilder.Entity<Test>()
-                .HasOne(t => t.Account)
-                .WithMany()
+                .HasOne(t => t.CreatedByAccount)
+                .WithMany(a => a.CreatedTests)
                 .HasForeignKey(t => t.CreatedBy)
                 .OnDelete(DeleteBehavior.Restrict);
 

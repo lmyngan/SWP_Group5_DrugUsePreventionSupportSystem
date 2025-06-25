@@ -12,9 +12,17 @@ import WhoWeAre from "./pages/WhoWeAre"
 import FreeCourse from "./pages/FreeCourse"
 import Mentor from "./pages/Mentor"
 import Event from "./pages/EventPage"
+<<<<<<< HEAD
 import LoginPage from "./pages/LoginPage" // Updated import
 import AddPost from "./pages/AddPost"
 import Register from "./pages/RegisterPage"
+=======
+import Login from "./pages/LoginPage"
+import Register from "./pages/RegisterPage"
+import ProfileUser from "./pages/ProfileUser"
+import AddPost from "./pages/AddPost"
+import Survey from "./pages/Survey"
+>>>>>>> d69aaa43947cb864721f5327b4858660b196ffe9
 
 const App = () => {
   // State để quản lý trang hiện tại
@@ -56,13 +64,18 @@ const App = () => {
       case "mentor":
         return <Mentor />
       case "event":
-        return <Event/>
+        return <Event />
+      case "survey":
+        return <Survey />
       case "login":
-        return <LoginPage /> // Updated component name
+        return <Login />
       case "register":
         return <Register />
+      case "profile":
+        return <ProfileUser />
       case "addpost":
         return <AddPost />
+
       default:
         return <HomePage /> // Fallback về trang chủ
     }
@@ -71,7 +84,7 @@ const App = () => {
   return (
     <div className="app">
       {/* Navbar - hiển thị trên tất cả trang trừ login */}
-      {currentPage !== "login" && <Navbar navigateTo={navigateTo} currentPage={currentPage} />}
+      {currentPage !== "notFound" && <Navbar navigateTo={navigateTo} currentPage={currentPage} />}
 
       {/* Main content */}
       <main className="main-content">{renderPage()}</main>

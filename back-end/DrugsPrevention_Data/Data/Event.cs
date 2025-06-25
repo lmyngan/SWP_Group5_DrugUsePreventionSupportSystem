@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace DrugsPrevention_Data.Data
 {
+    [Table("Event")]
     public class Event
     {
         [Key]

@@ -74,5 +74,23 @@ namespace DrugsPrevention_Service.Service
             await _repository.SaveChangesAsync();
             return true;
         }
+        public async Task<AccountResponseDTO> GetUserByIdAsync(int accountId)
+        {
+            var user = await _repository.GetAccountByIdAsync(accountId);
+            if (user == null) throw new Exception("User not found");
+
+            return new AccountResponseDTO
+            {
+                AccountId = user.AccountId,
+                Accountname = user.Accountname,
+                FullName = user.FullName,
+                DateOfBirth = user.DateOfBirth,
+                Gender = user.Gender,
+                Address = user.Address,
+                RoleId = user.RoleId,
+                CreatedAt = user.CreatedAt
+            };
+        }
+
     }
 }

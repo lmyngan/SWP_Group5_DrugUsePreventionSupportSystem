@@ -202,7 +202,7 @@ namespace DrugsPrevention_Data.Migrations
 
                     b.HasIndex("ConsultantId");
 
-                    b.ToTable("Certificates");
+                    b.ToTable("Certificate");
                 });
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.Consultant", b =>
@@ -275,7 +275,7 @@ namespace DrugsPrevention_Data.Migrations
 
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("Events");
+                    b.ToTable("Event");
                 });
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.EventParticipation", b =>
@@ -316,7 +316,7 @@ namespace DrugsPrevention_Data.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("EventParticipations");
+                    b.ToTable("EventParticipation");
                 });
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.Notifications", b =>
@@ -444,9 +444,6 @@ namespace DrugsPrevention_Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TestId"));
 
-                    b.Property<int?>("AccountsAccountId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnName("created_at");
@@ -467,11 +464,9 @@ namespace DrugsPrevention_Data.Migrations
 
                     b.HasKey("TestId");
 
-                    b.HasIndex("AccountsAccountId");
-
                     b.HasIndex("CreatedBy");
 
-                    b.ToTable("Tests");
+                    b.ToTable("Test");
                 });
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.TestAnswer", b =>
@@ -535,7 +530,7 @@ namespace DrugsPrevention_Data.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("TestOptions");
+                    b.ToTable("TestOption");
                 });
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.TestQuestion", b =>
@@ -565,7 +560,7 @@ namespace DrugsPrevention_Data.Migrations
 
                     b.HasIndex("TestId");
 
-                    b.ToTable("TestQuestions");
+                    b.ToTable("TestQuestion");
                 });
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.TestResult", b =>
@@ -749,17 +744,13 @@ namespace DrugsPrevention_Data.Migrations
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.Test", b =>
                 {
-                    b.HasOne("DrugsPrevention_Data.Data.Accounts", null)
+                    b.HasOne("DrugsPrevention_Data.Data.Accounts", "CreatedByAccount")
                         .WithMany("CreatedTests")
-                        .HasForeignKey("AccountsAccountId");
-
-                    b.HasOne("DrugsPrevention_Data.Data.Accounts", "Account")
-                        .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Account");
+                    b.Navigation("CreatedByAccount");
                 });
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.TestAnswer", b =>

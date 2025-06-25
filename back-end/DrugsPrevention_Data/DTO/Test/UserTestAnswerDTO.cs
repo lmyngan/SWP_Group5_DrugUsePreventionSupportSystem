@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DrugsPrevention_Data.DTO.Test
 {
-    public class QuestionAnswerDTO
+    public class UserTestAnswerDTO
     {
         public int QuestionId { get; set; }
-        public int? OptionId { get; set; }  // Dựa vào OptionId để tính điểm
-        public string AnswerText { get; set; }  // Có thể dùng khi không có OptionId
+        public string QuestionText { get; set; }
+        public string SelectedAnswer { get; set; }
+        public int? Score { get; set; }
     }
 }
-

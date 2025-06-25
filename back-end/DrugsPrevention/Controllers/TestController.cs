@@ -31,7 +31,23 @@ namespace DrugsPrevention_API.Controllers
                 return StatusCode(500, "An error occurred while processing the test.");
             }
 
-            return Ok(result); // Trả về TestResultDto
+            return Ok(result);
+        }
+
+        [HttpGet("{testId}")]
+        public async Task<IActionResult> GetTestById(int testId)
+        {
+            var result = await _testService.GetTestByIdAsync(testId);
+            if (result == null) return NotFound(new { message = "Test not found" });
+
+            return Ok(result);
+        }
+        [HttpGet("result/{resultId}")]
+        public async Task<IActionResult> GetUserTestResult(int resultId)
+        {
+            var result = await _testService.GetTestResultDetailsAsync(resultId);
+            if (result == null) return NotFound();
+            return Ok(result);
         }
     }
 }

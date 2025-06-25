@@ -8,9 +8,14 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.10.0",
+<<<<<<< HEAD
+=======
+    "bootstrap": "^5.3.7",
+>>>>>>> d69aaa43947cb864721f5327b4858660b196ffe9
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.514.0",
     "react": "^19.1.0",
+    "react-bootstrap": "^2.10.10",
     "react-dom": "^19.1.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",

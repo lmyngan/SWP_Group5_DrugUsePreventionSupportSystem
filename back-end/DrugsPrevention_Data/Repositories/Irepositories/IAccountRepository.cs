@@ -16,6 +16,7 @@ namespace DrugsPrevention_Data.Repositories.Irepositories
         Task AddAsync(Accounts account);
         Task UpdateAsync(Accounts account);
         Task DeleteAsync(Accounts account);
+        Task<Accounts> GetAccountByIdAsync(int accountId);
         Task SaveChangesAsync();
     }
 }

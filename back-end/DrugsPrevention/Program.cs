@@ -15,22 +15,25 @@ namespace DrugsPrevention
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Configure the database context (EF Core) using a connection string.
+            // Configure the database context (EF Core)
             builder.Services.AddDbContext<DrugsPrevention_DBContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // CORS config
+            // Add CORS configuration
             builder.Services.AddCors(options =>
             {
-                options.AddDefaultPolicy(policy =>
-                {
-                    policy.WithOrigins("http://localhost:5173")
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
-                });
+                options.AddPolicy("AllowReactApp",
+                    builder =>
+                    {
+                        builder
+                            .WithOrigins("http://localhost:3000")
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowCredentials();
+                    });
             });
 
-            // Add services
+            // Add other services
             builder.Services.AddAuthorization();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IAuthRepository, AuthRepository>();
@@ -38,6 +41,8 @@ namespace DrugsPrevention
             builder.Services.AddScoped<ITestRepository, TestRepository>();
             builder.Services.AddScoped<IAppointmentService, AppointmentService>();
             builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+            builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
@@ -45,7 +50,6 @@ namespace DrugsPrevention
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -53,11 +57,12 @@ namespace DrugsPrevention
             }
 
             app.UseHttpsRedirection();
+            app.UseRouting();
 
-            app.UseCors();
+            // Use CORS middleware (must be between UseRouting and UseAuthorization)
+            app.UseCors("AllowReactApp");
 
             app.UseAuthorization();
-
             app.MapControllers();
 
             app.Run();
