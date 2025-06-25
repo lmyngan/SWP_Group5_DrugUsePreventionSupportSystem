@@ -16,7 +16,7 @@ const HomePage = () => {
           </div>
         </div>
         <div className="hero-image">
-          <img src="/images./placeholder.svg?height=400&width=600" alt="Recovery Support" />
+          <img src="/images/matuy.webp" alt="Recovery Support" />
         </div>
       </section>
 
