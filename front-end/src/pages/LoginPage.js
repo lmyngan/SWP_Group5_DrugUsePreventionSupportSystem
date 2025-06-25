@@ -1,6 +1,6 @@
 // src/pages/LoginPage.js
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { loginUser } from '../service/api';
 import '../styles/LoginPage.css';
@@ -9,7 +9,6 @@ const LoginPage = () => {
   const [accountName, setAccountName] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,7 +38,7 @@ const LoginPage = () => {
       localStorage.setItem('user', JSON.stringify(user));
 
       // Chuyển hướng sau khi đăng nhập thành công
-      navigate("/");
+      window.location.href = "/";
       alert('Login successful!');
     } catch (error) {
       console.error('Login failed:', error);

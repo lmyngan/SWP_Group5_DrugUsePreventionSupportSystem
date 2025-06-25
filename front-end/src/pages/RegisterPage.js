@@ -1,6 +1,6 @@
 // src/pages/RegisterPage.js
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { registerUser } from '../service/api';
 import '../styles/RegisterPage.css';
 
@@ -15,7 +15,6 @@ const RegisterPage = () => {
     gender: 'Male'
   });
   const [error, setError] = useState('');
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -66,7 +65,7 @@ const RegisterPage = () => {
         setError(response.error);
       } else {
         alert('Registration successful! Please login.');
-        navigate('/login');
+        window.location.href = "/";
       }
     } catch (error) {
       setError('Registration failed. Please try again.');

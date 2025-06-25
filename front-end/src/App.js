@@ -78,7 +78,7 @@ const App = () => {
   return (
     <div className="app">
       {/* Navbar - hiển thị trên tất cả trang trừ login */}
-      {currentPage !== "login" && <Navbar navigateTo={navigateTo} currentPage={currentPage} />}
+      {currentPage !== "notFound" && <Navbar navigateTo={navigateTo} currentPage={currentPage} />}
 
       {/* Main content */}
       <main className="main-content">{renderPage()}</main>
