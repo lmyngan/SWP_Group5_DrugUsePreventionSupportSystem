@@ -3,12 +3,13 @@
 import "../styles/EventPage.css"
 import { useState, useEffect } from "react"
 import LoginStatus from "../components/LoginStatus"
+import Footer from "../components/Footer"
 
-const Event = () => {
+const EventPage = () => {
   const categories = ["All Posts", "Students", "University Students", "Parents", "Teachers", "Specialists", "Community"]
 
   // Simulate login status and content
-  const [hasContent, setHasContent] = useState(false)
+  const [hasContent, setHasContent] = useState(true)
   const [isLoggedIn, setIsLoggedIn] = useState(false) // Login status
   const [user, setUser] = useState(null) // User information
 
@@ -21,7 +22,7 @@ const Event = () => {
     }
   }, [])
 
-const handleAddPost = () => {
+  const handleAddPost = () => {
     if (!isLoggedIn) {
       // Redirect to login page
       window.location.href = "/login"
@@ -48,6 +49,11 @@ const handleAddPost = () => {
     localStorage.removeItem("user")
   }
 
+  // Thêm function toggle content
+  const toggleContent = () => {
+    setHasContent(!hasContent)
+  }
+
   const eventPosts = hasContent
     ? [
         {
@@ -55,7 +61,7 @@ const handleAddPost = () => {
           title: "How to Recognize Signs of Drug Use in Teenagers",
           excerpt:
             "A guide for parents and teachers to identify early warning signs of substance use in children and adolescents...",
-          image: "/placeholder.svg?height=200&width=300",
+          image: "/images/myphoto.jpg",
           category: "Parents",
           author: "Dr. Sarah Johnson",
           date: "March 15, 2024",
@@ -66,57 +72,14 @@ const handleAddPost = () => {
           id: 2,
           title: "Peer Pressure Resistance Skills for Students",
           excerpt: "Effective strategies to help students confidently say 'no' to drugs and harmful substances...",
-          image: "/placeholder.svg?height=200&width=300",
+          image: "/images/event1.png",
           category: "Students",
           author: "Prof. Michael Chen",
           date: "March 12, 2024",
           readTime: "7 min read",
           views: "2,156",
         },
-        {
-          id: 3,
-          title: "The Impact of Drugs on Brain and Health",
-          excerpt: "Scientific research on the serious damage that drugs cause to the nervous system...",
-          image: "/placeholder.svg?height=200&width=300",
-          category: "University Students",
-          author: "Dr. Emily Rodriguez",
-          date: "March 10, 2024",
-          readTime: "10 min read",
-          views: "987",
-        },
-        {
-          id: 4,
-          title: "Drug Prevention Education Programs",
-          excerpt: "Introduction to effective educational programs being implemented in schools...",
-          image: "/placeholder.svg?height=200&width=300",
-          category: "Teachers",
-          author: "Ms. Lisa Thompson",
-          date: "March 8, 2024",
-          readTime: "6 min read",
-          views: "1,543",
-        },
-        {
-          id: 5,
-          title: "Psychological Support for Families Affected by Addiction",
-          excerpt: "How to provide psychological support and care for family members affected by addiction...",
-          image: "/placeholder.svg?height=200&width=300",
-          category: "Parents",
-          author: "Dr. James Wilson",
-          date: "March 5, 2024",
-          readTime: "8 min read",
-          views: "876",
-        },
-        {
-          id: 6,
-          title: "The Role of Community in Drug Prevention",
-          excerpt: "The importance of active community participation in drug prevention and social harm reduction...",
-          image: "/placeholder.svg?height=200&width=300",
-          category: "Community",
-          author: "Mr. Robert Kim",
-          date: "March 3, 2024",
-          readTime: "9 min read",
-          views: "1,234",
-        },
+       
       ]
     : []
 
@@ -161,12 +124,15 @@ const handleAddPost = () => {
                       <span className="user-role">{user.role}</span>
                     </div>
                   </div>
-                 <div className="user-actions">
+                  <div className="user-actions">
                     <button className="btn-write-post" onClick={handleAddPost}>
                       ✍️ Write Post
                     </button>
                     <button className="btn-logout" onClick={handleLogout}>
                       🚪 Logout
+                    </button>
+                    <button className="btn-toggle-content" onClick={toggleContent}>
+                      {hasContent ? "🗑️ Clear Posts" : "📝 Add Sample Posts"}
                     </button>
                   </div>
                 </div>
@@ -174,13 +140,18 @@ const handleAddPost = () => {
                 <div className="not-logged-in">
                   <p>Login to share your posts</p>
                   <div className="auth-buttons">
-                    
+                    <button className="btn-login" onClick={handleLogin}>
+                      🔑 Login (Demo)
+                    </button>
                     <a href="/login" className="btn-login-real">
                       🔑 Login
                     </a>
                     <a href="/register" className="btn-register">
                       📝 Register
                     </a>
+                    <button className="btn-toggle-content" onClick={toggleContent}>
+                      {hasContent ? "🗑️ Clear Posts" : "📝 Add Sample Posts"}
+                    </button>
                   </div>
                 </div>
               )}
@@ -222,7 +193,7 @@ const handleAddPost = () => {
                     <h2>📌 Featured Blogs</h2>
                     <div className="featured-card">
                       <div className="featured-image">
-                        <img src="/placeholder.svg?height=300&width=500" alt="Featured post" />
+                        <img src="/images/myphoto.jpg" alt="Featured post" />
                         <span className="featured-badge">Featured</span>
                       </div>
                       <div className="featured-content">
@@ -241,7 +212,7 @@ const handleAddPost = () => {
                     </div>
                   </div>
 
-                  {/*Event Posts Grid */}
+                  {/* Event Posts Grid */}
                   <div className="posts-section">
                     <h2>📝 Latest Blogs</h2>
                     <div className="posts-grid">
@@ -290,10 +261,12 @@ const handleAddPost = () => {
                       The Event currently has no blog. Please come back later or explore other features of DrugsCare.
                     </p>
                     <div className="empty-actions">
-                      <button className="btn-write-post" onClick={handleAddPost}>
+                      <button className="btn-primary" onClick={handleAddPost}>
                         {isLoggedIn ? "📝 Add Sample Blogs" : "📝 Login to Write Posts"}
                       </button>
-                      
+                      <a href="/freecourse" className="btn-secondary">
+                        📚 View Courses
+                      </a>
                     </div>
 
                     {/* Login prompt for non-logged users */}
@@ -325,7 +298,14 @@ const handleAddPost = () => {
                         <p>Complete ASSIST or CRAFFT tests to assess your risk level</p>
                         <button className="suggestion-btn">Start Test</button>
                       </div>
-                     
+                      <div className="suggestion-card">
+                        <div className="suggestion-icon">📚</div>
+                        <h4>Join Courses</h4>
+                        <p>Learn from free courses about drug prevention and social harm reduction</p>
+                        <a href="/freecourse" className="suggestion-btn">
+                          View Courses
+                        </a>
+                      </div>
                       <div className="suggestion-card">
                         <div className="suggestion-icon">👨‍⚕️</div>
                         <h4>Consult Specialists</h4>
@@ -450,7 +430,9 @@ const handleAddPost = () => {
               <div className="sidebar-widget">
                 <h3>🔗 Quick Links</h3>
                 <div className="quick-links">
-                  
+                  <a href="/freecourse" className="quick-link">
+                    📚 Free Courses
+                  </a>
                   <a href="/mentor" className="quick-link">
                     👨‍⚕️ Consult Specialists
                   </a>
@@ -469,8 +451,11 @@ const handleAddPost = () => {
 
       {/* Login Status Component */}
       <LoginStatus />
+
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }
 
-export default Event
+export default EventPage

@@ -12,11 +12,17 @@ import WhoWeAre from "./pages/WhoWeAre"
 import FreeCourse from "./pages/FreeCourse"
 import Mentor from "./pages/Mentor"
 import Event from "./pages/EventPage"
+<<<<<<< HEAD
+import LoginPage from "./pages/LoginPage" // Updated import
+import AddPost from "./pages/AddPost"
+import Register from "./pages/RegisterPage"
+=======
 import Login from "./pages/LoginPage"
 import Register from "./pages/RegisterPage"
 import ProfileUser from "./pages/ProfileUser"
 import AddPost from "./pages/AddPost"
 import Survey from "./pages/Survey"
+>>>>>>> d69aaa43947cb864721f5327b4858660b196ffe9
 
 const App = () => {
   // State để quản lý trang hiện tại
