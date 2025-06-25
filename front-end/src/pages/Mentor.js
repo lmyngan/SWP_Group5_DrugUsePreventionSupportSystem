@@ -96,7 +96,7 @@ const Mentor = () => {
                       Send Email
                     </a>
                   </div>
-                  {/* Hiển thị lịch nếu đã lấy */}
+
                   {selectedSchedules[expert.id] && Array.isArray(selectedSchedules[expert.id]) && (
                     <div style={{ marginTop: "1rem" }}>
                       <label><strong>Available Schedules:</strong></label>
@@ -109,6 +109,7 @@ const Mentor = () => {
                       </select>
                     </div>
                   )}
+
                 </div>
               </div>
             ))}

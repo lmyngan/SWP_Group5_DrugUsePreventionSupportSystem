@@ -37,10 +37,10 @@ const HomePage = () => {
               <div className="overview-icon">📋</div>
               <h3>Assessment Tests</h3>
               <p>Take ASSIST and CRAFFT surveys to determine risk levels and receive appropriate counseling</p>
-              <a href="/freetest" className="overview-link">
+              <a href="/survey" className="overview-link">
                 Start Learning
               </a>
-              
+
             </div>
             <div className="overview-card">
               <div className="overview-icon">🩺</div>
@@ -176,7 +176,7 @@ const HomePage = () => {
               </div>
             </div>
 
-           
+
             <div className="footer-section">
               <h3>ABOUT DRUGSCARE</h3>
               <ul className="footer-info">
