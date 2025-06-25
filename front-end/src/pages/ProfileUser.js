@@ -33,9 +33,6 @@ const ProfileUser = () => {
                         <br />
                         <Card.Body>
                             <Card.Text>
-                                <strong>Username:</strong> {user.accountName || user.accountname}
-                            </Card.Text>
-                            <Card.Text>
                                 <strong>Full Name:</strong> {user.fullName}
                             </Card.Text>
                             <Card.Text>
