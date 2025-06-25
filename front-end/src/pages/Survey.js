@@ -1,7 +1,6 @@
 // src/components/Survey.js
 import '../styles/Survey.css';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Form, Button, Modal } from 'react-bootstrap';
 
 const Survey = () => {
@@ -9,7 +8,6 @@ const Survey = () => {
     const [score, setScore] = useState(0);
     const [showModal, setShowModal] = useState(false);
     const [modalContent, setModalContent] = useState({});
-    const navigate = useNavigate();
 
     const scoreSystem = {
         question4: { yes: 1, no: 0 },
@@ -81,7 +79,7 @@ const Survey = () => {
             setModalContent({
                 title: "Survey Result",
                 body: `Your total score is: ${totalScore}\nRisk Level: ${riskLevel}\nYou should login to book an appointment with a consultant.`,
-                showLogin: true
+                showLogin: false
             });
             setShowModal(true);
         }
@@ -91,12 +89,12 @@ const Survey = () => {
 
     const handleLogin = () => {
         setShowModal(false);
-        navigate('/login');
+        window.location.href = "/login";
     };
 
     const handleClose = () => {
         setShowModal(false);
-        if (score <= 10) navigate('/');
+        if (score <= 10) window.location.href = "/";;
     };
 
     const handleChange = (e) => {
