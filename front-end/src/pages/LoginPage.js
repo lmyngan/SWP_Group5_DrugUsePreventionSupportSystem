@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { authApi } from '../service/api.ts';
-import '../styles/LoginPage.css'
+import '../styles/LoginPage.css';
 
 const LoginPage = () => {
   const [accountName, setAccountName] = useState('');
@@ -27,12 +27,13 @@ const LoginPage = () => {
       // Tạo user object và lưu vào localStorage
       const user = {
         accountName: accountName,
+        password: password,
         // Thêm các thông tin user khác nếu cần
       };
       localStorage.setItem('user', JSON.stringify(user));
 
       // Chuyển hướng sau khi đăng nhập thành công
-      navigate('/');
+
       alert('Login successful!');
     } catch (error) {
       console.error('Login failed:', error);

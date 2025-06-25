@@ -12,8 +12,9 @@ import WhoWeAre from "./pages/WhoWeAre"
 import FreeCourse from "./pages/FreeCourse"
 import Mentor from "./pages/Mentor"
 import Event from "./pages/EventPage"
-import Login from "./pages/LoginPage"
+import LoginPage from "./pages/LoginPage" // Updated import
 import AddPost from "./pages/AddPost"
+import Register from "./pages/RegisterPage"
 
 const App = () => {
   // State để quản lý trang hiện tại
@@ -55,9 +56,11 @@ const App = () => {
       case "mentor":
         return <Mentor />
       case "event":
-        return <Event />
+        return <Event/>
       case "login":
-        return <Login />
+        return <LoginPage /> // Updated component name
+      case "register":
+        return <Register />
       case "addpost":
         return <AddPost />
       default:
