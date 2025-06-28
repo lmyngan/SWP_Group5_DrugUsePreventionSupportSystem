@@ -42,5 +42,42 @@ namespace DrugsPrevention_Data.Repositories
 
             return count == 0;
         }
+        public async Task<List<Appointment>> GetAllAsync()
+        {
+            return await _context.Appointments
+                .Include(a => a.Consultant)
+                .Include(a => a.Schedule)
+                .Include(a => a.Account)
+                .ToListAsync();
+        }
+
+        public async Task<Appointment> GetByIdAsync(int id)
+        {
+            return await _context.Appointments
+                .Include(a => a.Consultant)
+                .Include(a => a.Schedule)
+                .Include(a => a.Account)
+                .FirstOrDefaultAsync(a => a.AppointmentId == id);
+        }
+
+        public async Task AddAsync(Appointment appointment)
+        {
+            await _context.Appointments.AddAsync(appointment);
+        }
+
+        public async Task UpdateAsync(Appointment appointment)
+        {
+            _context.Appointments.Update(appointment);
+        }
+
+        public async Task DeleteAsync(Appointment appointment)
+        {
+            _context.Appointments.Remove(appointment);
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }
