@@ -45,6 +45,8 @@ namespace DrugsPrevention
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
             builder.Services.AddScoped<IEventService, EventService>();
             builder.Services.AddScoped<IEventRepository, EventRepository>();
+            builder.Services.AddScoped<IBlogService, BlogService>();
+            builder.Services.AddScoped<IBlogRepository, BlogRepository>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
