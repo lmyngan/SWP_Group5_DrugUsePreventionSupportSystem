@@ -1,18 +1,62 @@
 import { useState } from "react";
-import { getConsultantSchedules } from "../service/api";
+import { getConsultantSchedules, bookAppointment } from "../service/api";
 import "../styles/MentorPage.css";
 import Footer from "../components/Footer";
 
 const Mentor = () => {
   const [selectedSchedules, setSelectedSchedules] = useState({});
+  const [selectedScheduleId, setSelectedScheduleId] = useState({});
+  const [bookingMessage, setBookingMessage] = useState("");
 
   const handleScheduleClick = async (consultantId) => {
     const data = await getConsultantSchedules(consultantId);
-    // Giả sử data là mảng các lịch, ví dụ: [{id: 1, time: "2024-07-01 09:00"}, ...]
     setSelectedSchedules((prev) => ({
       ...prev,
       [consultantId]: data
     }));
+  };
+
+  const handleSelectChange = (consultantId, scheduleId) => {
+    setSelectedScheduleId((prev) => ({
+      ...prev,
+      [consultantId]: scheduleId
+    }));
+  };
+
+  const handleBookConsultant = async (expert) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user || !user.accountId) {
+      setBookingMessage("You must login to book a consultant.");
+      return;
+    }
+    const consultantId = expert.id;
+    const scheduleId = selectedScheduleId[consultantId];
+    const schedules = selectedSchedules[consultantId] || [];
+    const schedule = schedules.find(s => (s.id || s.scheduleId) === scheduleId || String(s.id || s.scheduleId) === String(scheduleId));
+    if (!schedule) {
+      setBookingMessage("Please select a schedule.");
+      return;
+    }
+
+    // Lấy các trường cần thiết từ schedule
+    const payload = {
+      accountId: user.accountId,
+      consultantId: consultantId,
+      scheduleId: schedule.id || schedule.scheduleId,
+      price: expert.price ? expert.price.replace(/\D/g, "") : "0", // Lấy số từ "$100"
+      startTime: schedule.startTime || schedule.time || schedule.dateTime || "",
+      endTime: schedule.endTime || "",
+      status: "pending",
+      notes: "",
+      createdAt: new Date().toISOString()
+    };
+
+    const response = await bookAppointment(payload);
+    if (response.error) {
+      setBookingMessage("Booking failed: " + response.error);
+    } else {
+      setBookingMessage("Booking successful!");
+    }
   };
 
   const experts = [
@@ -21,8 +65,7 @@ const Mentor = () => {
       name: "Dr. Sarah Johnson",
       title: "Addiction Specialist",
       image: "/images/consultant1.webp",
-      description:
-        "Dr. Johnson has over 15 years of experience in addiction medicine and has helped thousands of patients recover.",
+      description: "Dr. Johnson has over 15 years of experience in addiction medicine and has helped thousands of patients recover.",
       specialties: ["Substance Abuse", "Mental Health", "Recovery Programs"],
       experience: "15+ years",
       education: "MD from Harvard Medical School",
@@ -92,24 +135,37 @@ const Mentor = () => {
                     >
                       Schedule Consultation
                     </button>
-                    <a href={`mailto:${expert.contact}`} className="email-btn">
-                      Send Email
-                    </a>
                   </div>
-
+                  {/* Hiển thị lịch nếu đã lấy */}
                   {selectedSchedules[expert.id] && Array.isArray(selectedSchedules[expert.id]) && (
                     <div style={{ marginTop: "1rem" }}>
                       <label><strong>Available Schedules:</strong></label>
-                      <select>
+                      <select
+                        value={selectedScheduleId[expert.id] || ""}
+                        onChange={e => handleSelectChange(expert.id, e.target.value)}
+                      >
+                        <option value="">-- Select schedule --</option>
                         {selectedSchedules[expert.id].map((schedule, idx) => (
-                          <option key={schedule.id || idx} value={schedule.id || idx}>
-                            {JSON.stringify(schedule)}
+                          <option key={schedule.id || idx} value={schedule.id || schedule.scheduleId || idx}>
+                            {schedule.time || schedule.dateTime || schedule.startTime || JSON.stringify(schedule)}
                           </option>
                         ))}
                       </select>
+                      <button
+                        className="contact-btn"
+                        style={{ marginLeft: "1rem" }}
+                        onClick={() => handleBookConsultant(expert)}
+                      >
+                        Book Consultant
+                      </button>
                     </div>
                   )}
-
+                  {/* Thông báo booking */}
+                  {bookingMessage && (
+                    <div style={{ color: bookingMessage.includes("success") ? "green" : "red", marginTop: 8 }}>
+                      {bookingMessage}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

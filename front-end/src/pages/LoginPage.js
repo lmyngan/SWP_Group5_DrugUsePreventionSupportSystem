@@ -33,7 +33,6 @@ const LoginPage = () => {
         gender: decoded.Gender,
         address: decoded.Address,
         roleId: decoded.RoleId,
-
       };
       localStorage.setItem('user', JSON.stringify(user));
 

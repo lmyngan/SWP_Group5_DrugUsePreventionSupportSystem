@@ -17,6 +17,7 @@ import Register from "./pages/RegisterPage"
 import ProfileUser from "./pages/ProfileUser"
 import AddPost from "./pages/AddPost"
 import Survey from "./pages/Survey"
+import DashBoard from "./pages/DashBoard"
 
 const App = () => {
   // State để quản lý trang hiện tại
@@ -51,6 +52,8 @@ const App = () => {
       case "home":
       case "":
         return <HomePage />
+      case "dashboard":
+        return <DashBoard />
       case "whoweare":
         return <WhoWeAre />
       case "freecourse":
@@ -78,7 +81,7 @@ const App = () => {
   return (
     <div className="app">
       {/* Navbar - hiển thị trên tất cả trang trừ login */}
-      {currentPage !== "notFound" && <Navbar navigateTo={navigateTo} currentPage={currentPage} />}
+      {currentPage !== "dashboard" && <Navbar navigateTo={navigateTo} currentPage={currentPage} />}
 
       {/* Main content */}
       <main className="main-content">{renderPage()}</main>
