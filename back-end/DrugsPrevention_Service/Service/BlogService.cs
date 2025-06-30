@@ -30,7 +30,7 @@ namespace DrugsPrevention_Service.Service
                 Categories = b.Categories,
                 Title = b.Title,
                 Content = b.Content,
-                Rate = b.Rate,
+                Rate = (float)b.Rate,
                 CreatedAt = b.CreatedAt,
                 AuthorAccountname = b.Account?.Accountname,
                 AuthorFullName = b.Account?.FullName
@@ -49,7 +49,7 @@ namespace DrugsPrevention_Service.Service
                 Categories = b.Categories,
                 Title = b.Title,
                 Content = b.Content,
-                Rate = b.Rate,
+                Rate = (float)b.Rate,
                 CreatedAt = b.CreatedAt,
                 AuthorAccountname = b.Account?.Accountname,
                 AuthorFullName = b.Account?.FullName

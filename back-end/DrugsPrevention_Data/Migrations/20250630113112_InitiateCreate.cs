@@ -63,17 +63,11 @@ namespace DrugsPrevention_Data.Migrations
                     title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     rate = table.Column<float>(type: "real", nullable: false),
-                    created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AccountsAccountId = table.Column<int>(type: "int", nullable: true)
+                    created_at = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Blogs", x => x.blog_id);
-                    table.ForeignKey(
-                        name: "FK_Blogs_Accounts_AccountsAccountId",
-                        column: x => x.AccountsAccountId,
-                        principalTable: "Accounts",
-                        principalColumn: "account_id");
                     table.ForeignKey(
                         name: "FK_Blogs_Accounts_author_id",
                         column: x => x.author_id,
@@ -423,11 +417,6 @@ namespace DrugsPrevention_Data.Migrations
                 name: "IX_Appointment_schedule_id",
                 table: "Appointment",
                 column: "schedule_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Blogs_AccountsAccountId",
-                table: "Blogs",
-                column: "AccountsAccountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Blogs_author_id",
