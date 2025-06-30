@@ -1,4 +1,3 @@
-/* Main container */
 .calendar-root {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
@@ -11,7 +10,7 @@
   background: #fff;
 }
 
-/* Left Sidebar - Month Navigation */
+
 .calendar-sidebar {
   width: 256px;
   background: #fff;
@@ -61,7 +60,7 @@
   font-weight: 600;
 }
 
-/* Main Calendar Area */
+
 .calendar-main {
   flex: 1;
   background: #fff;
@@ -154,14 +153,14 @@
 }
 
 .calendar-day-indicator.available {
-  background-color: #22c55e; /* xanh lá */
+  background-color: #22c55e; 
 }
 
 .calendar-day-indicator.today {
-  background-color: #2563eb; /* xanh dương */
+  background-color: #2563eb; 
 }
 
-/* Right Sidebar - Details Panel */
+
 .details-sidebar {
   width: 320px;
   background: #fff;
@@ -201,7 +200,7 @@
   color: #9ca3af;
 }
 
-/* Responsive Design */
+
 @media (max-width: 1024px) {
   .calendar-layout {
     flex-direction: column;
