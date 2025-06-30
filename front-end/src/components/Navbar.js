@@ -75,7 +75,7 @@ const Navbar = ({ navigateTo, currentPage }) => {
           <li>
             <button
               className={`nav-link ${currentPage === "consultant" ? "active" : ""}`}
-              onClick={() => handleNavigation("consultant")}
+              onClick={() => handleNavigation("mentor")}
             >
               Consultant
             </button>

@@ -17,6 +17,7 @@ import Register from "./pages/RegisterPage"
 import ProfileUser from "./pages/ProfileUser"
 import AddPost from "./pages/AddPost"
 import Survey from "./pages/Survey"
+import CalendarPage from "./pages/CalendarPage"; // thêm dòng này
 
 const App = () => {
   // State để quản lý trang hiện tại
@@ -50,7 +51,7 @@ const App = () => {
     switch (currentPage) {
       case "home":
       case "":
-        return <HomePage />
+        return <HomePage navigateTo={navigateTo} />;
       case "whoweare":
         return <WhoWeAre />
       case "freecourse":
@@ -69,6 +70,8 @@ const App = () => {
         return <ProfileUser />
       case "addpost":
         return <AddPost />
+      case "calendar":
+        return <CalendarPage />;
 
       default:
         return <HomePage /> // Fallback về trang chủ
