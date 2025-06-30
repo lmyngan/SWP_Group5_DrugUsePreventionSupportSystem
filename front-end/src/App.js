@@ -17,7 +17,7 @@ import Register from "./pages/RegisterPage"
 import ProfileUser from "./pages/ProfileUser"
 import AddPost from "./pages/AddPost"
 import Survey from "./pages/Survey"
-import CalendarPage from "./pages/CalendarPage"; // thêm dòng này
+import CalendarPage from "./pages/CalendarPage"; 
 
 const App = () => {
   // State để quản lý trang hiện tại

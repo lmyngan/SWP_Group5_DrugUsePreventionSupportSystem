@@ -121,7 +121,7 @@ const WhoWeAre = () => {
           <div className="hero-content">
             <h1 className="hero-title">Chúng Tôi Là Ai</h1>
             <p className="hero-subtitle">
-              Chúng tôi xây dựng cộng đồng phòng ngừa, từng lựa chọn một.
+              Chúng tôi xây dựng cộng đồng giúp phòng ngừa ma túy, cung cấp kiến thức, công cụ và hỗ trợ để giúp mọi người sống khỏe mạnh và an toàn.
             </p>
           </div>
         </div>
@@ -271,7 +271,10 @@ const WhoWeAre = () => {
                   </a>
                 </Button>
                 <Button size="lg" variant="outline" className="cta-secondary">
-                  Tìm hiểu thêm về các chương trình
+                  <a href="/event" className="cta-link">
+                    Tìm hiểu thêm về các chương trình
+                    <ArrowRight className="icon-sm" />
+                  </a>
                 </Button>
               </div>
             </CardContent>
