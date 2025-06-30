@@ -1,6 +1,7 @@
 import React from 'react';
 import { CheckCircle, Users, GraduationCap, Heart, ArrowRight, Mail, Shield, FileText, Home } from 'lucide-react';
 import '../styles/WhoWeAre.css';
+import Footer from "../components/Footer"
 
 // Button Component
 const Button = ({ children, variant = 'default', size = 'default', className = '', onClick, ...props }) => {
@@ -28,42 +29,7 @@ const CardContent = ({ children, className = '' }) => (
   </div>
 );
 
-// Footer Component
-const Footer = () => (
-  <footer className="footer">
-    <div className="container">
-      <div className="footer-content">
-        <div className="footer-brand">
-          <div className="footer-logo">
-            <span>DC</span>
-          </div>
-          <div className="footer-info">
-            <h3>DrugsCare</h3>
-            <p>Hỗ trợ phòng ngừa & phục hồi ma túy</p>
-          </div>
-        </div>
-        <nav className="footer-nav">
-          <a href="/" className="footer-link">
-            <Home className="icon-sm" />
-            TRANG CHỦ
-          </a>
-          <a href="#" className="footer-link">
-            <Mail className="icon-sm" />
-            LIÊN HỆ
-          </a>
-          <a href="#" className="footer-link">
-            <Shield className="icon-sm" />
-            BẢO MẬT
-          </a>
-          <a href="#" className="footer-link">
-            <FileText className="icon-sm" />
-            PHÁP LÝ
-          </a>
-        </nav>
-      </div>
-    </div>
-  </footer>
-);
+
 
 // Feature Item Component
 const FeatureItem = ({ title, description }) => (
@@ -313,7 +279,7 @@ const WhoWeAre = () => {
         </section>
       </main>
 
-      <Footer />
+     <Footer />
     </div>
   );
 };
