@@ -1,4 +1,5 @@
 ﻿using DrugsPrevention_Data.Data;
+using DrugsPrevention_Data.DTO.Event;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +10,10 @@ namespace DrugsPrevention_Data.Repositories.Irepositories
 {
     public interface IEventRepository
     {
-        Task<IEnumerable<Event>> GetAllAsync();
-        Task<Event> GetByIdAsync(int id);
-        Task<Event> GetWithDetailsAsync(int id);
-        Task<IEnumerable<Event>> GetEventsWithCreatorAsync();
-        Task AddAsync(Event e);
-        void Update(Event e);
-        void Delete(Event e);
-        Task SaveAsync();
+        Task<IEnumerable<Event>> GetAllEventsAsync();
+        Task<Event> GetEventByIdAsync(int id);
+        Task<Event> AddEventAsync(Event ev);
+        Task<Event> UpdateEventAsync(Event ev);
+        Task<bool> DeleteEventAsync(int id);
     }
-
 }
