@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DrugsPrevention_Data.Migrations
 {
     [DbContext(typeof(DrugsPrevention_DBContext))]
-    [Migration("20250624172554_InitiateCreate")]
+    [Migration("20250630113112_InitiateCreate")]
     partial class InitiateCreate
     {
         /// <inheritdoc />
@@ -145,9 +145,6 @@ namespace DrugsPrevention_Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BlogId"));
 
-                    b.Property<int?>("AccountsAccountId")
-                        .HasColumnType("int");
-
                     b.Property<int>("AuthorId")
                         .HasColumnType("int")
                         .HasColumnName("author_id");
@@ -175,8 +172,6 @@ namespace DrugsPrevention_Data.Migrations
                         .HasColumnName("title");
 
                     b.HasKey("BlogId");
-
-                    b.HasIndex("AccountsAccountId");
 
                     b.HasIndex("AuthorId");
 
@@ -650,12 +645,8 @@ namespace DrugsPrevention_Data.Migrations
 
             modelBuilder.Entity("DrugsPrevention_Data.Data.Blogs", b =>
                 {
-                    b.HasOne("DrugsPrevention_Data.Data.Accounts", null)
-                        .WithMany("Blogs")
-                        .HasForeignKey("AccountsAccountId");
-
                     b.HasOne("DrugsPrevention_Data.Data.Accounts", "Account")
-                        .WithMany()
+                        .WithMany("Blogs")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();

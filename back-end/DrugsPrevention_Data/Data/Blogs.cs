@@ -22,7 +22,7 @@ namespace DrugsPrevention_Data.Data
         [Column("content")]
         public string Content { get; set; }
         [Column("rate")]
-        public float Rate { get; set; }
+        public double Rate { get; set; }
         [Column("created_at")]
         public DateTime CreatedAt { get; set; }
 

@@ -157,7 +157,7 @@ namespace DrugsPrevention_Data
             // Blogs -> Account
             modelBuilder.Entity<Blogs>()
                 .HasOne(b => b.Account)
-                .WithMany()
+                .WithMany(a => a.Blogs)
                 .HasForeignKey(b => b.AuthorId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
