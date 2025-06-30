@@ -18,6 +18,7 @@ import ProfileUser from "./pages/ProfileUser"
 import AddPost from "./pages/AddPost"
 import Survey from "./pages/Survey"
 import DashBoard from "./pages/DashBoard"
+import BookAppointment from "./pages/BookAppointment"
 
 const App = () => {
   // State để quản lý trang hiện tại
@@ -72,6 +73,8 @@ const App = () => {
         return <ProfileUser />
       case "addpost":
         return <AddPost />
+      case "manage-bookappointment":
+        return <BookAppointment />
 
       default:
         return <HomePage /> // Fallback về trang chủ

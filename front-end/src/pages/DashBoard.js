@@ -1,10 +1,8 @@
 import { Link } from "react-router-dom";
 
-
 const DashBoard = () => {
-
     return (
-        <div className="flex">
+        <div className="flex min-h-screen">
             {/* Hidden Checkbox for Toggle */}
             <input type="checkbox" id="menu-toggle" className="hidden peer" />
             {/* Sidebar Menu */}
@@ -18,8 +16,8 @@ const DashBoard = () => {
                 </label>
                 <div className="menu-header text-xl font-bold mb-6">Menu</div>
                 <div className="space-y-4">
-                    <Link to="/" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
-                        Home
+                    <Link to="/dashboard" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
+                        Dashboard Home
                     </Link>
                     <Link to="/manage" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
                         Manage
@@ -45,8 +43,8 @@ const DashBoard = () => {
                 </div>
             </div>
 
-            {/* Top Navbar */}
-            <div className="w-full flex items-center bg-gray-800 text-white p-4 fixed z-10">
+            {/* Top Navbar for sidebar toggle (hamburger only) */}
+            <div className="w-full flex items-center bg-gray-800 text-white p-4 fixed z-10" style={{ top: 0, left: 0 }}>
                 {/* Hamburger Button */}
                 <label htmlFor="menu-toggle" className="cursor-pointer">
                     <svg
@@ -68,7 +66,7 @@ const DashBoard = () => {
                 <p>This is the main content area. Use the hamburger menu to toggle sidebar.</p>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default DashBoard;
