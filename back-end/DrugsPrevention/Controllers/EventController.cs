@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DrugsPrevention_API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class EventController : ControllerBase
     {
         private readonly IEventService _eventService;
@@ -18,66 +18,41 @@ namespace DrugsPrevention_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var events = await _eventService.GetAllAsync();
-            return Ok(events);
+            var result = await _eventService.GetAllEventsAsync();
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var evt = await _eventService.GetByIdAsync(id);
-            if (evt == null)
-                return NotFound();
-
-            return Ok(evt);
-        }
-
-        [HttpGet("details/{id}")]
-        public async Task<IActionResult> GetWithDetails(int id)
-        {
-            var evt = await _eventService.GetWithDetailsAsync(id);
-            if (evt == null)
-                return NotFound();
-
-            return Ok(evt);
+            var result = await _eventService.GetEventByIdAsync(id);
+            if (result == null) return NotFound();
+            return Ok(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateEventDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            await _eventService.AddAsync(dto);
-            return Ok(new { message = "Event created successfully." });
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var result = await _eventService.CreateEventAsync(dto);
+            return CreatedAtAction(nameof(Get), new { id = result.EventId }, result);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateEventDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            if (id != dto.EventId)
-                return BadRequest("Event ID mismatch.");
-
-            var existing = await _eventService.GetByIdAsync(id);
-            if (existing == null)
-                return NotFound();
-
-            await _eventService.UpdateAsync(dto);
-            return Ok(new { message = "Event updated successfully." });
+            if (id != dto.EventId) return BadRequest("ID mismatch");
+            var result = await _eventService.UpdateEventAsync(dto);
+            if (result == null) return NotFound();
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var existing = await _eventService.GetByIdAsync(id);
-            if (existing == null)
-                return NotFound();
-
-            await _eventService.DeleteAsync(id);
-            return Ok(new { message = "Event deleted successfully." });
+            var deleted = await _eventService.DeleteEventAsync(id);
+            if (!deleted) return NotFound();
+            return NoContent();
         }
     }
 }

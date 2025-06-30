@@ -10,11 +10,10 @@ namespace DrugsPrevention_Service.Service.Iservice
 {
     public interface IEventService
     {
-        Task<IEnumerable<EventDto>> GetAllAsync();
-        Task<EventDto> GetByIdAsync(int id);
-        Task<EventDto> GetWithDetailsAsync(int id);
-        Task AddAsync(CreateEventDto dto);
-        Task UpdateAsync(UpdateEventDto dto);
-        Task DeleteAsync(int id);
+        Task<IEnumerable<EventDto>> GetAllEventsAsync();
+        Task<EventDto> GetEventByIdAsync(int id);
+        Task<EventDto> CreateEventAsync(CreateEventDto dto);
+        Task<EventDto> UpdateEventAsync(UpdateEventDto dto);
+        Task<bool> DeleteEventAsync(int id);
     }
 }

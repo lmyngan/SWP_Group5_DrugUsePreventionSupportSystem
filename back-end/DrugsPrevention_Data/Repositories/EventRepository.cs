@@ -1,13 +1,8 @@
 ﻿using DrugsPrevention_Data.Data;
 using DrugsPrevention_Data.Repositories.Irepositories;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DrugsPrevention_Data.Repositories
+namespace DrugsPrevention_Data.Repositories.Implementations
 {
     public class EventRepository : IEventRepository
     {
@@ -18,50 +13,38 @@ namespace DrugsPrevention_Data.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Event>> GetAllAsync()
-        {
-            return await _context.Events
-                .Include(e => e.Creator)
-                .ToListAsync();
-        }
-
-        public async Task<Event> GetByIdAsync(int id)
-        {
-            return await _context.Events.FindAsync(id);
-        }
-
-        public async Task<Event> GetWithDetailsAsync(int id)
-        {
-            return await _context.Events
-                .Include(e => e.Creator)
-                .Include(e => e.Participations)
-                .FirstOrDefaultAsync(e => e.EventId == id);
-        }
-
-        public async Task<IEnumerable<Event>> GetEventsWithCreatorAsync()
+        public async Task<IEnumerable<Event>> GetAllEventsAsync()
         {
             return await _context.Events.Include(e => e.Creator).ToListAsync();
         }
 
-        public async Task AddAsync(Event e)
+        public async Task<Event> GetEventByIdAsync(int id)
         {
-            await _context.Events.AddAsync(e);
+            return await _context.Events.Include(e => e.Creator).FirstOrDefaultAsync(e => e.EventId == id);
         }
 
-        public void Update(Event e)
+        public async Task<Event> AddEventAsync(Event ev)
         {
-            _context.Events.Update(e);
-        }
-
-        public void Delete(Event e)
-        {
-            _context.Events.Remove(e);
-        }
-
-        public async Task SaveAsync()
-        {
+            _context.Events.Add(ev);
             await _context.SaveChangesAsync();
+            return ev;
+        }
+
+        public async Task<Event> UpdateEventAsync(Event ev)
+        {
+            _context.Events.Update(ev);
+            await _context.SaveChangesAsync();
+            return ev;
+        }
+
+        public async Task<bool> DeleteEventAsync(int id)
+        {
+            var ev = await _context.Events.FindAsync(id);
+            if (ev == null) return false;
+
+            _context.Events.Remove(ev);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
-
 }
