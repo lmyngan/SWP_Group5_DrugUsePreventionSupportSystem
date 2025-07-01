@@ -63,5 +63,13 @@ namespace DrugsPrevention_API.Controllers
             var result = await _testService.GetTestQuestionsWithDetailsAsync(testId, resultId);
             return Ok(result);
         }
+        // GET: api/test/account/{accountId}/results
+        [HttpGet("account/{accountId}/results")]
+        public async Task<IActionResult> GetTestResultsByAccount(int accountId)
+        {
+            var results = await _testService.GetTestResultsByAccountIdAsync(accountId);
+            return Ok(results);
+        }
+
     }
 }

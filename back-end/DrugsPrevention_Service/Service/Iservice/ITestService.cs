@@ -13,5 +13,7 @@ namespace DrugsPrevention_Service.Service.Iservice
         Task<TestResponseDTO> GetTestByIdAsync(int testId);
         Task<UserTestResultDTO> GetTestResultDetailsAsync(int resultId);
         Task<List<TestQuestionWithAnswersDTO>> GetTestQuestionsWithDetailsAsync(int testId, int? resultId = null);
+        Task<List<UserTestResultDTO>> GetTestResultsByAccountIdAsync(int accountId);
+
     }
 }
