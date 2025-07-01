@@ -39,11 +39,17 @@ const DashBoardSidebar = () => {
                     <Link to="/dashboard" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
                         Dashboard Home
                     </Link>
+                    <Link to="/manage-consultant" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
+                        Consultant
+                    </Link>
                     <Link to="/manage-bookappointment" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
                         Book Appointment
                     </Link>
                     <Link to="/manage-account" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
                         Account
+                    </Link>
+                    <Link to="/report" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
+                        Report
                     </Link>
                     {/* Thêm các link khác nếu cần */}
                 </div>

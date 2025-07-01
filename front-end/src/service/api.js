@@ -38,6 +38,36 @@ export const getUserById = async (accountId) => {
     }
 };
 
+//GET TEST ID
+export const getTestId = async (testId) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Test/${testId}`);
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
+//GET TEST QUESTION
+export const getTestQuestion = async (testId) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Test/${testId}/questions`);
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
+//GET TEST RESULT
+export const getTestResult = async (testId, resultId) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Test/${testId}/questions?resultId=${resultId}`);
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
 // GET: CONSULTANT SCHEDULES
 export const getConsultantSchedules = async (consultantId) => {
     try {
@@ -57,3 +87,13 @@ export const bookAppointment = async (appointmentData) => {
         return { error: error.response?.data?.message || error.message };
     }
 };
+
+//GET APPOINTMENT ID
+export const appointmentId = async (appointmentIdData) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/Appointment/${appointmentId}`);
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+}

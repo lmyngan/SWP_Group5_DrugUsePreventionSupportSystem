@@ -27,7 +27,7 @@ const LoginPage = () => {
 
       const user = {
         accountId: decoded.AccountId,
-        consultantId: userInfo.ConsultantId,
+        consultantId: userInfo.consultantId,
         accountName: accountName,
         password: password,
         fullName: decoded.FullName,
