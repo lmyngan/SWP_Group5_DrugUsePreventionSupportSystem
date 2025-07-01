@@ -21,6 +21,7 @@ import Survey from "./pages/Survey"
 import DashBoard from "./pages/DashBoard"
 import BookAppointment from "./pages/BookAppointment"
 import Account from "./pages/Account"
+import Consultant from "./pages/Consultant"
 
 const App = () => {
   // State để quản lý trang hiện tại
@@ -79,6 +80,8 @@ const App = () => {
         return <BookAppointment />
       case "manage-account":
         return <Account />
+      case "manage-Consultant":
+        return <Consultant />
 
       default:
         return <HomePage /> // Fallback về trang chủ

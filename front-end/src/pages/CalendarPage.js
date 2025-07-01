@@ -24,9 +24,9 @@ function getMonthYear(offset = 0) {
   return { month, year }
 }
 
-// Giả lập fetch API
+
 const fetchAvailableDays = async (month, year) => {
-  // Sau này thay bằng API thực tế
+  // Khúc có thể thay API
   const { month: curMonth, year: curYear } = getMonthYear(0)
   const { month: nextMonth, year: nextYear } = getMonthYear(1)
   if (month === curMonth && year === curYear) {
@@ -35,13 +35,13 @@ const fetchAvailableDays = async (month, year) => {
   if (month === nextMonth && year === nextYear) {
     return [3, 7, 11, 15, 20, 25, 29]
   }
-  // Tháng xa hơn: mặc định mọi ngày đều rảnh
+
   const daysInMonth = getDaysInMonth(month, year)
   return Array.from({ length: daysInMonth }, (_, i) => i + 1)
 }
 
 const fetchSlotsByDay = async (month, year) => {
-  // Sau này thay bằng API thực tế
+  // Khúc có thể thay API
   const { month: curMonth, year: curYear } = getMonthYear(0)
   const { month: nextMonth, year: nextYear } = getMonthYear(1)
   if (month === curMonth && year === curYear) {
@@ -66,7 +66,7 @@ const fetchSlotsByDay = async (month, year) => {
       29: ["14:00 - 15:00", "15:00 - 16:00"],
     }
   }
-  // Tháng xa hơn: mọi ngày đều rảnh, mỗi ngày 3 slot mẫu
+
   const daysInMonth = getDaysInMonth(month, year)
   const slots = {}
   for (let d = 1; d <= daysInMonth; d++) {
@@ -89,7 +89,7 @@ const CalendarPage = () => {
   const [availableDays, setAvailableDays] = useState([])
   const [slotsByDay, setSlotsByDay] = useState({})
 
-  // Fetch data khi đổi tháng
+
   useEffect(() => {
     const fetchData = async () => {
       const days = await fetchAvailableDays(selectedMonth, curYear)
@@ -110,7 +110,7 @@ const CalendarPage = () => {
   for (let i = 0; i < calendarCells.length; i += 7) weeks.push(calendarCells.slice(i, i + 7))
 
   const handleMonthSelect = (monthIndex) => {
-    // Chỉ cho phép chọn tháng hiện tại và tháng tiếp theo
+  
     if (
       monthIndex === curMonth ||
       (curYear === nextYear && monthIndex === nextMonth) ||
@@ -131,12 +131,12 @@ const CalendarPage = () => {
   return (
     <div className="calendar-root">
       <div className="calendar-layout">
-        {/* Left Sidebar - Month Navigation */}
+        
         <div className="calendar-sidebar">
           <h2 className="year-title">{curYear}</h2>
           <div className="month-list">
             {monthNames.map((name, idx) => {
-              // Chỉ cho phép chọn tháng hiện tại và tháng tiếp theo
+             
               const isAllowed =
                 idx === curMonth || idx === nextMonth
               return (
@@ -156,16 +156,16 @@ const CalendarPage = () => {
             })}
           </div>
         </div>
-        {/* Main Calendar Area */}
+     
         <div className="calendar-main">
           <div className="calendar-container">
-            {/* Calendar Header */}
+          
             <h1 className="calendar-header">
               {monthNames[selectedMonth]} {curYear}
             </h1>
-            {/* Calendar Grid */}
+        
             <div className="calendar-grid-container">
-              {/* Days of Week Header */}
+            
               <div className="calendar-weekdays">
                 {daysOfWeek.map((day) => (
                   <div key={day} className="calendar-weekday">
@@ -173,7 +173,7 @@ const CalendarPage = () => {
                   </div>
                 ))}
               </div>
-              {/* Calendar Days */}
+            
               <div className="calendar-days">
                 {weeks.map((week, weekIndex) =>
                   week.map((day, dayIndex) => {
@@ -204,7 +204,7 @@ const CalendarPage = () => {
             </div>
           </div>
         </div>
-        {/* Right Sidebar - Details Panel */}
+       
         <div className="details-sidebar">
           {selected ? (
             <div>

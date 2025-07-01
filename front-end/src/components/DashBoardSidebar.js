@@ -39,6 +39,9 @@ const DashBoardSidebar = () => {
                     <Link to="/dashboard" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
                         Dashboard Home
                     </Link>
+                     <Link to="/manage-Consultant" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
+                        Consultant
+                    </Link>
                     <Link to="/manage-bookappointment" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
                         Book Appointment
                     </Link>
