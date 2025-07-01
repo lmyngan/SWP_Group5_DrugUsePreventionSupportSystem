@@ -94,6 +94,30 @@ namespace DrugsPrevention_Service.Service
                 ConsultantId = consultantId
             };
         }
+        public async Task<List<AccountResponseDTO>> GetAllAccountDTOsAsync()
+        {
+            var accounts = await _repository.GetAllAsync();
+            var result = new List<AccountResponseDTO>();
 
+            foreach (var acc in accounts)
+            {
+                var consultantId = await _repository.GetConsultantIdByAccountIdAsync(acc.AccountId);
+
+                result.Add(new AccountResponseDTO
+                {
+                    AccountId = acc.AccountId,
+                    Accountname = acc.Accountname,
+                    FullName = acc.FullName,
+                    DateOfBirth = acc.DateOfBirth,
+                    Gender = acc.Gender,
+                    Address = acc.Address,
+                    RoleId = acc.RoleId,
+                    CreatedAt = acc.CreatedAt,
+                    ConsultantId = consultantId
+                });
+            }
+
+            return result;
+        }
     }
 }

@@ -16,6 +16,7 @@ namespace DrugsPrevention_Service.Service.Iservice
         Task<AppointmentResponseDTO> GetAppointmentByIdAsync(int id);
         Task<AppointmentResponseDTO> CreateAppointmentAsync(AppointmentCreateDTO request);
         Task<AppointmentResponseDTO> UpdateAppointmentAsync(int id, AppointmentCreateDTO request);
+        Task<AppointmentResponseDTO> UpdateAppointmentStatusAsync(int id, AppointmentStatusUpdateDTO request);
         Task<bool> DeleteAppointmentAsync(int id);
     }
 }
