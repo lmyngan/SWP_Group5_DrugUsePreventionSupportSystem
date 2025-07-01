@@ -9,7 +9,7 @@ namespace DrugsPrevention_Service.Service.Iservice
 {
     public interface ITestService
     {
-        Task<TestResultDTO> SubmitTestAsync(TestSubmissionDTO submission);
+        Task<UserTestResultDTO> SubmitTestAsync(TestSubmissionDTO submission);
         Task<TestResponseDTO> GetTestByIdAsync(int testId);
         Task<UserTestResultDTO> GetTestResultDetailsAsync(int resultId);
         Task<List<TestQuestionWithAnswersDTO>> GetTestQuestionsWithDetailsAsync(int testId, int? resultId = null);

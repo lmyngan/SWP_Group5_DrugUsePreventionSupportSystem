@@ -18,7 +18,7 @@ namespace DrugsPrevention_Service.Service
             _testRepository = testRepository;
         }
 
-        public async Task<TestResultDTO> SubmitTestAsync(TestSubmissionDTO submission)
+        public async Task<UserTestResultDTO> SubmitTestAsync(TestSubmissionDTO submission)
         {
             int totalScore = 0;
             var answerResults = new List<AnswerResultDTO>();
@@ -73,14 +73,26 @@ namespace DrugsPrevention_Service.Service
                 }).ToList();
 
                 await _testRepository.AddTestAnswersAsync(answerEntities);
+
+                // return saved result with details
+                return await _testRepository.GetTestResultDetailsAsync(savedResult.ResultId);
             }
 
-            return new TestResultDTO
+            return new UserTestResultDTO
             {
+                AccountId = 0,
+                TestId = submission.TestId,
                 RiskLevel = riskLevel,
                 Recommendation = recommendation,
                 Score = totalScore,
-                Answers = answerResults
+                AssessedAt = DateTime.UtcNow,
+                Answers = answerResults.Select(a => new UserTestAnswerDTO
+                {
+                    QuestionId = a.QuestionId,
+                    QuestionText = "",
+                    SelectedAnswer = a.AnswerText,
+                    Score = a.Score
+                }).ToList()
             };
         }
 
