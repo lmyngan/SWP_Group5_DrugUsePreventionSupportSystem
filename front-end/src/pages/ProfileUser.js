@@ -10,7 +10,7 @@ const ProfileUser = () => {
         if (storedUser) {
             setUser(JSON.parse(storedUser));
         }
-        const score = localStorage.getItem("surveyTotalScore");
+        const score = localStorage.getItem("totalScore");
         if (score !== null) {
             setTotalScore(score);
         }

@@ -53,15 +53,32 @@ const Survey = () => {
         return total;
     };
 
+    const getRiskLevel = (score) => {
+        if (score <= 10) return "Low Risk";
+        if (score <= 30) return "Medium Risk";
+        return "High Risk";
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const totalScore = calculateScore();
+        const riskLevel = getRiskLevel(totalScore);
+
         setScore(totalScore);
         setShowModal(true);
+        let body = `Your total score is: ${totalScore}\nRisk Level: ${riskLevel}`;
+        if (riskLevel === "Medium Risk") {
+            body += `\nYou should Join Event.`;
+        }
+        if (riskLevel === "High Risk") {
+            body += `\nYou should Book Appointment with Consultant.`;
+        }
         setModalContent({
             title: "Survey Result",
-            body: `Your total score is: ${totalScore}`,
+            body: body,
         });
+
+        localStorage.setItem("totalScore", totalScore);
     };
 
     const handleClose = () => setShowModal(false);
@@ -132,15 +149,33 @@ const Survey = () => {
 
             <Modal show={showModal} onHide={handleClose} centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>{modalContent.title}</Modal.Title>
+                    <Modal.Title>Survey Result</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {modalContent.body}
+                    <div>Your total score is: {score}</div>
+                    <div>Risk Level: {getRiskLevel(score)}</div>
+                    {getRiskLevel(score) === "Medium Risk" && (
+                        <div>You should Join Event.</div>
+                    )}
+                    {getRiskLevel(score) === "High Risk" && (
+                        <div>You should Book Appointment with Consultant.</div>
+                    )}
+
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
+                    {getRiskLevel(score) === "Medium Risk" && (
+                        <Button variant="primary" onClick={() => window.location.href = '/event'}>
+                            Join Event
+                        </Button>
+                    )}
+                    {getRiskLevel(score) === "High Risk" && (
+                        <Button variant="primary" onClick={() => window.location.href = '/book-appointment'}>
+                            Book Appointment
+                        </Button>
+                    )}
                 </Modal.Footer>
             </Modal>
         </div>

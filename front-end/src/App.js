@@ -21,6 +21,8 @@ import Survey from "./pages/Survey"
 import DashBoard from "./pages/DashBoard"
 import BookAppointment from "./pages/BookAppointment"
 import Account from "./pages/Account"
+import ManageEvent from "./pages/ManageEvent"
+import ManageBlog from "./pages/ManageBlog"
 
 const App = () => {
   // State để quản lý trang hiện tại
@@ -77,6 +79,10 @@ const App = () => {
         return <AddPost />
       case "manage-bookappointment":
         return <BookAppointment />
+      case "manage-event":
+        return <ManageEvent />
+      case "manage-blog":
+        return <ManageBlog />
       case "manage-account":
         return <Account />
 

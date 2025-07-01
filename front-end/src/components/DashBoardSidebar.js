@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 
 const DashBoardSidebar = () => {
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
 
     return (
         <>
@@ -37,7 +37,7 @@ const DashBoardSidebar = () => {
                 </button>
                 <div className="space-y-4 mt-8">
                     <Link to="/dashboard" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
-                        Dashboard Home
+                        Home
                     </Link>
                     <Link to="/manage-consultant" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
                         Consultant
@@ -45,13 +45,18 @@ const DashBoardSidebar = () => {
                     <Link to="/manage-bookappointment" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
                         Book Appointment
                     </Link>
+                    <Link to="/manage-event" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
+                        Event
+                    </Link>
+                    <Link to="/manage-blog" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
+                        Blog
+                    </Link>
                     <Link to="/manage-account" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
                         Account
                     </Link>
                     <Link to="/report" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
                         Report
                     </Link>
-                    {/* Thêm các link khác nếu cần */}
                 </div>
             </div>
         </>
