@@ -28,6 +28,16 @@ export const registerUser = async (data) => {
     }
 };
 
+//GET: FULL ACCOUNT
+export const getFullAccount = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Account`);
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
 //GET: ACCOUNT INFO
 export const getUserById = async (accountId) => {
     try {
@@ -67,6 +77,22 @@ export const getTestResult = async (testId, resultId) => {
         return { error: error.message };
     }
 }
+
+//POST: TEST SCORE
+export const submitTestScore = async ({ accountId, testId, score, riskLevel, recommendation }) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/Test/submit`, {
+            accountId,
+            testId,
+            score,
+            riskLevel,
+            recommendation
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+};
 
 // GET: CONSULTANT SCHEDULES
 export const getConsultantSchedules = async (consultantId) => {

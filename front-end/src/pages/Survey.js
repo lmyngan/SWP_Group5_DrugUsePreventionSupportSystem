@@ -3,6 +3,7 @@ import '../styles/Survey.css';
 import { useEffect, useState } from 'react';
 import { Form, Button, Modal } from 'react-bootstrap';
 import { getTestQuestion } from '../service/api';
+import { submitTestScore } from '../service/api';
 
 const Survey = () => {
     const [questions, setQuestions] = useState([]);
@@ -54,15 +55,30 @@ const Survey = () => {
     };
 
     const getRiskLevel = (score) => {
-        if (score <= 10) return "Low Risk";
-        if (score <= 30) return "Medium Risk";
-        return "High Risk";
+        if (score <= 10) return "low";
+        if (score <= 30) return "moderate";
+        return "high";
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const totalScore = calculateScore();
         const riskLevel = getRiskLevel(totalScore);
+        const testId = 1;
+        let recommendation = "";
+        if (riskLevel === "moderate") recommendation = "You should join Event.";
+        if (riskLevel === "high") recommendation = "You should book appointment with consultant.";
+
+        // Gửi kết quả lên server nếu đã đăng nhập
+        if (user && user.accountId) {
+            await submitTestScore({
+                accountId: user.accountId,
+                testId,
+                score: totalScore,
+                riskLevel,
+                recommendation
+            });
+        }
 
         setScore(totalScore);
         setShowModal(true);
