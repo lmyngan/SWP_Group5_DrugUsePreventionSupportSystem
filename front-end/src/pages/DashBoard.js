@@ -17,10 +17,7 @@ const DashBoard = () => {
                 <div className="menu-header text-xl font-bold mb-6">Menu</div>
                 <div className="space-y-4">
                     <Link to="/dashboard" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
-                        Dashboard Home
-                    </Link>
-                    <Link to="/manage" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
-                        Manage
+                        Home
                     </Link>
                     <Link to="/manage-consultant" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
                         Consultant
