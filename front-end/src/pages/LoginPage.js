@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import { loginUser } from '../service/api';
+import { loginUser, getUserById } from '../service/api';
 import '../styles/LoginPage.css';
 
 const LoginPage = () => {
@@ -21,24 +21,30 @@ const LoginPage = () => {
       localStorage.setItem('token', response.token);
 
       const decoded = jwtDecode(response.token);
-      console.log("FullName:", decoded.FullName || decoded.accountname);
-      console.log("AccountId: ", decoded.AccountId);
+      console.log("Account: ", decoded);
+
+      const userInfo = await getUserById(decoded.AccountId);
 
       const user = {
         accountId: decoded.AccountId,
+        consultantId: userInfo.ConsultantId,
         accountName: accountName,
         password: password,
         fullName: decoded.FullName,
         dateOfBirth: decoded.DateOfBirth,
         gender: decoded.Gender,
         address: decoded.Address,
-        roleId: decoded.RoleId,
-
+        roleName: decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
       };
       localStorage.setItem('user', JSON.stringify(user));
 
       // Chuyển hướng sau khi đăng nhập thành công
-      window.location.href = "/";
+      if (user.roleName === "User") {
+        window.location.href = "/";
+      }
+      if (user.roleName !== "User") {
+        window.location.href = "/dashboard";
+      }
       alert('Login successful!');
     } catch (error) {
       console.error('Login failed:', error);

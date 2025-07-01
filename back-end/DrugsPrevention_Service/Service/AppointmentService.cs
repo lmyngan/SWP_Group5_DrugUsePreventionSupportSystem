@@ -10,6 +10,7 @@ using DrugsPrevention_Data;
 using DrugsPrevention_Service.Service.Iservice;
 using Microsoft.EntityFrameworkCore;
 using DrugsPrevention_Data.DTO.Schedule;
+using ServiceStack;
 
 namespace DrugsPrevention_Service.Service
 {
@@ -92,6 +93,89 @@ namespace DrugsPrevention_Service.Service
                 .ToListAsync();
 
             return schedules;
+        }
+        public async Task<List<AppointmentResponseDTO>> GetAllAppointmentsAsync()
+        {
+            var appointments = await _repo.GetAllAsync();
+            return appointments.Select(a => new AppointmentResponseDTO
+            {
+                AppointmentId = a.AppointmentId,
+                ConsultantName = a.Consultant?.Account?.FullName,
+                Date = a.Schedule?.AvailableDate ?? DateTime.MinValue,
+                StartTime = a.StartTime,
+                EndTime = a.EndTime,
+                Price = (float)a.Price,
+                Status = a.Status,
+                Notes = a.Notes
+            }).ToList();
+        }
+
+        public async Task<AppointmentResponseDTO> GetAppointmentByIdAsync(int id)
+        {
+            var a = await _repo.GetByIdAsync(id);
+            if (a == null) return null;
+
+            return new AppointmentResponseDTO
+            {
+                AppointmentId = a.AppointmentId,
+                ConsultantName = a.Consultant?.Account?.FullName,
+                Date = a.Schedule?.AvailableDate ?? DateTime.MinValue,
+                StartTime = a.StartTime,
+                EndTime = a.EndTime,
+                Price = (float)a.Price,
+                Status = a.Status,
+                Notes = a.Notes
+            };
+        }
+
+        public async Task<AppointmentResponseDTO> CreateAppointmentAsync(AppointmentCreateDTO request)
+        {
+            var appointment = new Appointment
+            {
+                AccountId = request.AccountId,
+                ConsultantId = request.ConsultantId,
+                ScheduleId = request.ScheduleId,
+                Price = request.Price,
+                StartTime = request.StartTime,
+                EndTime = request.EndTime,
+                Status = request.Status,
+                Notes = request.Notes,
+                CreatedAt = request.CreatedAt
+            };
+
+            await _repo.AddAsync(appointment);
+            await _repo.SaveChangesAsync();
+
+            return await GetAppointmentByIdAsync(appointment.AppointmentId);
+        }
+
+        public async Task<AppointmentResponseDTO> UpdateAppointmentAsync(int id, AppointmentCreateDTO request)
+        {
+            var appointment = await _repo.GetByIdAsync(id);
+            if (appointment == null) return null;
+
+            appointment.ConsultantId = request.ConsultantId;
+            appointment.ScheduleId = request.ScheduleId;
+            appointment.Price = request.Price;
+            appointment.StartTime = request.StartTime;
+            appointment.EndTime = request.EndTime;
+            appointment.Status = request.Status;
+            appointment.Notes = request.Notes;
+
+            await _repo.UpdateAsync(appointment);
+            await _repo.SaveChangesAsync();
+
+            return await GetAppointmentByIdAsync(appointment.AppointmentId);
+        }
+
+        public async Task<bool> DeleteAppointmentAsync(int id)
+        {
+            var appointment = await _repo.GetByIdAsync(id);
+            if (appointment == null) return false;
+
+            await _repo.DeleteAsync(appointment);
+            await _repo.SaveChangesAsync();
+            return true;
         }
     }
 }

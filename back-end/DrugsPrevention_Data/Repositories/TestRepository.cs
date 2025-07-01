@@ -18,93 +18,41 @@ namespace DrugsPrevention_Data.Repositories
             _context = context;
         }
 
-        public async Task<TestResultDTO> SubmitTestAsync(TestSubmissionDTO submission)
+        public async Task<Test> GetTestByIdAsync(int testId)
         {
-            int totalScore = 0;
-            var answerResults = new List<AnswerResultDTO>();
-
-            foreach (var answer in submission.Answers)
-            {
-                int? score = null;
-                if (answer.OptionId.HasValue)
-                {
-                    var option = await _context.TestOptions
-                        .FirstOrDefaultAsync(o => o.OptionId == answer.OptionId.Value);
-
-                    if (option != null)
-                    {
-                        score = option.Score;
-                        totalScore += score ?? 0;
-                    }
-                }
-
-                answerResults.Add(new AnswerResultDTO
-                {
-                    QuestionId = answer.QuestionId,
-                    AnswerText = answer.AnswerText,
-                    Score = score
-                });
-            }
-
-            string riskLevel = totalScore >= 5 ? "high" : "low";
-            string recommendation = riskLevel == "high" ? "Seek professional help." : "Maintain current lifestyle.";
-
-            if (submission.AccountId.HasValue)
-            {
-                var result = new TestResult
-                {
-                    AccountId = submission.AccountId.Value,
-                    TestId = submission.TestId,
-                    RiskLevel = riskLevel,
-                    Recommended = recommendation,
-                    Score = totalScore,
-                    AssessedAt = DateTime.Now
-                };
-
-                _context.TestResults.Add(result);
-                await _context.SaveChangesAsync();
-
-                foreach (var answer in answerResults)
-                {
-                    _context.TestAnswers.Add(new TestAnswer
-                    {
-                        ResultId = result.ResultId,
-                        QuestionId = answer.QuestionId,
-                        AnswerText = answer.AnswerText,
-                        CreatedAt = DateTime.Now
-                    });
-                }
-
-                await _context.SaveChangesAsync();
-            }
-
-            return new TestResultDTO
-            {
-                RiskLevel = riskLevel,
-                Recommendation = recommendation,
-                Score = totalScore,
-                Answers = answerResults
-            };
-        }
-
-        public async Task<TestResponseDTO> GetTestByIdAsync(int testId)
-        {
-            var test = await _context.Tests
+            return await _context.Tests
                 .Include(t => t.CreatedByAccount)
                 .FirstOrDefaultAsync(t => t.TestId == testId);
-
-            if (test == null) return null;
-
-            return new TestResponseDTO
-            {
-                TestId = test.TestId,
-                Name = test.Name,
-                Description = test.Description,
-                CreatedAt = test.CreatedAt,
-                CreatedBy = test.CreatedBy,
-                CreatedByName = test.CreatedByAccount?.FullName
-            };
         }
+
+        public async Task<List<TestQuestion>> GetTestQuestionsAsync(int testId)
+        {
+            return await _context.TestQuestions
+                .Include(q => q.Options)
+                .Where(q => q.TestId == testId)
+                .ToListAsync();
+        }
+
+        public async Task<List<TestOption>> GetOptionsByQuestionIdAsync(int questionId)
+        {
+            return await _context.TestOptions
+                .Where(o => o.QuestionId == questionId)
+                .ToListAsync();
+        }
+
+        public async Task<TestResult> AddTestResultAsync(TestResult result)
+        {
+            _context.TestResults.Add(result);
+            await _context.SaveChangesAsync();
+            return result;
+        }
+
+        public async Task AddTestAnswersAsync(List<TestAnswer> answers)
+        {
+            _context.TestAnswers.AddRange(answers);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<UserTestResultDTO> GetTestResultDetailsAsync(int resultId)
         {
             var result = await _context.TestResults
@@ -139,5 +87,44 @@ namespace DrugsPrevention_Data.Repositories
             };
         }
 
+        public async Task<List<TestQuestionWithAnswersDTO>> GetTestQuestionsWithAnswersAsync(int testId, int? resultId = null)
+        {
+            var questions = await _context.TestQuestions
+                .Where(q => q.TestId == testId)
+                .Include(q => q.Options)
+                .ToListAsync();
+
+            var answerMap = new Dictionary<int, List<TestAnswerDTO>>();
+
+            if (resultId.HasValue)
+            {
+                answerMap = await _context.TestAnswers
+                    .Where(a => a.ResultId == resultId.Value)
+                    .GroupBy(a => a.QuestionId)
+                    .ToDictionaryAsync(
+                        g => g.Key,
+                        g => g.Select(a => new TestAnswerDTO
+                        {
+                            AnswerId = a.AnswerId,
+                            AnswerText = a.AnswerText,
+                            CreatedAt = a.CreatedAt
+                        }).ToList()
+                    );
+            }
+
+            return questions.Select(q => new TestQuestionWithAnswersDTO
+            {
+                QuestionId = q.QuestionId,
+                QuestionText = q.QuestionText,
+                QuestionType = q.QuestionType,
+                Options = q.Options?.Select(o => new TestOptionDTO
+                {
+                    OptionId = o.OptionId,
+                    OptionText = o.OptionText,
+                    Score = o.Score
+                }).ToList(),
+                Answers = answerMap.ContainsKey(q.QuestionId) ? answerMap[q.QuestionId] : new List<TestAnswerDTO>()
+            }).ToList();
+        }
     }
 }

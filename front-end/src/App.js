@@ -5,6 +5,7 @@ import "./App.css"
 
 // Import components
 import Navbar from "./components/Navbar"
+import DashBoardSidebar from "./components/DashBoardSidebar"
 
 // Import pages
 import HomePage from "./pages/HomePage"
@@ -17,7 +18,9 @@ import Register from "./pages/RegisterPage"
 import ProfileUser from "./pages/ProfileUser"
 import AddPost from "./pages/AddPost"
 import Survey from "./pages/Survey"
-import CalendarPage from "./pages/CalendarPage"; 
+import DashBoard from "./pages/DashBoard"
+import BookAppointment from "./pages/BookAppointment"
+import Account from "./pages/Account"
 
 const App = () => {
   // State để quản lý trang hiện tại
@@ -51,7 +54,9 @@ const App = () => {
     switch (currentPage) {
       case "home":
       case "":
-        return <HomePage navigateTo={navigateTo} />;
+        return <HomePage />
+      case "dashboard":
+        return <DashBoard />
       case "whoweare":
         return <WhoWeAre />
       case "freecourse":
@@ -70,8 +75,10 @@ const App = () => {
         return <ProfileUser />
       case "addpost":
         return <AddPost />
-      case "calendar":
-        return <CalendarPage />;
+      case "manage-bookappointment":
+        return <BookAppointment />
+      case "manage-account":
+        return <Account />
 
       default:
         return <HomePage /> // Fallback về trang chủ
@@ -80,8 +87,15 @@ const App = () => {
 
   return (
     <div className="app">
-      {/* Navbar - hiển thị trên tất cả trang trừ login */}
-      {currentPage !== "notFound" && <Navbar navigateTo={navigateTo} currentPage={currentPage} />}
+      {/*Member Navbar*/}
+      {!(currentPage === "dashboard" || currentPage.startsWith("manage-")) && (
+        <Navbar navigateTo={navigateTo} currentPage={currentPage} />
+      )}
+
+      {/*Admin Dashboard*/}
+      {(currentPage === "dashboard" || currentPage.startsWith("manage-")) && (
+        <DashBoardSidebar />
+      )}
 
       {/* Main content */}
       <main className="main-content">{renderPage()}</main>

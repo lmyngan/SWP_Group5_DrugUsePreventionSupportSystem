@@ -30,10 +30,8 @@ const ProfileUser = () => {
                 <Col xs={12} md={10} lg={8}>
                     <Card>
                         <Card.Header as="h4">User Profile</Card.Header>
+                        <br />
                         <Card.Body>
-                            <Card.Text>
-                                <strong>Username:</strong> {user.accountName || user.accountname}
-                            </Card.Text>
                             <Card.Text>
                                 <strong>Full Name:</strong> {user.fullName}
                             </Card.Text>
@@ -46,6 +44,7 @@ const ProfileUser = () => {
                             <Card.Text>
                                 <strong>Address:</strong> {user.address}
                             </Card.Text>
+                            <br />
                             {totalScore !== null && (
                                 <Card.Text>
                                     <strong>Survey Total Score:</strong> {totalScore}

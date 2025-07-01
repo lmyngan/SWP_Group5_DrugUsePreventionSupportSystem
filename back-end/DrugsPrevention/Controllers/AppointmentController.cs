@@ -42,6 +42,43 @@ namespace DrugsPrevention_API.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var results = await _service.GetAllAppointmentsAsync();
+            return Ok(results);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var result = await _service.GetAppointmentByIdAsync(id);
+            if (result == null) return NotFound();
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] AppointmentCreateDTO request)
+        {
+            var result = await _service.CreateAppointmentAsync(request);
+            return CreatedAtAction(nameof(GetById), new { id = result.AppointmentId }, result);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] AppointmentCreateDTO request)
+        {
+            var result = await _service.UpdateAppointmentAsync(id, request);
+            if (result == null) return NotFound();
+            return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var deleted = await _service.DeleteAppointmentAsync(id);
+            if (!deleted) return NotFound();
+            return NoContent();
+        }
 
     }
 }

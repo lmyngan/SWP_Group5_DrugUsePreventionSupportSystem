@@ -3,7 +3,7 @@ import { jwtDecode } from 'jwt-decode';
 
 const API_BASE_URL = 'http://localhost:5187';
 
-// LOGIN
+//POST: LOGIN
 export const loginUser = async (credentials) => {
     try {
         const response = await axios.post(`${API_BASE_URL}/api/auth/login`, credentials);
@@ -18,7 +18,7 @@ export const loginUser = async (credentials) => {
     }
 };
 
-//REGISTER
+//POST: REGISTER
 export const registerUser = async (data) => {
     try {
         const response = await axios.post(`${API_BASE_URL}/api/auth/register`, data);
@@ -28,7 +28,7 @@ export const registerUser = async (data) => {
     }
 };
 
-// GET ACCOUNT INFO
+//GET: ACCOUNT INFO
 export const getUserById = async (accountId) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/api/account/${accountId}`);
@@ -38,4 +38,22 @@ export const getUserById = async (accountId) => {
     }
 };
 
-//
+// GET: CONSULTANT SCHEDULES
+export const getConsultantSchedules = async (consultantId) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Appointment/consultant/${consultantId}/schedules`);
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+};
+
+// POST: Book Appointment
+export const bookAppointment = async (appointmentData) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/Appointment/book`, appointmentData);
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+};

@@ -1,7 +1,6 @@
 // src/components/Survey.js
 import '../styles/Survey.css';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { Form, Button, Modal } from 'react-bootstrap';
 
 const Survey = () => {
@@ -9,7 +8,17 @@ const Survey = () => {
     const [score, setScore] = useState(0);
     const [showModal, setShowModal] = useState(false);
     const [modalContent, setModalContent] = useState({});
-    const navigate = useNavigate();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            setIsLoggedIn(true);
+            const userObj = JSON.parse(storedUser);
+            setUser(userObj);
+        }
+    }, [])
 
     const scoreSystem = {
         question4: { yes: 1, no: 0 },
@@ -59,30 +68,34 @@ const Survey = () => {
         const totalScore = calculateScore(answers);
         setScore(totalScore);
         localStorage.setItem('surveyTotalScore', totalScore);
+
         let riskLevel = "";
         if (totalScore <= 10) {
             riskLevel = "Low Risk";
             setModalContent({
                 title: "Survey Result",
                 body: `Your total score is: ${totalScore}\nRisk Level: ${riskLevel}`,
-                showLogin: false
-            });
-            setShowModal(true);
-        } else if (totalScore <= 30) {
-            riskLevel = "Moderate Risk";
-            setModalContent({
-                title: "Survey Result",
-                body: `Your total score is: ${totalScore}\nRisk Level: ${riskLevel}\nYou should login to book an appointment with a consultant.`,
-                showLogin: false
+                showLogin: false,
+                showMentor: false
             });
             setShowModal(true);
         } else {
-            riskLevel = "High Risk";
-            setModalContent({
-                title: "Survey Result",
-                body: `Your total score is: ${totalScore}\nRisk Level: ${riskLevel}\nYou should login to book an appointment with a consultant.`,
-                showLogin: true
-            });
+            riskLevel = totalScore <= 30 ? "Moderate Risk" : "High Risk";
+            if (isLoggedIn) {
+                setModalContent({
+                    title: "Survey Result",
+                    body: `Your total score is: ${totalScore}\nRisk Level: ${riskLevel}`,
+                    showLogin: false,
+                    showMentor: true
+                });
+            } else {
+                setModalContent({
+                    title: "Survey Result",
+                    body: `Your total score is: ${totalScore}\nRisk Level: ${riskLevel}\nYou should login to book an appointment with a consultant.`,
+                    showLogin: true,
+                    showMentor: false
+                });
+            }
             setShowModal(true);
         }
         console.log('Survey answers:', answers);
@@ -91,12 +104,12 @@ const Survey = () => {
 
     const handleLogin = () => {
         setShowModal(false);
-        navigate('/login');
+        window.location.href = "/login";
     };
 
     const handleClose = () => {
         setShowModal(false);
-        if (score <= 10) navigate('/');
+        if (score <= 10) window.location.href = "/";;
     };
 
     const handleChange = (e) => {
@@ -1093,6 +1106,10 @@ const Survey = () => {
                                 Cancel
                             </Button>
                         </>
+                    ) : modalContent.showMentor ? (
+                        <Button variant="success" onClick={() => window.location.href = "/mentor"}>
+                            Go to Mentor Page
+                        </Button>
                     ) : (
                         <Button variant="secondary" onClick={handleClose}>
                             Close
