@@ -78,5 +78,9 @@ namespace DrugsPrevention_Service.Service
         {
             return await _testRepository.GetTestQuestionsWithAnswersAsync(testId, resultId);
         }
+        public async Task<List<UserTestResultDTO>> GetTestResultsByAccountIdAsync(int accountId)
+        {
+            return await _testRepository.GetTestResultsByAccountIdAsync(accountId);
+        }
     }
 }
