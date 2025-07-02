@@ -27,5 +27,11 @@ namespace DrugsPrevention_API.Controllers
                 return NotFound(new { message = ex.Message });
             }
         }
+        [HttpGet]
+        public async Task<IActionResult> GetAllAccounts()
+        {
+            var accounts = await _accountService.GetAllAccountDTOsAsync();
+            return Ok(accounts);
+        }
     }
 }

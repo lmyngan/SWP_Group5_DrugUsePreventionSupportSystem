@@ -5,6 +5,7 @@ import "./App.css"
 
 // Import components
 import Navbar from "./components/Navbar"
+import DashBoardSidebar from "./components/DashBoardSidebar"
 
 // Import pages
 import HomePage from "./pages/HomePage"
@@ -19,6 +20,14 @@ import AddPost from "./pages/AddPost"
 import Survey from "./pages/Survey"
 import DashBoard from "./pages/DashBoard"
 import BookAppointment from "./pages/BookAppointment"
+import Account from "./pages/Account"
+
+import Consultant from "./pages/Consultant"
+
+import ManageEvent from "./pages/ManageEvent"
+import ManageBlog from "./pages/ManageBlog"
+import Report from "./pages/Report"
+
 
 
 
@@ -79,7 +88,19 @@ const App = () => {
         return <AddPost />
       case "bookappointment":
         return <BookAppointment />
-        
+      case "manage-event":
+        return <ManageEvent />
+      case "manage-blog":
+        return <ManageBlog />
+      case "manage-account":
+        return <Account />
+
+      case "manage-Consultant":
+        return <Consultant />
+
+      case "report":
+        return <Report />
+
 
       default:
         return <HomePage /> // Fallback về trang chủ
@@ -88,8 +109,15 @@ const App = () => {
 
   return (
     <div className="app">
-      {/* Navbar - hiển thị trên tất cả trang trừ login */}
-      {currentPage !== "dashboard" && <Navbar navigateTo={navigateTo} currentPage={currentPage} />}
+      {/*Member Navbar*/}
+      {!(currentPage === "dashboard" || currentPage.startsWith("manage-")) && (
+        <Navbar navigateTo={navigateTo} currentPage={currentPage} />
+      )}
+
+      {/*Admin Dashboard*/}
+      {(currentPage === "dashboard" || currentPage.startsWith("manage-")) && (
+        <DashBoardSidebar />
+      )}
 
       {/* Main content */}
       <main className="main-content">{renderPage()}</main>

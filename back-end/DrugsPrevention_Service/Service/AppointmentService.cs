@@ -118,7 +118,10 @@ namespace DrugsPrevention_Service.Service
             return new AppointmentResponseDTO
             {
                 AppointmentId = a.AppointmentId,
+                ConsultantId = a.ConsultantId,
+                ScheduleId = a.ScheduleId,
                 ConsultantName = a.Consultant?.Account?.FullName,
+                AccountName = a.Account?.Accountname,
                 Date = a.Schedule?.AvailableDate ?? DateTime.MinValue,
                 StartTime = a.StartTime,
                 EndTime = a.EndTime,
@@ -127,6 +130,7 @@ namespace DrugsPrevention_Service.Service
                 Notes = a.Notes
             };
         }
+
 
         public async Task<AppointmentResponseDTO> CreateAppointmentAsync(AppointmentCreateDTO request)
         {
@@ -177,5 +181,17 @@ namespace DrugsPrevention_Service.Service
             await _repo.SaveChangesAsync();
             return true;
         }
+        public async Task<AppointmentResponseDTO> UpdateAppointmentStatusAsync(int id, AppointmentStatusUpdateDTO request)
+        {
+            var appointment = await _repo.GetByIdAsync(id);
+            if (appointment == null) return null;
+
+            appointment.Status = request.Status;
+            await _repo.UpdateAsync(appointment);
+            await _repo.SaveChangesAsync();
+
+            return await GetAppointmentByIdAsync(appointment.AppointmentId);
+        }
+
     }
 }

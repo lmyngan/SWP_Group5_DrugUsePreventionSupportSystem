@@ -79,6 +79,12 @@ namespace DrugsPrevention_API.Controllers
             if (!deleted) return NotFound();
             return NoContent();
         }
-
+        [HttpPut("{id}/status")]
+        public async Task<IActionResult> UpdateStatus(int id, [FromBody] AppointmentStatusUpdateDTO request)
+        {
+            var result = await _service.UpdateAppointmentStatusAsync(id, request);
+            if (result == null) return NotFound();
+            return Ok(result);
+        }
     }
 }

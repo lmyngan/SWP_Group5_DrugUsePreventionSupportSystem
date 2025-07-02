@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using DrugsPrevention_Data.IRepositories;
 using DrugsPrevention_Service.Service;
 using DrugsPrevention_Data.Repositories.Irepositories;
+using DrugsPrevention_Data.Services.Implementations;
+using DrugsPrevention_Data.Repositories.Implementations;
 
 namespace DrugsPrevention
 {
@@ -47,6 +49,8 @@ namespace DrugsPrevention
             builder.Services.AddScoped<IEventRepository, EventRepository>();
             builder.Services.AddScoped<IBlogService, BlogService>();
             builder.Services.AddScoped<IBlogRepository, BlogRepository>();
+            builder.Services.AddScoped<IConsultantService, ConsultantService>();
+            builder.Services.AddScoped<IConsultantRepository, ConsultantRepository>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();

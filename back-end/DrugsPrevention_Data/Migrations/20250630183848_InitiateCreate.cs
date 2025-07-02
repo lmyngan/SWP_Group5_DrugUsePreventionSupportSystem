@@ -62,7 +62,7 @@ namespace DrugsPrevention_Data.Migrations
                     categories = table.Column<int>(type: "int", nullable: false),
                     title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    rate = table.Column<float>(type: "real", nullable: false),
+                    rate = table.Column<double>(type: "float", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>

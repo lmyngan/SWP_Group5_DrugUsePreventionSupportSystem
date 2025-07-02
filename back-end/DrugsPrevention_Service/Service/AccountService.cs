@@ -76,8 +76,10 @@ namespace DrugsPrevention_Service.Service
         }
         public async Task<AccountResponseDTO> GetUserByIdAsync(int accountId)
         {
-            var user = await _repository.GetAccountByIdAsync(accountId);
+            var user = await _repository.GetByIdAsync(accountId);
             if (user == null) throw new Exception("User not found");
+
+            var consultantId = await _repository.GetConsultantIdByAccountIdAsync(accountId);
 
             return new AccountResponseDTO
             {
@@ -88,9 +90,34 @@ namespace DrugsPrevention_Service.Service
                 Gender = user.Gender,
                 Address = user.Address,
                 RoleId = user.RoleId,
-                CreatedAt = user.CreatedAt
+                CreatedAt = user.CreatedAt,
+                ConsultantId = consultantId
             };
         }
+        public async Task<List<AccountResponseDTO>> GetAllAccountDTOsAsync()
+        {
+            var accounts = await _repository.GetAllAsync();
+            var result = new List<AccountResponseDTO>();
 
+            foreach (var acc in accounts)
+            {
+                var consultantId = await _repository.GetConsultantIdByAccountIdAsync(acc.AccountId);
+
+                result.Add(new AccountResponseDTO
+                {
+                    AccountId = acc.AccountId,
+                    Accountname = acc.Accountname,
+                    FullName = acc.FullName,
+                    DateOfBirth = acc.DateOfBirth,
+                    Gender = acc.Gender,
+                    Address = acc.Address,
+                    RoleId = acc.RoleId,
+                    CreatedAt = acc.CreatedAt,
+                    ConsultantId = consultantId
+                });
+            }
+
+            return result;
+        }
     }
 }

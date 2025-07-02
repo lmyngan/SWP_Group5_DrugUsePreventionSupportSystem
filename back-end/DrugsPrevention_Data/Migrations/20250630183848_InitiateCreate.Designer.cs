@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DrugsPrevention_Data.Migrations
 {
     [DbContext(typeof(DrugsPrevention_DBContext))]
-    [Migration("20250630113112_InitiateCreate")]
+    [Migration("20250630183848_InitiateCreate")]
     partial class InitiateCreate
     {
         /// <inheritdoc />
@@ -162,8 +162,8 @@ namespace DrugsPrevention_Data.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("created_at");
 
-                    b.Property<float>("Rate")
-                        .HasColumnType("real")
+                    b.Property<double>("Rate")
+                        .HasColumnType("float")
                         .HasColumnName("rate");
 
                     b.Property<string>("Title")
