@@ -17,7 +17,7 @@ const BookAppointment = () => {
         const fetchAppointments = async () => {
             try {
                 const res = await axios.get(
-                    `${API_BASE_URL}/api/Appointment`
+                    `${API_BASE_URL}/api/Appointment/consultant/${user.consultantId}/schedules`
                 );
                 setAppointments(res.data);
             } catch (err) {
@@ -26,9 +26,10 @@ const BookAppointment = () => {
                 setLoading(false);
             }
         };
-
         fetchAppointments();
     }, []);
+
+
 
     // Handler cho Đồng ý/Hủy (chỉ mock, bạn có thể gọi API cập nhật trạng thái ở đây)
     const handleUpdateStatus = async (appointmentId, status) => {
@@ -60,7 +61,10 @@ const BookAppointment = () => {
                                     {a.memberName || a.accountName || a.fullName}
                                 </div>
                                 <div className="mb-1">
-                                    <strong>Date:</strong> {a.date ? a.date.split("T")[0] : ""}
+                                    <strong>Date:</strong> {a.availableDate ? a.availableDate.split("T")[0] : ""}
+                                </div>
+                                <div className="mb-1">
+                                    <strong>Slot:</strong> {a.slot}
                                 </div>
                                 <div className="mb-1">
                                     <strong>Start Time:</strong> {a.startTime}

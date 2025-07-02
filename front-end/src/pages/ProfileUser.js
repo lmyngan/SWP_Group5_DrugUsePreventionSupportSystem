@@ -5,6 +5,7 @@ import { Card, Container, Row, Col } from "react-bootstrap"
 import "../styles/ProfileUser.css"
 
 const ProfileUser = () => {
+
   const [user, setUser] = useState(null)
   const [totalScore, setTotalScore] = useState(0)
   const [profileImage, setProfileImage] = useState(null)
@@ -33,6 +34,7 @@ const ProfileUser = () => {
     }
     if (savedBackgroundType) {
       setBackgroundType(savedBackgroundType)
+
     }
   }, [])
 

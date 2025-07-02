@@ -16,5 +16,7 @@ namespace DrugsPrevention_Data.DTO.Account
         public string Address { get; set; }
         public int RoleId { get; set; }
         public DateTime CreatedAt { get; set; }
+
+        public int? ConsultantId { get; set; }
     }
 }

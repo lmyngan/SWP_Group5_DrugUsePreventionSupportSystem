@@ -4,6 +4,7 @@ import "../styles/EventPage.css"
 import { useState, useEffect } from "react"
 import LoginStatus from "../components/LoginStatus"
 import Footer from "../components/Footer"
+import { eventData } from "../service/api"
 
 const EventPage = () => {
   const categories = ["All Posts", "Students", "University Students", "Parents", "Teachers", "Specialists", "Community"]
@@ -20,6 +21,12 @@ const EventPage = () => {
       setIsLoggedIn(true)
       setUser(JSON.parse(storedUser))
     }
+
+    const fetchEventData = async () => {
+      const data = await eventData();
+      console.log("Event data from API:", data);
+    };
+    fetchEventData();
   }, [])
 
   const handleAddPost = () => {
@@ -56,48 +63,48 @@ const EventPage = () => {
 
   const eventPosts = hasContent
     ? [
-        {
-          id: 1,
-          title: "How to Recognize Signs of Drug Use in Teenagers",
-          excerpt:
-            "A guide for parents and teachers to identify early warning signs of substance use in children and adolescents...",
-          image: "/images/myphoto.jpg",
-          category: "Parents",
-          author: "Dr. Sarah Johnson",
-          date: "March 15, 2024",
-          readTime: "5 min read",
-          views: "1,234",
-        },
-        {
-          id: 2,
-          title: "Peer Pressure Resistance Skills for Students",
-          excerpt: "Effective strategies to help students confidently say 'no' to drugs and harmful substances...",
-          image: "/images/event1.png",
-          category: "Students",
-          author: "Prof. Michael Chen",
-          date: "March 12, 2024",
-          readTime: "7 min read",
-          views: "2,156",
-        },
-       
-      ]
+      {
+        id: 1,
+        title: "How to Recognize Signs of Drug Use in Teenagers",
+        excerpt:
+          "A guide for parents and teachers to identify early warning signs of substance use in children and adolescents...",
+        image: "/images/myphoto.jpg",
+        category: "Parents",
+        author: "Dr. Sarah Johnson",
+        date: "March 15, 2024",
+        readTime: "5 min read",
+        views: "1,234",
+      },
+      {
+        id: 2,
+        title: "Peer Pressure Resistance Skills for Students",
+        excerpt: "Effective strategies to help students confidently say 'no' to drugs and harmful substances...",
+        image: "/images/event1.png",
+        category: "Students",
+        author: "Prof. Michael Chen",
+        date: "March 12, 2024",
+        readTime: "7 min read",
+        views: "2,156",
+      },
+
+    ]
     : []
 
   const recentPosts = hasContent
     ? [
-        {
-          title: "ASSIST Test - Assessing Risk of Substance Use",
-          date: "March 16, 2024",
-        },
-        {
-          title: "Recovery Story: From Darkness to Light",
-          date: "March 14, 2024",
-        },
-        {
-          title: "How to Use the DrugsCare App",
-          date: "March 13, 2024",
-        },
-      ]
+      {
+        title: "ASSIST Test - Assessing Risk of Substance Use",
+        date: "March 16, 2024",
+      },
+      {
+        title: "Recovery Story: From Darkness to Light",
+        date: "March 14, 2024",
+      },
+      {
+        title: "How to Use the DrugsCare App",
+        date: "March 13, 2024",
+      },
+    ]
     : []
 
   return (
@@ -439,7 +446,7 @@ const EventPage = () => {
                   <a href="/whoweare" className="quick-link">
                     ℹ️ About Us
                   </a>
-                  <a href="#" className="quick-link">
+                  <a href="/" className="quick-link">
                     📞 Support Hotline
                   </a>
                 </div>

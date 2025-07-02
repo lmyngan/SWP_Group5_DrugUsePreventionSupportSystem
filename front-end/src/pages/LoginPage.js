@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import { loginUser } from '../service/api';
+import { loginUser, getUserById } from '../service/api';
 import '../styles/LoginPage.css';
 
 const LoginPage = () => {
@@ -23,8 +23,11 @@ const LoginPage = () => {
       const decoded = jwtDecode(response.token);
       console.log("Account: ", decoded);
 
+      const userInfo = await getUserById(decoded.AccountId);
+
       const user = {
         accountId: decoded.AccountId,
+        consultantId: userInfo.consultantId,
         accountName: accountName,
         password: password,
         fullName: decoded.FullName,

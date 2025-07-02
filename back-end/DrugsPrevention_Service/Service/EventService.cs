@@ -1,30 +1,22 @@
-﻿using DrugsPrevention_Data;
-using DrugsPrevention_Data.Data;
+﻿using DrugsPrevention_Data.Data;
 using DrugsPrevention_Data.DTO.Event;
 using DrugsPrevention_Data.Repositories.Irepositories;
 using DrugsPrevention_Service.Service.Iservice;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DrugsPrevention_Service.Service
+namespace DrugsPrevention_Data.Services.Implementations
 {
     public class EventService : IEventService
     {
-        private readonly IEventRepository _eventRepository;
+        private readonly IEventRepository _repo;
 
-        public EventService(IEventRepository eventRepository)
+        public EventService(IEventRepository repo)
         {
-            _eventRepository = eventRepository;
+            _repo = repo;
         }
 
-        public async Task<IEnumerable<EventDto>> GetAllAsync()
+        public async Task<IEnumerable<EventDto>> GetAllEventsAsync()
         {
-            var events = await _eventRepository.GetEventsWithCreatorAsync(); // include Creator
-
+            var events = await _repo.GetAllEventsAsync();
             return events.Select(e => new EventDto
             {
                 EventId = e.EventId,
@@ -34,15 +26,15 @@ namespace DrugsPrevention_Service.Service
                 Location = e.Location,
                 Type = e.Type,
                 CreatedBy = e.CreatedBy,
-                CreatorAccountId = e.Creator?.AccountId ?? 0,
-                CreatorAccountname = e.Creator?.Accountname,
-                CreatorFullName = e.Creator?.FullName
+                CreatorAccountId = e.Creator.AccountId,
+                CreatorAccountname = e.Creator.Accountname,
+                CreatorFullName = e.Creator.FullName
             });
         }
 
-        public async Task<EventDto> GetByIdAsync(int id)
+        public async Task<EventDto> GetEventByIdAsync(int id)
         {
-            var e = await _eventRepository.GetWithDetailsAsync(id);
+            var e = await _repo.GetEventByIdAsync(id);
             if (e == null) return null;
 
             return new EventDto
@@ -54,35 +46,15 @@ namespace DrugsPrevention_Service.Service
                 Location = e.Location,
                 Type = e.Type,
                 CreatedBy = e.CreatedBy,
-                CreatorAccountId = e.Creator?.AccountId ?? 0,
-                CreatorAccountname = e.Creator?.Accountname,
-                CreatorFullName = e.Creator?.FullName
+                CreatorAccountId = e.Creator.AccountId,
+                CreatorAccountname = e.Creator.Accountname,
+                CreatorFullName = e.Creator.FullName
             };
         }
 
-        public async Task<EventDto> GetWithDetailsAsync(int id)
+        public async Task<EventDto> CreateEventAsync(CreateEventDto dto)
         {
-            var e = await _eventRepository.GetWithDetailsAsync(id);
-            if (e == null) return null;
-
-            return new EventDto
-            {
-                EventId = e.EventId,
-                Name = e.Name,
-                Description = e.Description,
-                Date = e.Date,
-                Location = e.Location,
-                Type = e.Type,
-                CreatedBy = e.CreatedBy,
-                CreatorAccountId = e.Creator?.AccountId ?? 0,
-                CreatorAccountname = e.Creator?.Accountname,
-                CreatorFullName = e.Creator?.FullName
-            };
-        }
-
-        public async Task AddAsync(CreateEventDto dto)
-        {
-            var entity = new Event
+            var ev = new Event
             {
                 Name = dto.Name,
                 Description = dto.Description,
@@ -92,33 +64,28 @@ namespace DrugsPrevention_Service.Service
                 CreatedBy = dto.CreatedBy
             };
 
-            await _eventRepository.AddAsync(entity);
-            await _eventRepository.SaveAsync();
+            var created = await _repo.AddEventAsync(ev);
+            return await GetEventByIdAsync(created.EventId);
         }
 
-        public async Task UpdateAsync(UpdateEventDto dto)
+        public async Task<EventDto> UpdateEventAsync(UpdateEventDto dto)
         {
-            var entity = await _eventRepository.GetByIdAsync(dto.EventId);
-            if (entity == null) return;
+            var existing = await _repo.GetEventByIdAsync(dto.EventId);
+            if (existing == null) return null;
 
-            entity.Name = dto.Name;
-            entity.Description = dto.Description;
-            entity.Date = dto.Date;
-            entity.Location = dto.Location;
-            entity.Type = dto.Type;
-            entity.CreatedBy = dto.CreatedBy;
+            existing.Name = dto.Name;
+            existing.Description = dto.Description;
+            existing.Date = dto.Date;
+            existing.Location = dto.Location;
+            existing.Type = dto.Type;
 
-            _eventRepository.Update(entity);
-            await _eventRepository.SaveAsync();
+            var updated = await _repo.UpdateEventAsync(existing);
+            return await GetEventByIdAsync(updated.EventId);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<bool> DeleteEventAsync(int id)
         {
-            var entity = await _eventRepository.GetByIdAsync(id);
-            if (entity == null) return;
-
-            _eventRepository.Delete(entity);
-            await _eventRepository.SaveAsync();
+            return await _repo.DeleteEventAsync(id);
         }
     }
 }

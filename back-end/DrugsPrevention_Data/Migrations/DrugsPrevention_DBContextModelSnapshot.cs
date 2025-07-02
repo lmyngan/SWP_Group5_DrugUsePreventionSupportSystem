@@ -159,8 +159,8 @@ namespace DrugsPrevention_Data.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("created_at");
 
-                    b.Property<float>("Rate")
-                        .HasColumnType("real")
+                    b.Property<double>("Rate")
+                        .HasColumnType("float")
                         .HasColumnName("rate");
 
                     b.Property<string>("Title")

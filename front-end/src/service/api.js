@@ -28,6 +28,16 @@ export const registerUser = async (data) => {
     }
 };
 
+//GET: FULL ACCOUNT
+export const getFullAccount = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Account`);
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
 //GET: ACCOUNT INFO
 export const getUserById = async (accountId) => {
     try {
@@ -35,6 +45,52 @@ export const getUserById = async (accountId) => {
         return response.data;
     } catch (error) {
         return { error: error.message };
+    }
+};
+
+//GET: TEST ID
+export const getTestId = async (testId) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Test/${testId}`);
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
+//GET: TEST QUESTION
+export const getTestQuestion = async (testId) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Test/${testId}/questions`);
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
+//GET: TEST RESULT
+export const getTestResult = async (testId, resultId) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Test/${testId}/questions?resultId=${resultId}`);
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
+//POST: TEST SCORE
+export const submitTestScore = async ({ accountId, testId, score, riskLevel, recommendation }) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/Test/submit`, {
+            accountId,
+            testId,
+            score,
+            riskLevel,
+            recommendation
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
     }
 };
 
@@ -57,3 +113,33 @@ export const bookAppointment = async (appointmentData) => {
         return { error: error.response?.data?.message || error.message };
     }
 };
+
+//GET: APPOINTMENT ID
+export const appointmentId = async (appointmentIdData) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Appointment/${appointmentId}`);
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+}
+
+//GET: EVENT
+export const eventData = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Event`);
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+}
+
+//GET: BLOG
+export const blogData = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Blog`);
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+}
