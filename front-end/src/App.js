@@ -20,6 +20,10 @@ import Survey from "./pages/Survey"
 import DashBoard from "./pages/DashBoard"
 import BookAppointment from "./pages/BookAppointment"
 
+
+
+
+
 const App = () => {
   // State để quản lý trang hiện tại
   const [currentPage, setCurrentPage] = useState("home")
@@ -73,8 +77,9 @@ const App = () => {
         return <ProfileUser />
       case "addpost":
         return <AddPost />
-      case "manage-bookappointment":
+      case "bookappointment":
         return <BookAppointment />
+        
 
       default:
         return <HomePage /> // Fallback về trang chủ
