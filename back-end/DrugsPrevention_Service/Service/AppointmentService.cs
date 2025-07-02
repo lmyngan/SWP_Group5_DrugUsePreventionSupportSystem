@@ -84,10 +84,12 @@ namespace DrugsPrevention_Service.Service
                 .Where(s => s.ConsultantId == consultantId)
                 .Select(s => new ScheduleDTO
                 {
+                    AccountName = s.Appointments.FirstOrDefault() != null ? s.Appointments.First().Account.Accountname : null,
                     ScheduleId = s.ScheduleId,
                     AvailableDate = s.AvailableDate,
                     StartTime = s.StartTime,
                     EndTime = s.EndTime,
+                    Status = s.Appointments.FirstOrDefault() != null ? s.Appointments.First().Status : null,
                     Slot = s.Slot
                 })
                 .ToListAsync();
