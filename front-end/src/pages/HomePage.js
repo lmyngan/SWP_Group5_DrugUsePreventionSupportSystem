@@ -1,6 +1,6 @@
 import "../styles/HomePage.css"
 
-const HomePage = () => {
+const HomePage = ({ navigateTo }) => {
   return (
     <div className="homepage">
       {/* Hero Section */}
@@ -72,16 +72,16 @@ const HomePage = () => {
               <h3>Smart Search</h3>
               <p>Search content categorized by age groups: students, university students, parents, teachers</p>
             </div>
-            <div className="feature-card">
-              <div className="feature-icon">📅</div>
-              <h3>Schedule Consultations</h3>
-              <p>Book online appointments with professional counselors</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">🎯</div>
-              <h3>Education Programs</h3>
-              <p>Participate in community outreach and education programs about drugs</p>
-            </div>
+          
+            <div
+  className="feature-card"
+  style={{ cursor: "pointer" }}
+  onClick={() => navigateTo && navigateTo("calendar")}
+>
+  <div className="feature-icon">📅</div>
+  <h3>Schedule Consultations</h3>
+  <p>Book online appointments with professional counselors</p>
+</div>
             <div className="feature-card">
               <div className="feature-icon">👨‍⚕️</div>
               <h3>Specialist Management</h3>

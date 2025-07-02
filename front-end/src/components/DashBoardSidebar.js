@@ -51,10 +51,17 @@ const DashBoardSidebar = () => {
                     <Link to="/dashboard" className="block p-3 bg-gray-700 rounded hover:bg-gray-600" onClick={() => setOpen(false)}>
                         Home
                     </Link>
+
+                     <Link to="/manage-Consultant" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
+                        Consultant
+                    </Link>
+                    <Link to="/manage-bookappointment" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
+
                     <Link to="/manage-consultant" className="block p-3 bg-gray-700 rounded hover:bg-gray-600" onClick={() => setOpen(false)}>
                         Consultant
                     </Link>
                     <Link to="/manage-bookappointment" className="block p-3 bg-gray-700 rounded hover:bg-gray-600" onClick={() => setOpen(false)}>
+
                         Book Appointment
                     </Link>
                     <Link to="/manage-event" className="block p-3 bg-gray-700 rounded hover:bg-gray-600" onClick={() => setOpen(false)}>
