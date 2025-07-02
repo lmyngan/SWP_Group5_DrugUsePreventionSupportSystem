@@ -23,6 +23,40 @@ const Mentor = () => {
     }));
   };
 
+  const formatScheduleDisplay = (schedule) => {
+    // Format date
+    let dateStr = "";
+    if (schedule.availableDate) {
+      const date = new Date(schedule.availableDate);
+      dateStr = date.toLocaleDateString('en-US', {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    } else if (schedule.dateTime) {
+      const date = new Date(schedule.dateTime);
+      dateStr = date.toLocaleDateString('en-US', {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    }
+
+    // Format time
+    let timeStr = "";
+    if (schedule.startTime && schedule.endTime) {
+      timeStr = `${schedule.startTime} - ${schedule.endTime}`;
+    } else if (schedule.time) {
+      timeStr = schedule.time;
+    } else if (schedule.startTime) {
+      timeStr = schedule.startTime;
+    }
+
+    return `${dateStr} ${timeStr}`.trim();
+  };
+
   const handleBookConsultant = async (expert) => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (!user || !user.accountId) {
@@ -62,19 +96,19 @@ const Mentor = () => {
   const experts = [
     {
       id: 1,
-      name: "Dr. Sarah Johnson",
+      name: "Dr. Jane Smith",
       title: "Addiction Specialist",
       image: "/images/consultant1.webp",
-      description: "Dr. Johnson has over 15 years of experience in addiction medicine and has helped thousands of patients recover.",
+      description: "Dr. Jane Smith has over 15 years of experience in addiction medicine and has helped thousands of patients recover.",
       specialties: ["Substance Abuse", "Mental Health", "Recovery Programs"],
       experience: "15+ years",
       education: "MD from Harvard Medical School",
       price: "$100",
-      contact: "sarah.johnson@drugscare.com",
+      contact: "jane_smith.johnson@drugscare.com",
     },
     {
       id: 2,
-      name: "Dr. Michael Chen",
+      name: "Dr. Emma Jones",
       title: "Behavioral Therapist",
       image: "/images/consultant2.jpg",
       description: "Specializing in cognitive behavioral therapy for addiction recovery and prevention programs.",
@@ -82,7 +116,7 @@ const Mentor = () => {
       experience: "12+ years",
       education: "PhD in Psychology from Stanford",
       price: "$150",
-      contact: "michael.chen@drugscare.com",
+      contact: "emma_jones.chen@drugscare.com",
     },
   ];
 
@@ -143,17 +177,18 @@ const Mentor = () => {
                       <select
                         value={selectedScheduleId[expert.id] || ""}
                         onChange={e => handleSelectChange(expert.id, e.target.value)}
+                        style={{ width: "100%", marginTop: "0.5rem", padding: "0.5rem" }}
                       >
                         <option value="">-- Select schedule --</option>
                         {selectedSchedules[expert.id].map((schedule, idx) => (
-                          <option key={schedule.id || idx} value={schedule.id || schedule.scheduleId || idx}>
-                            {schedule.time || schedule.dateTime || schedule.startTime || JSON.stringify(schedule)}
+                          <option key={schedule.id || schedule.scheduleId || idx} value={schedule.id || schedule.scheduleId || idx}>
+                            {formatScheduleDisplay(schedule)}
                           </option>
                         ))}
                       </select>
                       <button
                         className="contact-btn"
-                        style={{ marginLeft: "1rem" }}
+                        style={{ marginTop: "1rem", width: "100%" }}
                         onClick={() => handleBookConsultant(expert)}
                       >
                         Book Consultant
@@ -162,7 +197,14 @@ const Mentor = () => {
                   )}
                   {/* Thông báo booking */}
                   {bookingMessage && (
-                    <div style={{ color: bookingMessage.includes("success") ? "green" : "red", marginTop: 8 }}>
+                    <div style={{
+                      color: bookingMessage.includes("success") ? "green" : "red",
+                      marginTop: "1rem",
+                      padding: "0.5rem",
+                      borderRadius: "4px",
+                      backgroundColor: bookingMessage.includes("success") ? "#d4edda" : "#f8d7da",
+                      border: `1px solid ${bookingMessage.includes("success") ? "#c3e6cb" : "#f5c6cb"}`
+                    }}>
                       {bookingMessage}
                     </div>
                   )}

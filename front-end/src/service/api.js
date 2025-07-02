@@ -3,7 +3,7 @@ import { jwtDecode } from 'jwt-decode';
 
 const API_BASE_URL = 'http://localhost:5187';
 
-//POST: LOGIN
+//POST: Login
 export const loginUser = async (credentials) => {
     try {
         const response = await axios.post(`${API_BASE_URL}/api/auth/login`, credentials);
@@ -18,7 +18,7 @@ export const loginUser = async (credentials) => {
     }
 };
 
-//POST: REGISTER
+//POST: Register
 export const registerUser = async (data) => {
     try {
         const response = await axios.post(`${API_BASE_URL}/api/auth/register`, data);
@@ -28,7 +28,7 @@ export const registerUser = async (data) => {
     }
 };
 
-//GET: FULL ACCOUNT
+//GET: Full Account
 export const getFullAccount = async () => {
     try {
         const response = await axios.get(`${API_BASE_URL}/api/Account`);
@@ -38,7 +38,7 @@ export const getFullAccount = async () => {
     }
 }
 
-//GET: ACCOUNT INFO
+//GET: Account Info
 export const getUserById = async (accountId) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/api/account/${accountId}`);
@@ -48,7 +48,7 @@ export const getUserById = async (accountId) => {
     }
 };
 
-//GET: TEST ID
+//GET: TestId
 export const getTestId = async (testId) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/api/Test/${testId}`);
@@ -58,7 +58,7 @@ export const getTestId = async (testId) => {
     }
 }
 
-//GET: TEST QUESTION
+//GET: Test Questions
 export const getTestQuestion = async (testId) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/api/Test/${testId}/questions`);
@@ -68,7 +68,7 @@ export const getTestQuestion = async (testId) => {
     }
 }
 
-//GET: TEST RESULT
+//GET: Test Result
 export const getTestResult = async (testId, resultId) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/api/Test/${testId}/questions?resultId=${resultId}`);
@@ -78,7 +78,7 @@ export const getTestResult = async (testId, resultId) => {
     }
 }
 
-//POST: TEST SCORE
+//POST: Test Submit
 export const submitTestScore = async ({ accountId, testId, score, riskLevel, recommendation }) => {
     try {
         const response = await axios.post(`${API_BASE_URL}/api/Test/submit`, {
@@ -94,7 +94,17 @@ export const submitTestScore = async ({ accountId, testId, score, riskLevel, rec
     }
 };
 
-// GET: CONSULTANT SCHEDULES
+//GET: Test Get Score
+export const getTestScore = async (accountId) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Test/account/${accountId}/results`);
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+}
+
+// GET: Consultant Schedules
 export const getConsultantSchedules = async (consultantId) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/api/Appointment/consultant/${consultantId}/schedules`);
@@ -114,7 +124,7 @@ export const bookAppointment = async (appointmentData) => {
     }
 };
 
-//GET: APPOINTMENT ID
+//GET: Appointment ID
 export const appointmentId = async (appointmentIdData) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/api/Appointment/${appointmentId}`);
@@ -124,7 +134,17 @@ export const appointmentId = async (appointmentIdData) => {
     }
 }
 
-//GET: EVENT
+// PUT: Update Appointment Status
+export const updateAppointmentStatus = async (appointmentId, status) => {
+    try {
+        const response = await axios.put(`${API_BASE_URL}/api/Appointment/${appointmentId}/status`, { status });
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+};
+
+//GET: Event
 export const eventData = async () => {
     try {
         const response = await axios.get(`${API_BASE_URL}/api/Event`);
@@ -134,7 +154,7 @@ export const eventData = async () => {
     }
 }
 
-//GET: BLOG
+//GET: Blog
 export const blogData = async () => {
     try {
         const response = await axios.get(`${API_BASE_URL}/api/Blog`);

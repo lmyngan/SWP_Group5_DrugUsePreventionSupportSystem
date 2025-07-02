@@ -1,20 +1,49 @@
 import { useEffect, useState } from "react";
-import { Card, Container, Row, Col } from "react-bootstrap";
+import { Card, Container, Row, Col, Alert, Spinner } from "react-bootstrap";
+import { getTestScore } from "../service/api";
 
 const ProfileUser = () => {
     const [user, setUser] = useState(null);
-    const [totalScore, setTotalScore] = useState(0);
+    const [testScore, setTestScore] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        }
-        const score = localStorage.getItem("totalScore");
-        if (score !== null) {
-            setTotalScore(score);
+            const userData = JSON.parse(storedUser);
+            setUser(userData);
+
+            // Fetch test results if user has accountId
+            if (userData.accountId) {
+                fetchTestResults(userData.accountId);
+            }
         }
     }, []);
+
+    const fetchTestResults = async (accountId) => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await getTestScore(accountId);
+            if (response.error) {
+                setError(response.error);
+            } else {
+                // Get the latest test result score
+                const results = Array.isArray(response) ? response : [response];
+                if (results.length > 0) {
+                    // Get the most recent result (assuming results are ordered by date)
+                    const latestResult = results[0];
+                    setTestScore(latestResult.score);
+                }
+            }
+        } catch (err) {
+            setError("Failed to fetch test results");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     if (!user) {
         return (
@@ -45,11 +74,9 @@ const ProfileUser = () => {
                                 <strong>Address:</strong> {user.address}
                             </Card.Text>
                             <br />
-                            {totalScore !== null && (
-                                <Card.Text>
-                                    <strong>Survey Total Score:</strong> {totalScore}
-                                </Card.Text>
-                            )}
+                            <Card.Text>
+                                <strong>Survey Total Score:</strong> {testScore}
+                            </Card.Text>
                         </Card.Body>
                     </Card>
                 </Col>

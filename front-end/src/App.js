@@ -23,6 +23,7 @@ import BookAppointment from "./pages/BookAppointment"
 import Account from "./pages/Account"
 import ManageEvent from "./pages/ManageEvent"
 import ManageBlog from "./pages/ManageBlog"
+import Report from "./pages/Report"
 
 const App = () => {
   // State để quản lý trang hiện tại
@@ -85,6 +86,8 @@ const App = () => {
         return <ManageBlog />
       case "manage-account":
         return <Account />
+      case "report":
+        return <Report />
 
       default:
         return <HomePage /> // Fallback về trang chủ

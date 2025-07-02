@@ -49,7 +49,7 @@ const DashBoard = () => {
 
     const stats = [
         {
-            value: "$30200",
+            value: "$666",
             label: "All Earnings",
             icon: '',
             color: "bg-orange-100 text-orange-800",

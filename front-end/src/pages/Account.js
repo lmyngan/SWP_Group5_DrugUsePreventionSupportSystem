@@ -3,7 +3,7 @@ import { getFullAccount } from "../service/api";
 
 const roleOptions = [
     { id: 1, name: "Admin" },
-    { id: 2, name: "Staff" },
+    { id: 2, name: "Manager" },
     { id: 3, name: "Consultant" },
     { id: 4, name: "Member" },
 ];
