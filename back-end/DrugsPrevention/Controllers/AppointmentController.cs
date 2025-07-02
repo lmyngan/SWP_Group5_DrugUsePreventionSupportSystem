@@ -80,11 +80,19 @@ namespace DrugsPrevention_API.Controllers
             return NoContent();
         }
         [HttpPut("{id}/status")]
-        public async Task<IActionResult> UpdateStatus(int id, [FromBody] AppointmentStatusUpdateDTO request)
+        public async Task<IActionResult> UpdateStatus(int id, [FromQuery] string status)
         {
-            var result = await _service.UpdateAppointmentStatusAsync(id, request);
+            var result = await _service.UpdateAppointmentStatusAsync(id, status);
             if (result == null) return NotFound();
-            return Ok(result);
+
+            var updatedUrl = Url.Action(nameof(UpdateStatus), new { id = result.AppointmentId, status = result.Status });
+            return Ok(new
+            {
+                message = "Status updated successfully",
+                status = result.Status,
+                url = $"{Request.Scheme}://{Request.Host}/api/Appointment/{result.AppointmentId}/status?status={result.Status}"
+            });
         }
+
     }
 }
