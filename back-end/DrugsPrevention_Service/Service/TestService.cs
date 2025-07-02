@@ -18,88 +18,39 @@ namespace DrugsPrevention_Service.Service
             _testRepository = testRepository;
         }
 
-        public async Task<TestResultDTO> SubmitTestAsync(TestSubmissionDTO submission)
+        public async Task<int> SubmitTestAsync(TestResultCreateDTO submission)
         {
-            int totalScore = 0;
-            var answerResults = new List<AnswerResultDTO>();
-
-            foreach (var answer in submission.Answers)
+            var result = new TestResult
             {
-                int? score = null;
-
-                if (answer.OptionId.HasValue)
-                {
-                    var options = await _testRepository.GetOptionsByQuestionIdAsync(answer.QuestionId);
-                    var selected = options.FirstOrDefault(o => o.OptionId == answer.OptionId.Value);
-
-                    if (selected != null)
-                    {
-                        score = selected.Score;
-                        totalScore += score.Value;
-                    }
-                }
-
-                answerResults.Add(new AnswerResultDTO
-                {
-                    QuestionId = answer.QuestionId,
-                    AnswerText = answer.AnswerText,
-                    Score = score
-                });
-            }
-
-            var riskLevel = GetRiskLevel(totalScore);
-            var recommendation = GetRecommendation(riskLevel);
-
-            if (submission.AccountId.HasValue)
-            {
-                var result = new TestResult
-                {
-                    AccountId = submission.AccountId.Value,
-                    TestId = submission.TestId,
-                    RiskLevel = riskLevel,
-                    Recommended = recommendation,
-                    Score = totalScore,
-                    AssessedAt = DateTime.UtcNow
-                };
-
-                var savedResult = await _testRepository.AddTestResultAsync(result);
-
-                var answerEntities = answerResults.Select(a => new TestAnswer
-                {
-                    ResultId = savedResult.ResultId,
-                    QuestionId = a.QuestionId,
-                    AnswerText = a.AnswerText,
-                    CreatedAt = DateTime.UtcNow
-                }).ToList();
-
-                await _testRepository.AddTestAnswersAsync(answerEntities);
-            }
-
-            return new TestResultDTO
-            {
-                RiskLevel = riskLevel,
-                Recommendation = recommendation,
-                Score = totalScore,
-                Answers = answerResults
+                AccountId = submission.AccountId,
+                TestId = submission.TestId,
+                Score = submission.Score,
+                RiskLevel = submission.RiskLevel,
+                Recommended = submission.Recommendation,
+                AssessedAt = DateTime.UtcNow
             };
+
+            var savedResult = await _testRepository.AddTestResultAsync(result);
+
+            return savedResult.ResultId;
         }
 
-        private string GetRiskLevel(int score)
-        {
-            if (score >= 8) return "high";
-            if (score >= 4) return "moderate";
-            return "low";
-        }
+        //private string GetRiskLevel(int score)
+        //{
+        //    if (score >= 8) return "high";
+        //    if (score >= 4) return "moderate";
+        //    return "low";
+        //}
 
-        private string GetRecommendation(string level)
-        {
-            return level switch
-            {
-                "high" => "Seek professional help immediately.",
-                "moderate" => "Consider consulting a specialist.",
-                _ => "Maintain current lifestyle."
-            };
-        }
+        //private string GetRecommendation(string level)
+        //{
+        //    return level switch
+        //    {
+        //        "high" => "Seek professional help immediately.",
+        //        "moderate" => "Consider consulting a specialist.",
+        //        _ => "Maintain current lifestyle."
+        //    };
+        //}
 
         public async Task<TestResponseDTO> GetTestByIdAsync(int testId)
         {
@@ -126,6 +77,10 @@ namespace DrugsPrevention_Service.Service
         public async Task<List<TestQuestionWithAnswersDTO>> GetTestQuestionsWithDetailsAsync(int testId, int? resultId = null)
         {
             return await _testRepository.GetTestQuestionsWithAnswersAsync(testId, resultId);
+        }
+        public async Task<List<UserTestResultDTO>> GetTestResultsByAccountIdAsync(int accountId)
+        {
+            return await _testRepository.GetTestResultsByAccountIdAsync(accountId);
         }
     }
 }

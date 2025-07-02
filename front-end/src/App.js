@@ -21,7 +21,13 @@ import Survey from "./pages/Survey"
 import DashBoard from "./pages/DashBoard"
 import BookAppointment from "./pages/BookAppointment"
 import Account from "./pages/Account"
+
 import Consultant from "./pages/Consultant"
+
+import ManageEvent from "./pages/ManageEvent"
+import ManageBlog from "./pages/ManageBlog"
+import Report from "./pages/Report"
+
 
 const App = () => {
   // State để quản lý trang hiện tại
@@ -78,10 +84,19 @@ const App = () => {
         return <AddPost />
       case "manage-bookappointment":
         return <BookAppointment />
+      case "manage-event":
+        return <ManageEvent />
+      case "manage-blog":
+        return <ManageBlog />
       case "manage-account":
         return <Account />
+
       case "manage-Consultant":
         return <Consultant />
+
+      case "report":
+        return <Report />
+
 
       default:
         return <HomePage /> // Fallback về trang chủ

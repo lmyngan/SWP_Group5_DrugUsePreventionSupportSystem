@@ -82,8 +82,10 @@ const RegisterPage = () => {
           <h1>Register</h1>
 
           {error && <div className="error-message">{error}</div>}
-
+          
+          
           <div className="input-box">
+            <label htmlFor="title">Email/Username</label>
             <input
               type="text"
               name="email"
@@ -94,6 +96,7 @@ const RegisterPage = () => {
           </div>
 
           <div className="input-box">
+            <label htmlFor="title">Password: </label>
             <input
               type="password"
               name="password"
@@ -104,6 +107,7 @@ const RegisterPage = () => {
           </div>
 
           <div className="input-box">
+            <label htmlFor="title">Confirm Password: </label>
             <input
               type="password"
               name="confirmPassword"
@@ -114,6 +118,7 @@ const RegisterPage = () => {
           </div>
 
           <div className="input-box">
+            <label htmlFor="title">FullName: </label>
             <input
               type="text"
               name="fullName"
@@ -124,6 +129,7 @@ const RegisterPage = () => {
           </div>
 
           <div className="input-box">
+            <label htmlFor="title">Date Of Birth: </label>
             <input
               type="date"
               name="dateOfBirth"
@@ -134,6 +140,7 @@ const RegisterPage = () => {
           </div>
 
           <div className="input-box">
+            <label htmlFor="title">Address: </label>
             <input
               type="text"
               name="address"

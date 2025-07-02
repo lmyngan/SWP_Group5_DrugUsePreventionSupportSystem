@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-
-const API_BASE_URL = "http://localhost:5187";
+import { getConsultantSchedules, updateAppointmentStatus } from "../service/api";
 
 const BookAppointment = () => {
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [updatingId, setUpdatingId] = useState(null);
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("user"));
@@ -16,29 +15,62 @@ const BookAppointment = () => {
 
         const fetchAppointments = async () => {
             try {
-                const res = await axios.get(
-                    `${API_BASE_URL}/api/Appointment`
-                );
-                setAppointments(res.data);
+                const response = await getConsultantSchedules(user.consultantId);
+                if (response.error) {
+                    console.error("Error fetching appointments:", response.error);
+                    setAppointments([]);
+                } else {
+                    setAppointments(Array.isArray(response) ? response : [response]);
+                }
             } catch (err) {
+                console.error("Error fetching appointments:", err);
                 setAppointments([]);
             } finally {
                 setLoading(false);
             }
         };
-
         fetchAppointments();
     }, []);
 
-    // Handler cho Đồng ý/Hủy (chỉ mock, bạn có thể gọi API cập nhật trạng thái ở đây)
+    // Handler cho Đồng ý/Hủy
     const handleUpdateStatus = async (appointmentId, status) => {
-        // Ví dụ: gọi API cập nhật trạng thái ở đây
-        // await axios.put(`${API_BASE_URL}/api/Appointment/${appointmentId}/status`, { status });
-        setAppointments((prev) =>
-            prev.map((a) =>
-                a.appointmentId === appointmentId ? { ...a, status } : a
-            )
-        );
+        setUpdatingId(appointmentId);
+
+        try {
+            const response = await updateAppointmentStatus(appointmentId, status);
+            if (response.error) {
+                console.error("Error updating appointment:", response.error);
+                alert("Failed to update appointment status");
+                return;
+            }
+
+            // Update only the specific appointment in the state
+            setAppointments((prev) =>
+                prev.map((appointment) =>
+                    appointment.appointmentId === appointmentId
+                        ? { ...appointment, status }
+                        : appointment
+                )
+            );
+        } catch (err) {
+            console.error("Error updating appointment:", err);
+            alert("Failed to update appointment status");
+        } finally {
+            setUpdatingId(null);
+        }
+    };
+
+    const getStatusColor = (status) => {
+        switch (status) {
+            case "completed":
+                return "text-green-600";
+            case "canceled":
+                return "text-red-600";
+            case "pending":
+                return "text-yellow-600";
+            default:
+                return "text-gray-600";
+        }
     };
 
     return (
@@ -60,7 +92,10 @@ const BookAppointment = () => {
                                     {a.memberName || a.accountName || a.fullName}
                                 </div>
                                 <div className="mb-1">
-                                    <strong>Date:</strong> {a.date ? a.date.split("T")[0] : ""}
+                                    <strong>Date:</strong> {a.availableDate ? a.availableDate.split("T")[0] : ""}
+                                </div>
+                                <div className="mb-1">
+                                    <strong>Slot:</strong> {a.slot}
                                 </div>
                                 <div className="mb-1">
                                     <strong>Start Time:</strong> {a.startTime}
@@ -70,15 +105,7 @@ const BookAppointment = () => {
                                 </div>
                                 <div className="mb-1">
                                     <strong>Status:</strong>{" "}
-                                    <span
-                                        className={
-                                            a.status === "accepted"
-                                                ? "text-green-600"
-                                                : a.status === "rejected"
-                                                    ? "text-red-600"
-                                                    : "text-yellow-600"
-                                        }
-                                    >
+                                    <span className={getStatusColor(a.status)}>
                                         {a.status}
                                     </span>
                                 </div>
@@ -88,18 +115,18 @@ const BookAppointment = () => {
                             </div>
                             <div className="flex gap-2 mt-4">
                                 <button
-                                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
-                                    onClick={() => handleUpdateStatus(a.appointmentId, "accepted")}
-                                    disabled={a.status === "accepted"}
+                                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
+                                    onClick={() => handleUpdateStatus(a.appointmentId, "completed")}
+                                    disabled={a.status === "completed" || updatingId === a.appointmentId}
                                 >
-                                    Đồng ý
+                                    {updatingId === a.appointmentId ? "Updating..." : "Đồng ý"}
                                 </button>
                                 <button
-                                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
-                                    onClick={() => handleUpdateStatus(a.appointmentId, "rejected")}
-                                    disabled={a.status === "rejected"}
+                                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded disabled:opacity-50"
+                                    onClick={() => handleUpdateStatus(a.appointmentId, "canceled")}
+                                    disabled={a.status === "canceled" || updatingId === a.appointmentId}
                                 >
-                                    Hủy
+                                    {updatingId === a.appointmentId ? "Updating..." : "Hủy"}
                                 </button>
                             </div>
                         </div>

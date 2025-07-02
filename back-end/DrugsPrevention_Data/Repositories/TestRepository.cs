@@ -126,5 +126,43 @@ namespace DrugsPrevention_Data.Repositories
                 Answers = answerMap.ContainsKey(q.QuestionId) ? answerMap[q.QuestionId] : new List<TestAnswerDTO>()
             }).ToList();
         }
+        public async Task<List<UserTestResultDTO>> GetTestResultsByAccountIdAsync(int accountId)
+        {
+            var results = await _context.TestResults
+                .Where(r => r.AccountId == accountId)
+                .Include(r => r.Test)
+                .Include(r => r.Answers)
+                .ToListAsync();
+
+            var resultDTOs = new List<UserTestResultDTO>();
+
+            foreach (var result in results)
+            {
+                var answers = result.Answers.Select(a => new UserTestAnswerDTO
+                {
+                    QuestionId = a.QuestionId,
+                    QuestionText = _context.TestQuestions
+                        .FirstOrDefault(q => q.QuestionId == a.QuestionId)?.QuestionText,
+                    SelectedAnswer = a.AnswerText,
+                    Score = _context.TestOptions
+                        .FirstOrDefault(o => o.QuestionId == a.QuestionId && o.OptionText == a.AnswerText)?.Score
+                }).ToList();
+
+                resultDTOs.Add(new UserTestResultDTO
+                {
+                    ResultId = result.ResultId,
+                    AccountId = result.AccountId,
+                    TestId = result.TestId,
+                    RiskLevel = result.RiskLevel,
+                    Recommendation = result.Recommended,
+                    Score = result.Score,
+                    AssessedAt = result.AssessedAt,
+                    Answers = answers
+                });
+            }
+
+            return resultDTOs;
+        }
+
     }
 }

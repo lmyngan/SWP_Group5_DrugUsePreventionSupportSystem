@@ -18,21 +18,17 @@ namespace DrugsPrevention_API.Controllers
 
         // POST: api/test/submit
         [HttpPost("submit")]
-        public async Task<IActionResult> SubmitTest([FromBody] TestSubmissionDTO submission)
+        public async Task<IActionResult> SubmitTest([FromBody] TestResultCreateDTO submission)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var result = await _testService.SubmitTestAsync(submission);
-            if (result == null)
-            {
-                return StatusCode(500, "An error occurred while processing the test.");
-            }
-
-            return Ok(result);
+            var resultId = await _testService.SubmitTestAsync(submission);
+            return Ok(new { resultId });
         }
+
 
         // GET: api/test/{testId}
         [HttpGet("{testId}")]
@@ -67,5 +63,13 @@ namespace DrugsPrevention_API.Controllers
             var result = await _testService.GetTestQuestionsWithDetailsAsync(testId, resultId);
             return Ok(result);
         }
+        // GET: api/test/account/{accountId}/results
+        [HttpGet("account/{accountId}/results")]
+        public async Task<IActionResult> GetTestResultsByAccount(int accountId)
+        {
+            var results = await _testService.GetTestResultsByAccountIdAsync(accountId);
+            return Ok(results);
+        }
+
     }
 }

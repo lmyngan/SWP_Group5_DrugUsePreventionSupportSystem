@@ -1,171 +1,15 @@
-import { useState } from "react";
-
-const initialAccounts = [
-    {
-        account_id: 1,
-        accountname: "admin",
-        password: "admin123",
-        fullName: "Admin User",
-        dateOfBirth: "1980-01-01",
-        gender: "Male",
-        address: "123 Main St",
-        role_id: 1,
-        created_at: "2025-06-04 02:41:27.000",
-    },
-    {
-        account_id: 2,
-        accountname: "john_doe",
-        password: "password123",
-        fullName: "John Doe",
-        dateOfBirth: "1990-05-15",
-        gender: "Male",
-        address: "456 Elm St",
-        role_id: 4,
-        created_at: "2025-06-04 02:41:27.000",
-    },
-    {
-        account_id: 3,
-        accountname: "jane_smith",
-        password: "password456",
-        fullName: "Jane Smith",
-        dateOfBirth: "1985-08-22",
-        gender: "Female",
-        address: "789 Oak St",
-        role_id: 3,
-        created_at: "2025-06-04 02:41:27.000",
-    },
-    {
-        account_id: 4,
-        accountname: "emma_jones",
-        password: "pass789",
-        fullName: "Emma Jones",
-        dateOfBirth: "1987-02-14",
-        gender: "Female",
-        address: "123 Maple St",
-        role_id: 3,
-        created_at: "2025-06-04 02:41:27.000",
-    },
-    {
-        account_id: 5,
-        accountname: "michael_lee",
-        password: "pass321",
-        fullName: "Michael Lee",
-        dateOfBirth: "1975-09-30",
-        gender: "Male",
-        address: "456 Birch St",
-        role_id: 2,
-        created_at: "2025-06-04 02:41:27.000",
-    },
-    {
-        account_id: 6,
-        accountname: "test001",
-        password: "123123123",
-        fullName: "Test 001",
-        dateOfBirth: "2009-01-01",
-        gender: "Female",
-        address: "HCM",
-        role_id: 4,
-        created_at: "2025-06-24 02:56:35.647",
-    },
-    {
-        account_id: 7,
-        accountname: "test002",
-        password: "123123123",
-        fullName: "Test002",
-        dateOfBirth: "2017-05-08",
-        gender: "Female",
-        address: "HN",
-        role_id: 4,
-        created_at: "2025-06-24 05:26:55.793",
-    },
-    {
-        account_id: 8,
-        accountname: "test003",
-        password: "123123",
-        fullName: "Test 003",
-        dateOfBirth: "1111-11-11",
-        gender: "Male",
-        address: "ASB",
-        role_id: 4,
-        created_at: "2025-06-24 05:34:22.993",
-    },
-    {
-        account_id: 9,
-        accountname: "test004",
-        password: "123123",
-        fullName: "Test 004",
-        dateOfBirth: "1111-11-11",
-        gender: "Male",
-        address: "BCD",
-        role_id: 4,
-        created_at: "2025-06-24 05:34:46.817",
-    },
-    {
-        account_id: 10,
-        accountname: "test005",
-        password: "123123",
-        fullName: "Test 005",
-        dateOfBirth: "2222-02-22",
-        gender: "Male",
-        address: "QWEEWQ",
-        role_id: 4,
-        created_at: "2025-06-24 05:42:08.000",
-    },
-    {
-        account_id: 11,
-        accountname: "test006",
-        password: "123123",
-        fullName: "HCMASD;l",
-        dateOfBirth: "2312-12-31",
-        gender: "Male",
-        address: "111",
-        role_id: 4,
-        created_at: "2025-06-24 14:28:26.907",
-    },
-    {
-        account_id: 12,
-        accountname: "tuilavy",
-        password: "123123",
-        fullName: "Tui La Vy",
-        dateOfBirth: "2025-06-03",
-        gender: "Male",
-        address: "Ho Chi Minh",
-        role_id: 4,
-        created_at: "2025-06-25 00:36:04.420",
-    },
-    {
-        account_id: 13,
-        accountname: "thao123",
-        password: "123456",
-        fullName: "123455",
-        dateOfBirth: "2344-11-12",
-        gender: "Male",
-        address: "dfafdadd",
-        role_id: 4,
-        created_at: "2025-06-25 02:59:04.853",
-    },
-    {
-        account_id: 14,
-        accountname: "test008",
-        password: "123123",
-        fullName: "ABC",
-        dateOfBirth: "2025-06-01",
-        gender: "Male",
-        address: "HCM",
-        role_id: 4,
-        created_at: "2025-06-25 04:05:46.037",
-    },
-];
+import { useState, useEffect } from "react";
+import { getFullAccount } from "../service/api";
 
 const roleOptions = [
     { id: 1, name: "Admin" },
-    { id: 2, name: "Staff" },
+    { id: 2, name: "Manager" },
     { id: 3, name: "Consultant" },
     { id: 4, name: "Member" },
 ];
 
 const Account = () => {
-    const [accounts, setAccounts] = useState(initialAccounts);
+    const [accounts, setAccounts] = useState([]);
     const [editId, setEditId] = useState(null);
     const [editRole, setEditRole] = useState(4);
     const [showAdd, setShowAdd] = useState(false);
@@ -179,6 +23,15 @@ const Account = () => {
         role_id: 4,
     });
 
+    useEffect(() => {
+        const fetchAccounts = async () => {
+            const data = await getFullAccount();
+            if (Array.isArray(data)) setAccounts(data);
+            else setAccounts([]);
+        };
+        fetchAccounts();
+    }, []);
+
     // Edit role
     const handleEditRole = (id, currentRole) => {
         setEditId(id);
@@ -188,7 +41,7 @@ const Account = () => {
     const handleSaveRole = (id) => {
         setAccounts((prev) =>
             prev.map((acc) =>
-                acc.account_id === id ? { ...acc, role_id: Number(editRole) } : acc
+                acc.accountId === id ? { ...acc, roleId: Number(editRole) } : acc
             )
         );
         setEditId(null);
@@ -197,19 +50,19 @@ const Account = () => {
     // Delete
     const handleDelete = (id) => {
         if (window.confirm("Are you sure you want to delete this account?")) {
-            setAccounts((prev) => prev.filter((acc) => acc.account_id !== id));
+            setAccounts((prev) => prev.filter((acc) => acc.accountId !== id));
         }
     };
 
     // Add
     const handleAddAccount = () => {
-        const nextId = Math.max(...accounts.map((a) => a.account_id)) + 1;
+        const nextId = Math.max(...accounts.map((a) => a.accountId)) + 1;
         setAccounts((prev) => [
             ...prev,
             {
                 ...newAccount,
-                account_id: nextId,
-                created_at: new Date().toISOString(),
+                accountId: nextId,
+                createdAt: new Date().toISOString(),
             },
         ]);
         setShowAdd(false);
@@ -327,50 +180,57 @@ const Account = () => {
                     </thead>
                     <tbody>
                         {accounts.map((acc) => (
-                            <tr key={acc.account_id}>
-                                <td className="py-2 px-4 border">{acc.account_id}</td>
+                            <tr key={acc.accountId}>
+                                <td className="py-2 px-4 border">{acc.accountId}</td>
                                 <td className="py-2 px-4 border">{acc.accountname}</td>
                                 <td className="py-2 px-4 border">{acc.fullName}</td>
-                                <td className="py-2 px-4 border">{acc.dateOfBirth}</td>
+                                <td className="py-2 px-4 border">{acc.dateOfBirth.split('T')[0]}</td>
                                 <td className="py-2 px-4 border">{acc.gender}</td>
                                 <td className="py-2 px-4 border">{acc.address}</td>
                                 <td className="py-2 px-4 border">
-                                    {editId === acc.account_id ? (
-                                        <select
-                                            value={editRole}
-                                            onChange={(e) => setEditRole(Number(e.target.value))}
-                                            className="border p-1"
-                                        >
-                                            {roleOptions.map((r) => (
-                                                <option key={r.id} value={r.id}>
-                                                    {r.name}
-                                                </option>
-                                            ))}
-                                        </select>
+                                    {editId === acc.accountId ? (
+                                        <>
+                                            <select
+                                                value={editRole}
+                                                onChange={(e) => setEditRole(Number(e.target.value))}
+                                                className="border p-1"
+                                            >
+                                                {roleOptions.map((r) => (
+                                                    <option key={r.id} value={r.id}>
+                                                        {r.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <button
+                                                className="bg-green-500 text-white px-2 py-1 rounded ml-2"
+                                                onClick={() => handleSaveRole(acc.accountId)}
+                                            >
+                                                Save
+                                            </button>
+                                            <button
+                                                className="bg-gray-400 text-white px-2 py-1 rounded ml-2"
+                                                onClick={() => setEditId(null)}
+                                            >
+                                                Cancel
+                                            </button>
+                                        </>
                                     ) : (
-                                        roleOptions.find((r) => r.id === acc.role_id)?.name || acc.role_id
+                                        <>
+                                            {roleOptions.find((r) => r.id === acc.roleId)?.name || acc.roleid}
+                                            <button
+                                                className="bg-yellow-500 text-white px-2 py-1 rounded ml-2"
+                                                onClick={() => handleEditRole(acc.accountId, acc.roleId)}
+                                            >
+                                                Edit
+                                            </button>
+                                        </>
                                     )}
                                 </td>
-                                <td className="py-2 px-4 border">{acc.created_at}</td>
+                                <td className="py-2 px-4 border">{acc.createdAt ? acc.createdAt.split('T')[0] : ''}</td>
                                 <td className="py-2 px-4 border">
-                                    {editId === acc.account_id ? (
-                                        <button
-                                            className="bg-green-500 text-white px-2 py-1 rounded mr-2"
-                                            onClick={() => handleSaveRole(acc.account_id)}
-                                        >
-                                            Save
-                                        </button>
-                                    ) : (
-                                        <button
-                                            className="bg-yellow-500 text-white px-2 py-1 rounded mr-2"
-                                            onClick={() => handleEditRole(acc.account_id, acc.role_id)}
-                                        >
-                                            Edit Role
-                                        </button>
-                                    )}
                                     <button
                                         className="bg-red-500 text-white px-2 py-1 rounded"
-                                        onClick={() => handleDelete(acc.account_id)}
+                                        onClick={() => handleDelete(acc.accountId)}
                                     >
                                         Delete
                                     </button>
