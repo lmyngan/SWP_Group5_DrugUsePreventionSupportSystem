@@ -51,6 +51,8 @@ namespace DrugsPrevention
             builder.Services.AddScoped<IBlogRepository, BlogRepository>();
             builder.Services.AddScoped<IConsultantService, ConsultantService>();
             builder.Services.AddScoped<IConsultantRepository, ConsultantRepository>();
+            builder.Services.AddScoped<ICertificateService, CertificateService>();
+            builder.Services.AddScoped<ICertificateRepository, CertificateRepository>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
