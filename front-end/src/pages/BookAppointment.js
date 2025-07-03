@@ -33,28 +33,40 @@ const BookAppointment = () => {
     }, []);
 
     // Handler cho Đồng ý/Hủy
-    const handleUpdateStatus = async (appointmentId, status) => {
-        setUpdatingId(appointmentId);
+    const handleUpdateStatus = async (scheduleId, status) => {
+        console.log("Starting update with:", { scheduleId, status });
+        console.log("Schedule ID type:", typeof scheduleId);
+
+        // Convert scheduleId to number if it's a string
+        const numericId = parseInt(scheduleId);
+        if (isNaN(numericId)) {
+            alert("Invalid schedule ID");
+            return;
+        }
+
+        setUpdatingId(scheduleId);
 
         try {
-            const response = await updateAppointmentStatus(appointmentId, status);
+            console.log("Calling API with:", { numericId, status });
+            const response = await updateAppointmentStatus(numericId, status);
             if (response.error) {
                 console.error("Error updating appointment:", response.error);
-                alert("Failed to update appointment status");
+                alert(`Failed to update appointment status: ${response.error}`);
                 return;
             }
 
+            console.log("Update successful:", response);
             // Update only the specific appointment in the state
             setAppointments((prev) =>
                 prev.map((appointment) =>
-                    appointment.appointmentId === appointmentId
+                    appointment.scheduleId === scheduleId
                         ? { ...appointment, status }
                         : appointment
                 )
             );
         } catch (err) {
             console.error("Error updating appointment:", err);
-            alert("Failed to update appointment status");
+            alert(`Failed to update appointment status: ${err.message}`);
         } finally {
             setUpdatingId(null);
         }
@@ -64,7 +76,7 @@ const BookAppointment = () => {
         switch (status) {
             case "completed":
                 return "text-green-600";
-            case "canceled":
+            case "cancelled":
                 return "text-red-600";
             case "pending":
                 return "text-yellow-600";
@@ -84,7 +96,7 @@ const BookAppointment = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {appointments.map((a) => (
                         <div
-                            key={a.appointmentId}
+                            key={a.scheduleId || a.appointmentId}
                             className="bg-white border rounded-lg shadow p-6 flex flex-col justify-between"
                         >
                             <div>
@@ -116,17 +128,17 @@ const BookAppointment = () => {
                             <div className="flex gap-2 mt-4">
                                 <button
                                     className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
-                                    onClick={() => handleUpdateStatus(a.appointmentId, "completed")}
-                                    disabled={a.status === "completed" || updatingId === a.appointmentId}
+                                    onClick={() => handleUpdateStatus(a.scheduleId || a.appointmentId, "completed")}
+                                    disabled={a.status === "completed" || updatingId === (a.scheduleId || a.appointmentId)}
                                 >
-                                    {updatingId === a.appointmentId ? "Updating..." : "Đồng ý"}
+                                    {updatingId === (a.scheduleId || a.appointmentId) ? "Updating..." : "Đồng ý"}
                                 </button>
                                 <button
                                     className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded disabled:opacity-50"
-                                    onClick={() => handleUpdateStatus(a.appointmentId, "canceled")}
-                                    disabled={a.status === "canceled" || updatingId === a.appointmentId}
+                                    onClick={() => handleUpdateStatus(a.scheduleId || a.appointmentId, "cancelled")}
+                                    disabled={a.status === "cancelled" || updatingId === (a.scheduleId || a.appointmentId)}
                                 >
-                                    {updatingId === a.appointmentId ? "Updating..." : "Hủy"}
+                                    {updatingId === (a.scheduleId || a.appointmentId) ? "Updating..." : "Hủy"}
                                 </button>
                             </div>
                         </div>

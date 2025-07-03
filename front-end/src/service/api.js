@@ -104,6 +104,16 @@ export const getTestScore = async (accountId) => {
     }
 }
 
+//GET; ConsultantId
+export const getConsultantInfo = async (consultantId) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Consultant/${consultantId}`);
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+}
+
 // GET: Consultant Schedules
 export const getConsultantSchedules = async (consultantId) => {
     try {
@@ -135,11 +145,22 @@ export const appointmentId = async (appointmentIdData) => {
 }
 
 // PUT: Update Appointment Status
-export const updateAppointmentStatus = async (appointmentId, status) => {
+export const updateAppointmentStatus = async (scheduleId, status) => {
     try {
-        const response = await axios.put(`${API_BASE_URL}/api/Appointment/${appointmentId}/status`, { status });
+        const url = `${API_BASE_URL}/api/Appointment/${scheduleId}/status?status=${encodeURIComponent(status)}`;
+        console.log("Sending request to:", url);
+
+        const response = await axios.put(url);
+        console.log("Response:", response.data);
         return response.data;
     } catch (error) {
+        console.error("API Error Details:", {
+            status: error.response?.status,
+            statusText: error.response?.statusText,
+            data: error.response?.data,
+            message: error.message,
+            url: error.config?.url
+        });
         return { error: error.response?.data?.message || error.message };
     }
 };

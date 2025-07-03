@@ -1,41 +1,55 @@
 import React, { useState, useEffect } from "react"
-
-// Dữ liệu mẫu, sau này thay bằng API
-const mockProfile = {
-  consultant_id: 1,
-  account_id: 3,
-  fullName: "Jane Smith",
-  dateOfBirth: "1985-08-22",
-  gender: "Female",
-  address: "789 Oak St",
-  certificate: "Certified Substance Abuse Counselor",
-  price: 100.0,
-  certificates: [
-    "Masters in Psychology"
-  ],
-  accountname: "jane_smith",
-  email: "jane.smith@example.com"
-}
+import { getConsultantInfo } from "../service/api"
 
 const Consultant = () => {
-  // Sau này thay mockProfile bằng dữ liệu từ API
   const [profile, setProfile] = useState(null)
   const [editMode, setEditMode] = useState(false)
   const [editData, setEditData] = useState(null)
   const [newCert, setNewCert] = useState("")
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  // Lấy dữ liệu profile (sau này thay bằng API call)
+  // Lấy dữ liệu profile từ API
   useEffect(() => {
-    setProfile(mockProfile)
+    const fetchConsultantInfo = async () => {
+      try {
+        setLoading(true)
+        // Lấy consultantId từ localStorage hoặc từ user data
+        const user = JSON.parse(localStorage.getItem("user"))
+        const consultantId = user?.consultantId || 1 // Default to 1 if not found
+
+        const response = await getConsultantInfo(consultantId)
+        if (response.error) {
+          setError(response.error)
+        } else {
+          setProfile(response)
+        }
+      } catch (err) {
+        setError("Failed to fetch consultant information")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchConsultantInfo()
   }, [])
 
- 
   useEffect(() => {
-    setEditData(profile)
+    if (profile) {
+      setEditData(profile)
+    }
   }, [profile])
 
+  if (loading) {
+    return <div className="max-w-xl mx-auto bg-white shadow rounded p-8 mt-8">Đang tải thông tin...</div>
+  }
+
+  if (error) {
+    return <div className="max-w-xl mx-auto bg-white shadow rounded p-8 mt-8 text-red-600">Lỗi: {error}</div>
+  }
+
   if (!profile || !editData) {
-    return <div>Đang tải thông tin...</div>
+    return <div className="max-w-xl mx-auto bg-white shadow rounded p-8 mt-8">Không tìm thấy thông tin tư vấn viên</div>
   }
 
   const handleChange = (e) => {
@@ -44,21 +58,21 @@ const Consultant = () => {
   }
 
   const handleCertChange = (idx, value) => {
-    const updated = [...editData.certificates]
+    const updated = [...editData.certificateNames]
     updated[idx] = value
-    setEditData({ ...editData, certificates: updated })
+    setEditData({ ...editData, certificateNames: updated })
   }
 
   const handleAddCert = () => {
     if (newCert.trim()) {
-      setEditData({ ...editData, certificates: [...editData.certificates, newCert.trim()] })
+      setEditData({ ...editData, certificateNames: [...editData.certificateNames, newCert.trim()] })
       setNewCert("")
     }
   }
 
   const handleRemoveCert = (idx) => {
-    const updated = editData.certificates.filter((_, i) => i !== idx)
-    setEditData({ ...editData, certificates: updated })
+    const updated = editData.certificateNames.filter((_, i) => i !== idx)
+    setEditData({ ...editData, certificateNames: updated })
   }
 
   const handleEdit = () => {
@@ -75,7 +89,7 @@ const Consultant = () => {
     setProfile(editData)
     setEditMode(false)
     setNewCert("")
-    // TODO: Gọi API cập nhật thông tin ở đây, 
+    // TODO: Gọi API cập nhật thông tin ở đây
   }
 
   const c = editData
@@ -97,18 +111,6 @@ const Consultant = () => {
       </div>
       <div className="mb-4">
         <span className="font-semibold">Tên tài khoản: </span>{c.accountname}
-      </div>
-      <div className="mb-4">
-        <span className="font-semibold">Email: </span>
-        {editMode ? (
-          <input
-            type="email"
-            name="email"
-            value={c.email}
-            onChange={handleChange}
-            className="border rounded px-2 py-1 ml-2"
-          />
-        ) : c.email}
       </div>
       <div className="mb-4">
         <span className="font-semibold">Ngày sinh: </span>
@@ -164,7 +166,7 @@ const Consultant = () => {
       <div className="mb-4">
         <span className="font-semibold">Các chứng chỉ khác:</span>
         <ul className="list-disc ml-6">
-          {c.certificates.map((cert, idx) =>
+          {c.certificateNames.map((cert, idx) =>
             editMode ? (
               <li key={idx} className="flex items-center mb-1">
                 <input

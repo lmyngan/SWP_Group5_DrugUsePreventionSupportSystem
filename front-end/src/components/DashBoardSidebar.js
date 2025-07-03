@@ -1,7 +1,8 @@
-import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const DashBoardSidebar = () => {
+
+const DashBoardSidebar = ({ navigateTo, currentPage }) => {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
 
@@ -48,34 +49,41 @@ const DashBoardSidebar = () => {
                 )}
                 <div className="menu-header text-xl font-bold mb-6">Menu</div>
                 <div className="space-y-4 mt-8">
-                    <Link to="/dashboard" className="block p-3 bg-gray-700 rounded hover:bg-gray-600" onClick={() => setOpen(false)}>
+                    <button
+                        className={`block w-full text-left p-3 rounded ${currentPage === "dashboard" ? "bg-gray-600" : "bg-gray-700"} hover:bg-gray-600`}
+                        onClick={() => { navigateTo("dashboard"); setOpen(false); }}>
                         Home
-                    </Link>
-
-                     <Link to="/manage-Consultant" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
+                    </button>
+                    <button
+                        className={`block w-full text-left p-3 rounded ${currentPage === "manage-consultant" ? "bg-gray-600" : "bg-gray-700"} hover:bg-gray-600`}
+                        onClick={() => { navigateTo("manage-consultant"); setOpen(false); }}>
                         Consultant
-                    </Link>
-                    <Link to="/manage-bookappointment" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
-
-                    <Link to="/manage-consultant" className="block p-3 bg-gray-700 rounded hover:bg-gray-600" onClick={() => setOpen(false)}>
-                        Consultant
-                    </Link>
-                    <Link to="/manage-bookappointment" className="block p-3 bg-gray-700 rounded hover:bg-gray-600" onClick={() => setOpen(false)}>
-
+                    </button>
+                    <button
+                        className={`block w-full text-left p-3 rounded ${currentPage === "manage-bookappointment" ? "bg-gray-600" : "bg-gray-700"} hover:bg-gray-600`}
+                        onClick={() => { navigateTo("manage-bookappointment"); setOpen(false); }}>
                         Book Appointment
-                    </Link>
-                    <Link to="/manage-event" className="block p-3 bg-gray-700 rounded hover:bg-gray-600" onClick={() => setOpen(false)}>
+                    </button>
+                    <button
+                        className={`block w-full text-left p-3 rounded ${currentPage === "manage-event" ? "bg-gray-600" : "bg-gray-700"} hover:bg-gray-600`}
+                        onClick={() => { navigateTo("manage-event"); setOpen(false); }}>
                         Event
-                    </Link>
-                    <Link to="/manage-blog" className="block p-3 bg-gray-700 rounded hover:bg-gray-600" onClick={() => setOpen(false)}>
+                    </button>
+                    <button
+                        className={`block w-full text-left p-3 rounded ${currentPage === "manage-blog" ? "bg-gray-600" : "bg-gray-700"} hover:bg-gray-600`}
+                        onClick={() => { navigateTo("manage-blog"); setOpen(false); }}>
                         Blog
-                    </Link>
-                    <Link to="/manage-account" className="block p-3 bg-gray-700 rounded hover:bg-gray-600" onClick={() => setOpen(false)}>
+                    </button>
+                    <button
+                        className={`block w-full text-left p-3 rounded ${currentPage === "manage-account" ? "bg-gray-600" : "bg-gray-700"} hover:bg-gray-600`}
+                        onClick={() => { navigateTo("manage-account"); setOpen(false); }}>
                         Account
-                    </Link>
-                    <Link to="/report" className="block p-3 bg-gray-700 rounded hover:bg-gray-600" onClick={() => setOpen(false)}>
+                    </button>
+                    <button
+                        className={`block w-full text-left p-3 rounded ${currentPage === "report" ? "bg-gray-600" : "bg-gray-700"} hover:bg-gray-600`}
+                        onClick={() => { navigateTo("report"); setOpen(false); }}>
                         Report
-                    </Link>
+                    </button>
                 </div>
                 {/* Navbar dưới cùng */}
                 <div className="absolute bottom-6 left-0 w-full flex flex-col items-center gap-2 px-4">
