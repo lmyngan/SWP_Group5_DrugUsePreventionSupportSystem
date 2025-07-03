@@ -26,7 +26,10 @@ namespace DrugsPrevention_API.Attributes
                 return;
             }
 
-            var roleClaim = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+            var roleClaim = user.Claims.FirstOrDefault(c =>
+                c.Type == ClaimTypes.Role ||
+                c.Type == "role" ||
+                c.Type.EndsWith("/role", StringComparison.OrdinalIgnoreCase));
 
             if (roleClaim == null || !_allowedRoles.Contains(int.Parse(roleClaim.Value)))
             {
