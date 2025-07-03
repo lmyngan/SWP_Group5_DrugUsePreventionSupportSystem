@@ -41,9 +41,9 @@ namespace DrugsPrevention_Service
 
             var claims = new[]
             {
-            new Claim("AccountName", account.Accountname),
-            new Claim("FullName", account.FullName ?? ""),
-            new Claim(ClaimTypes.Role, account.Role?.RoleName ?? "Unknown"),
+            new Claim(ClaimTypes.NameIdentifier, account.AccountId.ToString()),
+            new Claim(ClaimTypes.Name, account.Accountname),
+            new Claim(ClaimTypes.Role, account.RoleId.ToString()),
             new Claim("AccountId", account.AccountId.ToString()),
             new Claim("Gender", account.Gender ?? ""),
             new Claim("Address", account.Address ?? ""),

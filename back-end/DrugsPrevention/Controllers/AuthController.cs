@@ -23,10 +23,10 @@ namespace DrugsPrevention_API.Controllers
             var result = await _authService.RegisterAccount(request);
             if (!result)
             {
-                return BadRequest(new { message = "Account name already exists or invalid role!" });
+                return BadRequest(new { message = "Tên tài khoản đã tồn tại hoặc vai trò không hợp lệ!" });
             }
 
-            return Ok(new { message = "Registration successful!" });
+            return Ok(new { message = "Đăng ký thành công!" });
         }
 
         [HttpPost("login")]
@@ -35,9 +35,16 @@ namespace DrugsPrevention_API.Controllers
             var token = await _authService.LoginAsync(request.Accountname, request.Password);
 
             if (token == null)
-                return Unauthorized(new { message = "Invalid account name or password." });
+                return Unauthorized(new { message = "Sai tên đăng nhập hoặc mật khẩu." });
 
             return Ok(new { Token = token });
         }
+        [HttpPost("migrate-passwords")]
+        public async Task<IActionResult> MigratePasswords()
+        {
+            await _authService.MigratePlaintextPasswordsToHash();
+            return Ok(new { message = "Hash mật khẩu thành công!" });
+        }
+
     }
 }
