@@ -17,7 +17,7 @@ namespace DrugsPrevention_API.Controllers
             _blogService = blogService;
         }
 
-        [AuthorizeByRole(1, 2, 3, 4)]
+        [AuthorizeByRole(1, 2)]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
