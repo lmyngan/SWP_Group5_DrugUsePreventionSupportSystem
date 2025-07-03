@@ -119,5 +119,29 @@ namespace DrugsPrevention_Service.Service
 
             return result;
         }
+        public async Task<Accounts> CreateAccountAsync(CreateAccountRequestDTO request)
+        {
+            var role = await _repository.FindRoleByIdAsync(request.RoleId);
+            if (role == null)
+                throw new Exception("Role không tồn tại!");
+
+            var newAccount = new Accounts
+            {
+                Accountname = request.Accountname,
+                Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
+                FullName = request.FullName,
+                DateOfBirth = request.DateOfBirth,
+                Gender = request.Gender,
+                Address = request.Address,
+                RoleId = request.RoleId,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _repository.AddAsync(newAccount);
+            await _repository.SaveChangesAsync();
+
+            return newAccount;
+        }
+
     }
 }

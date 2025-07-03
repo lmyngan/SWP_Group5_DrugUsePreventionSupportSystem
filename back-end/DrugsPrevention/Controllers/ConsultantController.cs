@@ -1,4 +1,5 @@
-﻿using DrugsPrevention_Data.DTO.Consultant;
+﻿using DrugsPrevention_API.Attributes;
+using DrugsPrevention_Data.DTO.Consultant;
 using DrugsPrevention_Service.Service.Iservice;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +16,7 @@ namespace DrugsPrevention_API.Controllers
             _consultantService = consultantService;
         }
 
+        [AuthorizeByRole(1, 2, 3)]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetConsultantById(int id)
         {
@@ -25,7 +27,7 @@ namespace DrugsPrevention_API.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new { message = ex.Message });
             }
         }
     }

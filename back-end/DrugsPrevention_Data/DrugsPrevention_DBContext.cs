@@ -123,7 +123,7 @@ namespace DrugsPrevention_Data
 
             modelBuilder.Entity<EventParticipation>()
                 .HasOne(p => p.Account)
-                .WithMany()
+                .WithMany(a => a.EventParticipations)
                 .HasForeignKey(p => p.AccountId)
                 .OnDelete(DeleteBehavior.Restrict);
 

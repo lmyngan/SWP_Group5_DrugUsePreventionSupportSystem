@@ -1,4 +1,5 @@
-﻿using DrugsPrevention_Data.DTO.Event;
+﻿using DrugsPrevention_API.Attributes;
+using DrugsPrevention_Data.DTO.Event;
 using DrugsPrevention_Service.Service.Iservice;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +16,7 @@ namespace DrugsPrevention_API.Controllers
             _eventService = eventService;
         }
 
+        [AuthorizeByRole(1, 2, 3, 4)]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -22,6 +24,7 @@ namespace DrugsPrevention_API.Controllers
             return Ok(result);
         }
 
+        [AuthorizeByRole(1, 2, 3, 4)]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
@@ -30,6 +33,7 @@ namespace DrugsPrevention_API.Controllers
             return Ok(result);
         }
 
+        [AuthorizeByRole(1, 2)]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateEventDto dto)
         {
@@ -38,15 +42,17 @@ namespace DrugsPrevention_API.Controllers
             return CreatedAtAction(nameof(Get), new { id = result.EventId }, result);
         }
 
+        [AuthorizeByRole(1, 2)]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateEventDto dto)
         {
-            if (id != dto.EventId) return BadRequest("ID mismatch");
+            if (id != dto.EventId) return BadRequest("ID không trùng khớp");
             var result = await _eventService.UpdateEventAsync(dto);
             if (result == null) return NotFound();
             return Ok(result);
         }
 
+        [AuthorizeByRole(1)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

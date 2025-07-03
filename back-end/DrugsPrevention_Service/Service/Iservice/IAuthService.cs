@@ -11,5 +11,6 @@ namespace DrugsPrevention_Service.Service.Iservice
     {
         Task<string> LoginAsync(string accountName, string password);
         Task<bool> RegisterAccount(RegisterRequestDTO request);
+        Task MigratePlaintextPasswordsToHash();
     }
 }
