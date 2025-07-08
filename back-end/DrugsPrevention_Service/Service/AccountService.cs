@@ -58,11 +58,21 @@ namespace DrugsPrevention_Service.Service
             existing.Gender = request.Gender ?? existing.Gender;
             existing.Address = request.Address ?? existing.Address;
 
+            if (request.RoleId.HasValue && request.RoleId.Value != existing.RoleId)
+            {
+                var role = await _repository.FindRoleByIdAsync(request.RoleId.Value);
+                if (role == null)
+                    throw new Exception("Role không tồn tại!");
+
+                existing.RoleId = request.RoleId.Value;
+            }
+
             await _repository.UpdateAsync(existing);
             await _repository.SaveChangesAsync();
 
             return existing;
         }
+
 
         public async Task<bool> DeleteAccountAsync(int accountId)
         {
