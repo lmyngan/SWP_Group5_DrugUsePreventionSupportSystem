@@ -52,19 +52,13 @@ namespace DrugsPrevention_Service.Service
             if (existing == null)
                 throw new Exception("Account not found");
 
-            existing.Accountname = request.Accountname ?? existing.Accountname;
-            existing.FullName = request.FullName ?? existing.FullName;
-            existing.DateOfBirth = request.DateOfBirth ?? existing.DateOfBirth;
-            existing.Gender = request.Gender ?? existing.Gender;
-            existing.Address = request.Address ?? existing.Address;
-
-            if (request.RoleId.HasValue && request.RoleId.Value != existing.RoleId)
+            if (request.RoleId != existing.RoleId)
             {
-                var role = await _repository.FindRoleByIdAsync(request.RoleId.Value);
+                var role = await _repository.FindRoleByIdAsync(request.RoleId);
                 if (role == null)
                     throw new Exception("Role không tồn tại!");
 
-                existing.RoleId = request.RoleId.Value;
+                existing.RoleId = request.RoleId;
             }
 
             await _repository.UpdateAsync(existing);
@@ -72,7 +66,6 @@ namespace DrugsPrevention_Service.Service
 
             return existing;
         }
-
 
         public async Task<bool> DeleteAccountAsync(int accountId)
         {
