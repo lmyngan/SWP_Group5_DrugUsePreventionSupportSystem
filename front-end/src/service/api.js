@@ -77,7 +77,7 @@ export const addAccount = async (data) => {
 //PUT: Edit Account
 export const editAccount = async (accountId, data) => {
     try {
-        const response = await axios.put(`${API_BASE_URL}/account/${accountId}`, data, {
+        const response = await axios.put(`${API_BASE_URL}/api/account/${accountId}`, data, {
             headers: getAuthHeader(),
         });
         return response.data;

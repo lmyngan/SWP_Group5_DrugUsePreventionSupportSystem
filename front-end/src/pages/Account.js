@@ -61,7 +61,7 @@ const Account = () => {
 
     const handleSaveRole = async (id) => {
         try {
-            await editAccount(id, { RoleId: Number(editRole) });
+            await editAccount(id, { roleId: Number(editRole) }); // Sửa lại roleId thường
             // Refetch danh sách
             const data = await getFullAccount();
             if (Array.isArray(data)) setAccounts(data);
