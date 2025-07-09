@@ -69,7 +69,7 @@ const LoginPage = () => {
               onChange={(e) => setAccountName(e.target.value)}
               required
             />
-            
+
           </div>
 
           <div className="input-box">
@@ -82,7 +82,7 @@ const LoginPage = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-           
+
           </div>
 
           <div className="forgot-password">

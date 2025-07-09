@@ -6,13 +6,50 @@ const DashBoardSidebar = ({ navigateTo, currentPage }) => {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        localStorage.removeItem("user");
-        navigate("/");
+    const handleGoHome = () => {
+        navigateTo("dashboard");
+        setOpen(false);
     };
 
-    const handleGoHome = () => {
-        navigate("/");
+    const handleConsultant = () => {
+        navigateTo("manage-consultant");
+        setOpen(false);
+    };
+
+    const handleBookAppointment = () => {
+        navigateTo("manage-bookappointment");
+        setOpen(false);
+    };
+
+    const handleEvent = () => {
+        navigateTo("manage-event");
+        setOpen(false);
+    };
+
+    const handleBlog = () => {
+        navigateTo("manage-blog");
+        setOpen(false);
+    };
+
+    const handleAccount = () => {
+        navigateTo("manage-account");
+        setOpen(false);
+    };
+
+    const handleReport = () => {
+        navigateTo("report");
+        setOpen(false);
+    };
+
+    const handleSidebarHome = () => {
+        navigateTo("");
+        setOpen(false);
+    };
+
+    const handleSidebarLogout = () => {
+        localStorage.removeItem("user");
+        navigateTo("");
+        setOpen(false);
     };
 
     return (
@@ -51,44 +88,52 @@ const DashBoardSidebar = ({ navigateTo, currentPage }) => {
                 <div className="space-y-4 mt-8">
                     <button
                         className={`block w-full text-left p-3 rounded ${currentPage === "dashboard" ? "bg-gray-600" : "bg-gray-700"} hover:bg-gray-600`}
-                        onClick={() => { navigateTo("dashboard"); setOpen(false); }}>
+                        onClick={handleGoHome}>
                         Home
                     </button>
                     <button
                         className={`block w-full text-left p-3 rounded ${currentPage === "manage-consultant" ? "bg-gray-600" : "bg-gray-700"} hover:bg-gray-600`}
-                        onClick={() => { navigateTo("manage-consultant"); setOpen(false); }}>
+                        onClick={handleConsultant}>
                         Consultant
                     </button>
                     <button
                         className={`block w-full text-left p-3 rounded ${currentPage === "manage-bookappointment" ? "bg-gray-600" : "bg-gray-700"} hover:bg-gray-600`}
-                        onClick={() => { navigateTo("manage-bookappointment"); setOpen(false); }}>
+                        onClick={handleBookAppointment}>
                         Book Appointment
                     </button>
                     <button
                         className={`block w-full text-left p-3 rounded ${currentPage === "manage-event" ? "bg-gray-600" : "bg-gray-700"} hover:bg-gray-600`}
-                        onClick={() => { navigateTo("manage-event"); setOpen(false); }}>
+                        onClick={handleEvent}>
                         Event
                     </button>
                     <button
                         className={`block w-full text-left p-3 rounded ${currentPage === "manage-blog" ? "bg-gray-600" : "bg-gray-700"} hover:bg-gray-600`}
-                        onClick={() => { navigateTo("manage-blog"); setOpen(false); }}>
+                        onClick={handleBlog}>
                         Blog
                     </button>
                     <button
                         className={`block w-full text-left p-3 rounded ${currentPage === "manage-account" ? "bg-gray-600" : "bg-gray-700"} hover:bg-gray-600`}
-                        onClick={() => { navigateTo("manage-account"); setOpen(false); }}>
+                        onClick={handleAccount}>
                         Account
                     </button>
                     <button
                         className={`block w-full text-left p-3 rounded ${currentPage === "report" ? "bg-gray-600" : "bg-gray-700"} hover:bg-gray-600`}
-                        onClick={() => { navigateTo("report"); setOpen(false); }}>
+                        onClick={handleReport}>
                         Report
                     </button>
                 </div>
                 {/* Navbar dưới cùng */}
                 <div className="absolute bottom-6 left-0 w-full flex flex-col items-center gap-2 px-4">
-                    <button onClick={handleGoHome} className="w-full text-center py-2 rounded bg-gray-700 hover:bg-gray-600 mb-1">Trang chủ</button>
-                    <button onClick={handleLogout} className="w-full py-2 rounded bg-red-600 hover:bg-red-700 text-white font-semibold">Logout</button>
+                    <button
+                        className={`block w-full text-center p-3 rounded ${currentPage === "" ? "bg-gray-600" : "bg-gray-700"} hover:bg-gray-600`}
+                        onClick={handleSidebarHome}>
+                        Home
+                    </button>
+                    <button
+                        className="w-full py-2 rounded bg-red-600 hover:bg-red-700 text-white font-semibold"
+                        onClick={handleSidebarLogout}>
+                        Logout
+                    </button>
                 </div>
             </div>
         </>

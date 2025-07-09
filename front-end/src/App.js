@@ -107,12 +107,12 @@ const App = () => {
   return (
     <div className="app">
       {/*Member Navbar*/}
-      {!(currentPage === "dashboard" || currentPage.startsWith("manage-")) && (
+      {!(currentPage === "dashboard" || currentPage.startsWith("manage-") || currentPage === "report") && (
         <Navbar navigateTo={navigateTo} currentPage={currentPage} />
       )}
 
       {/*Admin Dashboard*/}
-      {(currentPage === "dashboard" || currentPage.startsWith("manage-")) && (
+      {(currentPage === "dashboard" || currentPage.startsWith("manage-") || currentPage === "report") && (
         <DashBoardSidebar navigateTo={navigateTo} currentPage={currentPage} />
       )}
 
