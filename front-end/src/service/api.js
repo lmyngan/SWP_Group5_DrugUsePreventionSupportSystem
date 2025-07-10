@@ -243,7 +243,43 @@ export const eventData = async () => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.response?.data?.message || error.message };
+        return { error: error.message };
+    }
+}
+
+//POST: Add Event
+export const addEvent = async (data) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/Event`, data, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
+//PUT: Edit Event
+export const editEvent = async (eventId, data) => {
+    try {
+        const response = await axios.put(`${API_BASE_URL}/api/Event/${eventId}`, data, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
+//DELETE: Delete Event
+export const deleteEvent = async (eventId) => {
+    try {
+        const response = await axios.delete(`${API_BASE_URL}/api/Event/${eventId}`, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message }
     }
 }
 
@@ -255,45 +291,42 @@ export const blogData = async () => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.response?.data?.message || error.message };
+        return { error: error.message };
     }
 }
 
-export const accountApi = {
-    getAll: async () => {
-        const response = await axios.get(`${API_BASE_URL}/account`, {
+//POST: Add Blog
+export const addBlog = async (data) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/Blog`, data, {
             headers: getAuthHeader(),
         });
         return response.data;
-    },
-
-    getById: async (id) => {
-        const response = await axios.get(`${API_BASE_URL}/account/${id}`, {
-            headers: getAuthHeader(),
-        });
-        return response.data;
-    },
-
-    createAccount: async (data) => {
-        // data: { accountname, password, fullName, dateOfBirth, gender, address, roleId }
-        const response = await axios.post(`${API_BASE_URL}/account`, data, {
-            headers: getAuthHeader(),
-        });
-        return response.data;
-    },
-
-    updateAccount: async (accountId, data) => {
-        // data: { accountname, fullName, dateOfBirth, gender, address }
-        const response = await axios.put(`${API_BASE_URL}/account/${accountId}`, data, {
-            headers: getAuthHeader(),
-        });
-        return response.data;
-    },
-
-    deleteAccount: async (accountId) => {
-        const response = await axios.delete(`${API_BASE_URL}/account/${accountId}`, {
-            headers: getAuthHeader(),
-        });
-        return response.data;
+    } catch (error) {
+        return { error: error.message };
     }
-};
+}
+
+//PUT: Edit Blog
+export const editBlog = async (blogId, data) => {
+    try {
+        const response = await axios.put(`${API_BASE_URL}/api/Blog/${blogId}`, data, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
+//DELETE: Delete Blog
+export const deleteBlog = async (blogId) => {
+    try {
+        const response = await axios.delete(`${API_BASE_URL}/api/Blog/${blogId}`, {
+            headers: getAuthHeader(),
+        })
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
