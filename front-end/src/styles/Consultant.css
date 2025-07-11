@@ -1,0 +1,253 @@
+/* Main Container */
+.consultant-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  background: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Header */
+.profile-header {
+  background: #2563eb;
+  padding: 1.5rem 2rem;
+}
+
+.profile-header h2 {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Content Layout */
+.profile-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+@media (min-width: 768px) {
+  .profile-content {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Info Cards */
+.info-card {
+  background: #f9fafb;
+  padding: 1.5rem;
+  border-radius: 8px;
+  height: 100%;
+}
+
+.info-card h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Info Sections */
+.info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.info-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.info-field label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.info-field p {
+  font-weight: 500;
+  color: #111827;
+  margin: 0;
+}
+
+/* Input Fields */
+.info-field input,
+.info-field select,
+.info-field textarea {
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  width: 100%;
+}
+
+.info-field input:focus,
+.info-field select:focus,
+.info-field textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* Price Input */
+.price-input {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.price-input input {
+  flex: 1;
+}
+
+.price-display span {
+  color: #059669;
+  font-weight: 600;
+}
+
+/* Certificates */
+.certificates-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.certificate-view {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.certificate-view svg {
+  color: #10b981;
+  margin-top: 0.125rem;
+  flex-shrink: 0;
+}
+
+.certificate-edit {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.certificate-edit input {
+  flex: 1;
+}
+
+.certificate-edit button {
+  color: #ef4444;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+.certificate-edit button:hover {
+  color: #dc2626;
+}
+
+/* Add Certificate */
+.add-certificate {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.add-certificate input {
+  flex: 1;
+}
+
+.add-certificate button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.add-certificate button:hover {
+  background: #1d4ed8;
+}
+
+/* Action Buttons */
+.action-buttons {
+  padding: 1.5rem 2rem;
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.edit-btn,
+.save-btn,
+.cancel-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background: #2563eb;
+  color: white;
+  border: none;
+}
+
+.edit-btn:hover {
+  background: #1d4ed8;
+}
+
+.save-btn {
+  background: #059669;
+  color: white;
+  border: none;
+}
+
+.save-btn:hover {
+  background: #047857;
+}
+
+.cancel-btn {
+  background: white;
+  color: #4b5563;
+  border: 1px solid #d1d5db;
+}
+
+.cancel-btn:hover {
+  background: #f3f4f6;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.loading-spinner::after {
+  content: "";
+  width: 3rem;
+  height: 3rem;
+  border: 3px solid #e5e7eb;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,253 +1,297 @@
-import React, { useState, useEffect } from "react"
-
-// Dữ liệu mẫu, sau này thay bằng API
-const mockProfile = {
-  consultant_id: 1,
-  account_id: 3,
-  fullName: "Jane Smith",
-  dateOfBirth: "1985-08-22",
-  gender: "Female",
-  address: "789 Oak St",
-  certificate: "Certified Substance Abuse Counselor",
-  price: 100.0,
-  certificates: [
-    "Masters in Psychology"
-  ],
-  accountname: "jane_smith",
-  email: "jane.smith@example.com"
-}
+import React, { useState, useEffect } from "react";
+import "../styles/Consultant.css";
 
 const Consultant = () => {
-  // Sau này thay mockProfile bằng dữ liệu từ API
-  const [profile, setProfile] = useState(null)
-  const [editMode, setEditMode] = useState(false)
-  const [editData, setEditData] = useState(null)
-  const [newCert, setNewCert] = useState("")
+  const mockProfile = {
+    consultant_id: 1,
+    account_id: 3,
+    fullName: "Jane Smith",
+    dateOfBirth: "1985-08-22",
+    gender: "Female",
+    address: "789 Oak St, Springfield, IL 62704",
+    certificate: "Certified Substance Abuse Counselor",
+    price: 100.0,
+    certificates: [
+      "Masters in Psychology",
+      "Licensed Professional Counselor (LPC)",
+      "Cognitive Behavioral Therapy Certification"
+    ],
+    accountname: "jane_smith",
+    email: "jane.smith@example.com"
+  };
 
-  // Lấy dữ liệu profile (sau này thay bằng API call)
+  const [profile, setProfile] = useState(null);
+  const [editMode, setEditMode] = useState(false);
+  const [editData, setEditData] = useState(null);
+  const [newCert, setNewCert] = useState("");
+
   useEffect(() => {
-    setProfile(mockProfile)
-  }, [])
+    setProfile(mockProfile);
+  }, []);
 
- 
   useEffect(() => {
-    setEditData(profile)
-  }, [profile])
-
-  if (!profile || !editData) {
-    return <div>Đang tải thông tin...</div>
-  }
+    setEditData(profile);
+  }, [profile]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setEditData({ ...editData, [name]: value })
-  }
+    const { name, value } = e.target;
+    setEditData({ ...editData, [name]: value });
+  };
 
   const handleCertChange = (idx, value) => {
-    const updated = [...editData.certificates]
-    updated[idx] = value
-    setEditData({ ...editData, certificates: updated })
-  }
+    const updated = [...editData.certificates];
+    updated[idx] = value;
+    setEditData({ ...editData, certificates: updated });
+  };
 
   const handleAddCert = () => {
     if (newCert.trim()) {
-      setEditData({ ...editData, certificates: [...editData.certificates, newCert.trim()] })
-      setNewCert("")
+      setEditData({ 
+        ...editData, 
+        certificates: [...editData.certificates, newCert.trim()] 
+      });
+      setNewCert("");
     }
-  }
+  };
 
   const handleRemoveCert = (idx) => {
-    const updated = editData.certificates.filter((_, i) => i !== idx)
-    setEditData({ ...editData, certificates: updated })
-  }
+    const updated = editData.certificates.filter((_, i) => i !== idx);
+    setEditData({ ...editData, certificates: updated });
+  };
 
-  const handleEdit = () => {
-    setEditMode(true)
-  }
-
+  const handleEdit = () => setEditMode(true);
   const handleCancel = () => {
-    setEditData(profile)
-    setEditMode(false)
-    setNewCert("")
-  }
+    setEditData(profile);
+    setEditMode(false);
+    setNewCert("");
+  };
 
   const handleSave = () => {
-    setProfile(editData)
-    setEditMode(false)
-    setNewCert("")
-    // TODO: Gọi API cập nhật thông tin ở đây, 
+    setProfile(editData);
+    setEditMode(false);
+    setNewCert("");
+  };
+
+  if (!profile || !editData) {
+    return <div className="loading-spinner"></div>;
   }
 
-  const c = editData
+  const c = editData;
 
   return (
-    <div className="max-w-xl mx-auto bg-white shadow rounded p-8 mt-8">
-      <h2 className="text-2xl font-bold mb-4 text-blue-700">Thông tin tư vấn viên</h2>
-      <div className="mb-4">
-        <span className="font-semibold">Họ tên: </span>
-        {editMode ? (
-          <input
-            type="text"
-            name="fullName"
-            value={c.fullName}
-            onChange={handleChange}
-            className="border rounded px-2 py-1 ml-2"
-          />
-        ) : c.fullName}
+    <div className="consultant-container">
+      <div className="profile-header">
+        <h2>Consultant Profile</h2>
       </div>
-      <div className="mb-4">
-        <span className="font-semibold">Tên tài khoản: </span>{c.accountname}
-      </div>
-      <div className="mb-4">
-        <span className="font-semibold">Email: </span>
-        {editMode ? (
-          <input
-            type="email"
-            name="email"
-            value={c.email}
-            onChange={handleChange}
-            className="border rounded px-2 py-1 ml-2"
-          />
-        ) : c.email}
-      </div>
-      <div className="mb-4">
-        <span className="font-semibold">Ngày sinh: </span>
-        {editMode ? (
-          <input
-            type="date"
-            name="dateOfBirth"
-            value={c.dateOfBirth}
-            onChange={handleChange}
-            className="border rounded px-2 py-1 ml-2"
-          />
-        ) : c.dateOfBirth}
-      </div>
-      <div className="mb-4">
-        <span className="font-semibold">Giới tính: </span>
-        {editMode ? (
-          <select
-            name="gender"
-            value={c.gender}
-            onChange={handleChange}
-            className="border rounded px-2 py-1 ml-2"
-          >
-            <option value="Male">Nam</option>
-            <option value="Female">Nữ</option>
-            <option value="Other">Khác</option>
-          </select>
-        ) : c.gender}
-      </div>
-      <div className="mb-4">
-        <span className="font-semibold">Địa chỉ: </span>
-        {editMode ? (
-          <input
-            type="text"
-            name="address"
-            value={c.address}
-            onChange={handleChange}
-            className="border rounded px-2 py-1 ml-2"
-          />
-        ) : c.address}
-      </div>
-      <div className="mb-4">
-        <span className="font-semibold">Chứng chỉ chính: </span>
-        {editMode ? (
-          <input
-            type="text"
-            name="certificate"
-            value={c.certificate}
-            onChange={handleChange}
-            className="border rounded px-2 py-1 ml-2"
-          />
-        ) : c.certificate}
-      </div>
-      <div className="mb-4">
-        <span className="font-semibold">Các chứng chỉ khác:</span>
-        <ul className="list-disc ml-6">
-          {c.certificates.map((cert, idx) =>
-            editMode ? (
-              <li key={idx} className="flex items-center mb-1">
-                <input
-                  type="text"
-                  value={cert}
-                  onChange={e => handleCertChange(idx, e.target.value)}
-                  className="border rounded px-2 py-1 mr-2"
-                />
-                <button
-                  type="button"
-                  onClick={() => handleRemoveCert(idx)}
-                  className="text-red-500 ml-1"
-                  title="Xóa chứng chỉ"
-                >
-                  X
-                </button>
-              </li>
-            ) : (
-              <li key={idx}>{cert}</li>
-            )
-          )}
-        </ul>
-        {editMode && (
-          <div className="flex mt-2">
-            <input
-              type="text"
-              value={newCert}
-              onChange={e => setNewCert(e.target.value)}
-              placeholder="Thêm chứng chỉ mới"
-              className="border rounded px-2 py-1 mr-2"
-            />
-            <button
-              type="button"
-              onClick={handleAddCert}
-              className="bg-blue-500 text-white px-3 py-1 rounded"
-            >
-              Thêm
-            </button>
+      
+      <div className="profile-content">
+        {/* Personal Information Column */}
+        <div className="personal-info">
+          <div className="info-card">
+            <h3>Personal Information</h3>
+            
+            <div className="info-section">
+              <div className="info-field">
+                <label>Full Name</label>
+                {editMode ? (
+                  <input
+                    type="text"
+                    name="fullName"
+                    value={c.fullName}
+                    onChange={handleChange}
+                  />
+                ) : (
+                  <p>{c.fullName}</p>
+                )}
+              </div>
+
+              <div className="info-field">
+                <label>Username</label>
+                <p>{c.accountname}</p>
+              </div>
+
+              <div className="info-field">
+                <label>Email</label>
+                {editMode ? (
+                  <input
+                    type="email"
+                    name="email"
+                    value={c.email}
+                    onChange={handleChange}
+                  />
+                ) : (
+                  <p>{c.email}</p>
+                )}
+              </div>
+
+              <div className="info-field">
+                <label>Date of Birth</label>
+                {editMode ? (
+                  <input
+                    type="date"
+                    name="dateOfBirth"
+                    value={c.dateOfBirth}
+                    onChange={handleChange}
+                  />
+                ) : (
+                  <p>
+                    {new Date(c.dateOfBirth).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </p>
+                )}
+              </div>
+
+              <div className="info-field">
+                <label>Gender</label>
+                {editMode ? (
+                  <select
+                    name="gender"
+                    value={c.gender}
+                    onChange={handleChange}
+                  >
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                ) : (
+                  <p>{c.gender}</p>
+                )}
+              </div>
+
+              <div className="info-field">
+                <label>Address</label>
+                {editMode ? (
+                  <textarea
+                    name="address"
+                    value={c.address}
+                    onChange={handleChange}
+                    rows={3}
+                  />
+                ) : (
+                  <p>{c.address}</p>
+                )}
+              </div>
+            </div>
           </div>
-        )}
+        </div>
+
+        {/* Professional Information Column */}
+        <div className="professional-info">
+          <div className="info-card">
+            <h3>Professional Information</h3>
+            
+            <div className="info-section">
+              <div className="info-field">
+                <label>Main Certificate</label>
+                {editMode ? (
+                  <input
+                    type="text"
+                    name="certificate"
+                    value={c.certificate}
+                    onChange={handleChange}
+                  />
+                ) : (
+                  <p>{c.certificate}</p>
+                )}
+              </div>
+
+              <div className="info-field">
+                <label>Consultation Price</label>
+                {editMode ? (
+                  <div className="price-input">
+                    <span>$</span>
+                    <input
+                      type="number"
+                      name="price"
+                      value={c.price}
+                      onChange={handleChange}
+                      min={0}
+                      step="0.01"
+                    />
+                    <span>/ session</span>
+                  </div>
+                ) : (
+                  <p className="price-display">
+                    <span>${c.price.toFixed(2)}</span> per session
+                  </p>
+                )}
+              </div>
+
+              <div className="info-field">
+                <label>Certifications & Qualifications</label>
+                <ul className="certificates-list">
+                  {c.certificates.map((cert, idx) =>
+                    editMode ? (
+                      <li key={idx} className="certificate-edit">
+                        <input
+                          type="text"
+                          value={cert}
+                          onChange={(e) => handleCertChange(idx, e.target.value)}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveCert(idx)}
+                          title="Remove certificate"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                          </svg>
+                        </button>
+                      </li>
+                    ) : (
+                      <li key={idx} className="certificate-view">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        <span>{cert}</span>
+                      </li>
+                    )
+                  )}
+                </ul>
+                
+                {editMode && (
+                  <div className="add-certificate">
+                    <input
+                      type="text"
+                      value={newCert}
+                      onChange={(e) => setNewCert(e.target.value)}
+                      placeholder="Add new certification"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddCert}
+                    >
+                      Add
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="mb-4">
-        <span className="font-semibold">Giá tư vấn: </span>
-        {editMode ? (
-          <input
-            type="number"
-            name="price"
-            value={c.price}
-            onChange={handleChange}
-            className="border rounded px-2 py-1 ml-2"
-            min={0}
-          />
-        ) : (
-          <span className="text-green-700 font-bold">{c.price} USD / buổi</span>
-        )}
-      </div>
-      <div className="flex gap-3 mt-6">
+
+      <div className="action-buttons">
         {editMode ? (
           <>
-            <button
-              onClick={handleSave}
-              className="bg-green-600 text-white px-4 py-2 rounded"
-            >
-              Lưu
+            <button onClick={handleSave} className="save-btn">
+              Save Changes
             </button>
-            <button
-              onClick={handleCancel}
-              className="bg-gray-400 text-white px-4 py-2 rounded"
-            >
-              Hủy
+            <button onClick={handleCancel} className="cancel-btn">
+              Cancel
             </button>
           </>
         ) : (
-          <button
-            onClick={handleEdit}
-            className="bg-blue-600 text-white px-4 py-2 rounded"
-          >
-            Chỉnh sửa
+          <button onClick={handleEdit} className="edit-btn">
+            Edit Profile
           </button>
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Consultant
+export default Consultant;

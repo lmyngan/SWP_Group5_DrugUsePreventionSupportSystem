@@ -29,8 +29,6 @@ const CardContent = ({ children, className = '' }) => (
   </div>
 );
 
-
-
 // Feature Item Component
 const FeatureItem = ({ title, description }) => (
   <div className="feature-item">
@@ -55,60 +53,60 @@ const ServiceCard = ({ emoji, title, description, bgColor = "service-card-blue" 
 const WhoWeAre = () => {
   const features = [
     {
-      title: "Khóa học giáo dục",
-      description: "Phù hợp theo từng nhóm tuổi (học sinh, phụ huynh, giáo viên) về tác hại của ma túy, kỹ năng từ chối và sức khỏe tâm thần."
+      title: "Educational Courses",
+      description: "Age-appropriate content (for students, parents, teachers) about drug dangers, refusal skills, and mental health."
     },
     {
-      title: "Đánh giá nguy cơ tương tác",
-      description: "Sử dụng các công cụ như ASSIST và CRAFFT giúp bạn hiểu rõ nguy cơ của bản thân và hướng xử lý tiếp theo."
+      title: "Risk Assessment Tools",
+      description: "Using tools like ASSIST and CRAFFT to help you understand personal risks and next steps."
     },
     {
-      title: "Hỗ trợ tư vấn trực tuyến",
-      description: "Đặt lịch hẹn dễ dàng với chuyên gia tư vấn để nhận lời khuyên, hỗ trợ tâm lý và định hướng."
+      title: "Online Counseling Support",
+      description: "Easy scheduling with counseling experts for advice, psychological support and guidance."
     },
     {
-      title: "Chương trình cộng đồng",
-      description: "Quản lý và tham gia các chiến dịch truyền thông, hội thảo giáo dục và hoạt động ngoại khóa."
+      title: "Community Programs",
+      description: "Manage and participate in awareness campaigns, educational seminars and extracurricular activities."
     },
     {
-      title: "Blog & Chia sẻ trải nghiệm",
-      description: "Đọc các câu chuyện thực tế, lời khuyên từ chuyên gia và mẹo cho cuộc sống hàng ngày."
+      title: "Blog & Experience Sharing",
+      description: "Read real stories, expert advice and tips for daily living."
     },
     {
-      title: "Hồ sơ cá nhân & Theo dõi tiến trình",
-      description: "Lưu lại quá trình học tập, lịch hẹn và sự phát triển của bạn."
+      title: "Personal Profile & Progress Tracking",
+      description: "Track your learning journey, appointments and personal development."
     }
   ];
 
   const services = [
     {
       emoji: "🧑‍🎓",
-      title: "Học sinh, sinh viên",
-      description: "Từ tiểu học đến đại học – những người muốn học cách bảo vệ bản thân và vượt qua áp lực bạn bè.",
+      title: "Students",
+      description: "From elementary to university - those wanting to learn self-protection and peer pressure resistance.",
       bgColor: "service-card-blue"
     },
     {
       emoji: "👨‍👩‍👧‍👦",
-      title: "Phụ huynh & Người giám hộ",
-      description: "Những người muốn hiểu hơn về phòng ngừa ma túy và hỗ trợ con em mình.",
+      title: "Parents & Guardians",
+      description: "Those wanting to better understand drug prevention and support their children.",
       bgColor: "service-card-green"
     },
     {
       emoji: "🧑‍🏫",
-      title: "Giáo viên & Tư vấn viên",
-      description: "Những người cần công cụ để tích hợp giáo dục phòng chống ma túy vào lớp học.",
+      title: "Teachers & Counselors",
+      description: "Educators needing tools to integrate drug prevention education into classrooms.",
       bgColor: "service-card-purple"
     },
     {
       emoji: "🧑‍⚕️",
-      title: "Nhân viên y tế & xã hội",
-      description: "Những người muốn theo dõi, tư vấn và kết nối với các cá nhân có nguy cơ.",
+      title: "Healthcare & Social Workers",
+      description: "Professionals who monitor, advise and connect with at-risk individuals.",
       bgColor: "service-card-red"
     },
     {
       emoji: "🏘️",
-      title: "Tổ chức cộng đồng",
-      description: "Thực hiện các hoạt động truyền thông, nâng cao nhận thức và hỗ trợ cộng đồng.",
+      title: "Community Organizations",
+      description: "Groups conducting awareness campaigns and community support activities.",
       bgColor: "service-card-yellow"
     }
   ];
@@ -119,9 +117,9 @@ const WhoWeAre = () => {
       <section className="hero-section">
         <div className="container">
           <div className="hero-content">
-            <h1 className="hero-title">Chúng Tôi Là Ai</h1>
+            <h1 className="hero-title">Who We Are</h1>
             <p className="hero-subtitle">
-              Chúng tôi xây dựng cộng đồng giúp phòng ngừa ma túy, cung cấp kiến thức, công cụ và hỗ trợ để giúp mọi người sống khỏe mạnh và an toàn.
+              We build communities to prevent drug abuse, providing knowledge, tools and support to help people live healthy and safe lives.
             </p>
           </div>
         </div>
@@ -135,20 +133,20 @@ const WhoWeAre = () => {
             <CardContent>
               <h2 className="section-title">
                 <Heart className="section-icon heart-icon" />
-                Vì Sao Phòng Ngừa Ma Túy Quan Trọng
+                Why Drug Prevention Matters
               </h2>
               <div className="prose">
                 <p>
-                  Mỗi năm, hàng triệu bạn trẻ và gia đình bị ảnh hưởng bởi ma túy, không chỉ bởi nghiện mà còn bởi hậu quả về cảm xúc, xã hội và kinh tế. Dù điều trị rất quan trọng,{" "}
+                  Every year, millions of youth and families are affected by drugs, not just through addiction but also through emotional, social and economic consequences. While treatment is crucial,{" "}
                   <strong>
-                    phòng ngừa sớm đã được chứng minh là một trong những cách hiệu quả nhất để giảm nguy cơ sử dụng ma túy
+                    early prevention has proven to be one of the most effective ways to reduce drug use risks
                   </strong>
-                  . Phòng ngừa bắt đầu từ nhận thức, giáo dục và hỗ trợ kịp thời.
+                  . Prevention begins with awareness, education and timely support.
                 </p>
                 <p>
-                  Tuy nhiên, thực tế là nhiều người không biết bắt đầu từ đâu. Họ có thể cảm thấy quá tải, xấu hổ hoặc không nhận thức được nguy cơ. Giáo viên thiếu tài liệu hướng dẫn. Phụ huynh không biết cách trò chuyện với con. Học sinh thì ngại hỏi.
+                  However, the reality is many don't know where to start. They may feel overwhelmed, ashamed or unaware of risks. Teachers lack guidance materials. Parents don't know how to talk to their children. Students hesitate to ask.
                 </p>
-                <p className="highlight-text">Đó là lý do vì sao Drugs Prevention (DP) ra đời.</p>
+                <p className="highlight-text">This is why Drugs Prevention (DP) was created.</p>
               </div>
             </CardContent>
           </Card>
@@ -160,18 +158,18 @@ const WhoWeAre = () => {
             <CardContent>
               <h2 className="section-title">
                 <Users className="section-icon users-icon" />
-                Chúng Tôi Làm Gì
+                What We Do
               </h2>
               <div className="prose about-prose">
                 <p>
-                  Drugs Prevention là hệ thống hỗ trợ trực tuyến cung cấp giáo dục phòng ngừa, công cụ tương tác và hướng dẫn chuyên môn giúp mọi người, đặc biệt là giới trẻ, hiểu rõ và phòng tránh nguy cơ từ ma túy.
+                  Drugs Prevention is an online support system providing preventive education, interactive tools and professional guidance to help people, especially youth, understand and avoid drug risks.
                 </p>
                 <p>
-                  <strong>Chúng tôi không chỉ là một website. Chúng tôi là sáng kiến cộng đồng</strong>—hỗ trợ nhà trường, gia đình và tổ chức cùng chung tay phòng chống ma túy và nâng cao sức khỏe tâm thần.
+                  <strong>We're not just a website. We're a community initiative</strong>—supporting schools, families and organizations in collaborative drug prevention and mental health promotion.
                 </p>
               </div>
 
-              <h3 className="subsection-title">Các tính năng nổi bật:</h3>
+              <h3 className="subsection-title">Key Features:</h3>
               <div className="features-grid">
                 {features.map((feature, index) => (
                   <FeatureItem key={index} title={feature.title} description={feature.description} />
@@ -187,27 +185,27 @@ const WhoWeAre = () => {
             <CardContent>
               <h2 className="section-title">
                 <GraduationCap className="section-icon graduation-icon" />
-                Tầm Nhìn: Giá Trị Chúng Tôi Tin Tưởng
+                Vision: Values We Believe In
               </h2>
               <div className="vision-grid">
                 <div className="vision-column">
                   <p className="belief-item">
                     <span className="belief-emoji">🌟</span>
-                    Chúng tôi tin rằng mỗi người đều xứng đáng lớn lên trong môi trường an toàn, hiểu biết và được hỗ trợ.
+                    We believe everyone deserves to grow up in a safe, informed and supportive environment.
                   </p>
                   <p className="belief-item">
                     <span className="belief-emoji">📚</span>
-                    Chúng tôi tin rằng giáo dục là sức mạnh—khi hiểu về nguy cơ ma túy, nhận biết dấu hiệu sớm và biết nơi tìm kiếm hỗ trợ, mọi người sẽ đưa ra lựa chọn tốt hơn.
+                    We believe education is power—when people understand drug risks, recognize early signs and know where to seek help, they make better choices.
                   </p>
                 </div>
                 <div className="vision-column">
                   <p className="belief-item">
                     <span className="belief-emoji">💻</span>
-                    Chúng tôi tin rằng công nghệ có thể thu hẹp khoảng cách—giúp tài nguyên phòng ngừa đến với bất kỳ ai, ở bất cứ đâu, bất cứ lúc nào.
+                    We believe technology can bridge gaps—making prevention resources accessible to anyone, anywhere, anytime.
                   </p>
                   <p className="belief-item">
                     <span className="belief-emoji">🤝</span>
-                    Chúng tôi tin rằng cộng đồng là chìa khóa—sự thay đổi không chỉ đến từ cá nhân mà từ sự chung tay của gia đình, nhà trường và tổ chức.
+                    We believe community is key—change comes not just from individuals but from collaborative efforts of families, schools and organizations.
                   </p>
                 </div>
               </div>
@@ -219,7 +217,7 @@ const WhoWeAre = () => {
         <section className="section">
           <Card className="serve-card">
             <CardContent>
-              <h2 className="section-title centered">Chúng Tôi Phục Vụ Ai</h2>
+              <h2 className="section-title centered">Who We Serve</h2>
               <div className="services-grid">
                 {services.map((service, index) => (
                   <ServiceCard
@@ -239,13 +237,13 @@ const WhoWeAre = () => {
         <section className="section">
           <Card className="matters-card">
             <CardContent>
-              <h2 className="section-title">Vì Sao Điều Này Quan Trọng Hiện Nay</h2>
+              <h2 className="section-title">Why This Matters Today</h2>
               <div className="prose">
                 <p>
-                  Ngày nay, nguy cơ từ ma túy không còn dễ nhận biết. Chất gây nghiện dễ tiếp cận hơn, ảnh hưởng bạn bè qua mạng xã hội mạnh mẽ hơn, và nhiều bạn trẻ gặp khó khăn tâm lý làm tăng nguy cơ. <strong>Phòng ngừa không còn là lựa chọn—mà là điều bắt buộc.</strong>
+                  Today, drug risks are less recognizable. Substances are more accessible, social media peer influence is stronger, and many youth face psychological challenges that increase risks. <strong>Prevention is no longer optional—it's essential.</strong>
                 </p>
                 <p>
-                  Với công cụ phù hợp, chúng ta có thể giúp mọi người đưa ra quyết định an toàn, đúng đắn và tự tin. Dù là nói không ở bữa tiệc, trò chuyện với bạn gặp khó khăn, hay tìm đến chuyên gia—<strong className="prevention-highlight">phòng ngừa cứu sống mạng người.</strong>
+                  With the right tools, we can help people make safe, informed and confident decisions. Whether saying no at parties, helping a struggling friend, or seeking professional help—<strong className="prevention-highlight">prevention saves lives.</strong>
                 </p>
               </div>
             </CardContent>
@@ -256,23 +254,23 @@ const WhoWeAre = () => {
         <section className="section">
           <Card className="cta-card">
             <CardContent className="cta-content">
-              <h2 className="cta-title">Tham Gia Cùng Chúng Tôi</h2>
+              <h2 className="cta-title">Join Us</h2>
               <p className="cta-subtitle">
-                Dù bạn đến để học, để dạy, để giúp người khác hay tìm kiếm sự giúp đỡ cho chính mình—bạn không đơn độc.
+                Whether you're here to learn, teach, help others or seek help for yourself—you're not alone.
               </p>
               <p className="cta-description">
-                Hãy cùng xây dựng một cộng đồng mạnh khỏe, hiểu biết và chủ động—bởi vì trong phòng ngừa ma túy, <strong>mỗi bước đi đều quan trọng.</strong>
+                Let's build a healthy, informed and proactive community together—because in drug prevention, <strong>every step matters.</strong>
               </p>
               <div className="cta-buttons">
                 <Button size="lg" className="cta-primary">
                   <a href="/login" className="cta-link">
-                    Bắt đầu ngay hôm nay
+                    Get started today
                     <ArrowRight className="icon-sm" />
                   </a>
                 </Button>
                 <Button size="lg" variant="outline" className="cta-secondary">
                   <a href="/event" className="cta-link">
-                    Tìm hiểu thêm về các chương trình
+                    Learn about our programs
                     <ArrowRight className="icon-sm" />
                   </a>
                 </Button>
