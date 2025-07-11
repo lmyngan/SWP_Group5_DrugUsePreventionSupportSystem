@@ -83,6 +83,10 @@
   color: white;
 }
 
+.input-box input:focus {
+  top: -20;
+}
+
 .input-box svg {
   color: white;
   position: absolute;

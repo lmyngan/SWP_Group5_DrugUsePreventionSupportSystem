@@ -16,33 +16,31 @@ const LoginPage = () => {
 
     try {
       const response = await loginUser({ accountName, password });
+      if (response.error) throw new Error(response.error);
       console.log('Login successful:', response);
+
 
       localStorage.setItem('token', response.token);
 
       const decoded = jwtDecode(response.token);
-      console.log("Account: ", decoded);
+      const accountId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+      const userInfo = await getUserById(accountId);
+      if (userInfo.error) throw new Error(userInfo.error);
 
-      const userInfo = await getUserById(decoded.AccountId);
 
-      const user = {
-        accountId: decoded.AccountId,
-        consultantId: userInfo.consultantId,
-        accountName: accountName,
-        password: password,
-        fullName: decoded.FullName,
-        dateOfBirth: decoded.DateOfBirth,
-        gender: decoded.Gender,
-        address: decoded.Address,
-        roleName: decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
-      };
-      localStorage.setItem('user', JSON.stringify(user));
-
-      // Chuyển hướng sau khi đăng nhập thành công
-      if (user.roleName === "User") {
-        window.location.href = "/";
+      if (userInfo.DateOfBirth) {
+        const date = new Date(userInfo.DateOfBirth);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        userInfo.DateOfBirth = `${day}/${month}/${year}`;
       }
-      if (user.roleName !== "User") {
+
+      localStorage.setItem('user', JSON.stringify(userInfo));
+
+      if (userInfo.roleId === 4) {
+        window.location.href = "/";
+      } else {
         window.location.href = "/dashboard";
       }
       alert('Login successful!');
