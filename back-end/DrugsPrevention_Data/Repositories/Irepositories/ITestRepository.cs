@@ -20,6 +20,8 @@ namespace DrugsPrevention_Data.Repositories.Irepositories
         Task AddTestAnswersAsync(List<TestAnswer> answers);
         Task<UserTestResultDTO> GetTestResultDetailsAsync(int resultId);
         Task<List<TestQuestionWithAnswersDTO>> GetTestQuestionsWithAnswersAsync(int testId, int? resultId = null);
+        Task<List<UserTestResultDTO>> GetTestResultsByAccountIdAsync(int accountId);
+
     }
 }
 

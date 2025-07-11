@@ -26,7 +26,7 @@ namespace DrugsPrevention_Service
         public async Task<string> LoginAsync(string accountName, string password)
         {
             var user = await _repository.GetUserByAccountNameAsync(accountName);
-            if (user == null || user.Password != password)
+            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
             {
                 return null;
             }
@@ -41,9 +41,9 @@ namespace DrugsPrevention_Service
 
             var claims = new[]
             {
-            new Claim("AccountName", account.Accountname),
-            new Claim("FullName", account.FullName ?? ""),
-            new Claim(ClaimTypes.Role, account.Role?.RoleName ?? "Unknown"),
+            new Claim(ClaimTypes.NameIdentifier, account.AccountId.ToString()),
+            new Claim(ClaimTypes.Name, account.Accountname),
+            new Claim(ClaimTypes.Role, account.RoleId.ToString()),
             new Claim("AccountId", account.AccountId.ToString()),
             new Claim("Gender", account.Gender ?? ""),
             new Claim("Address", account.Address ?? ""),
@@ -74,7 +74,7 @@ namespace DrugsPrevention_Service
             var newAccount = new Accounts
             {
                 Accountname = request.Accountname,
-                Password = request.Password,
+                Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 FullName = request.FullName,
                 Gender = request.Gender,
                 DateOfBirth = request.DateOfBirth,
@@ -88,6 +88,19 @@ namespace DrugsPrevention_Service
 
             return true;
         }
-    }
+        public async Task MigratePlaintextPasswordsToHash()
+        {
+            var allAccounts = await _repository.GetAllAccountsAsync();
 
+            foreach (var acc in allAccounts)
+            {
+                if (!acc.Password.StartsWith("$2a$") && !acc.Password.StartsWith("$2b$"))
+                {
+                    acc.Password = BCrypt.Net.BCrypt.HashPassword(acc.Password);
+                }
+            }
+
+            await _repository.SaveChangesAsync();
+        }
+    }
 }

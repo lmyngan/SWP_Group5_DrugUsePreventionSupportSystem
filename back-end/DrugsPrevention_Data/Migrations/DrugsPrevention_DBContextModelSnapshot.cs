@@ -286,9 +286,6 @@ namespace DrugsPrevention_Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("account_id");
 
-                    b.Property<int?>("AccountsAccountId")
-                        .HasColumnType("int");
-
                     b.Property<int>("EventId")
                         .HasColumnType("int")
                         .HasColumnName("event_id");
@@ -306,8 +303,6 @@ namespace DrugsPrevention_Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
-
-                    b.HasIndex("AccountsAccountId");
 
                     b.HasIndex("EventId");
 
@@ -687,14 +682,10 @@ namespace DrugsPrevention_Data.Migrations
             modelBuilder.Entity("DrugsPrevention_Data.Data.EventParticipation", b =>
                 {
                     b.HasOne("DrugsPrevention_Data.Data.Accounts", "Account")
-                        .WithMany()
+                        .WithMany("EventParticipations")
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("DrugsPrevention_Data.Data.Accounts", null)
-                        .WithMany("EventParticipation")
-                        .HasForeignKey("AccountsAccountId");
 
                     b.HasOne("DrugsPrevention_Data.Data.Event", "Event")
                         .WithMany("Participations")
@@ -812,7 +803,7 @@ namespace DrugsPrevention_Data.Migrations
 
                     b.Navigation("CreatedTests");
 
-                    b.Navigation("EventParticipation");
+                    b.Navigation("EventParticipations");
 
                     b.Navigation("Notifications");
 

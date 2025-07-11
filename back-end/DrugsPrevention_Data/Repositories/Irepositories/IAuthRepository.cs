@@ -14,6 +14,7 @@ namespace DrugsPrevention_Data.IRepositories
         Task<Role> GetRoleByNameAsync(string roleName);
         Task<bool> AccountExistsAsync(string accountName);
         Task AddAccountAsync(Accounts account);
+        Task<List<Accounts>> GetAllAccountsAsync();
         Task SaveChangesAsync();
 
     }

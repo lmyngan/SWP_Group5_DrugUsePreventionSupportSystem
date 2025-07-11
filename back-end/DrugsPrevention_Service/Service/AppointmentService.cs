@@ -84,10 +84,12 @@ namespace DrugsPrevention_Service.Service
                 .Where(s => s.ConsultantId == consultantId)
                 .Select(s => new ScheduleDTO
                 {
+                    AccountName = s.Appointments.FirstOrDefault() != null ? s.Appointments.First().Account.Accountname : null,
                     ScheduleId = s.ScheduleId,
                     AvailableDate = s.AvailableDate,
                     StartTime = s.StartTime,
                     EndTime = s.EndTime,
+                    Status = s.Appointments.FirstOrDefault() != null ? s.Appointments.First().Status : null,
                     Slot = s.Slot
                 })
                 .ToListAsync();
@@ -118,7 +120,10 @@ namespace DrugsPrevention_Service.Service
             return new AppointmentResponseDTO
             {
                 AppointmentId = a.AppointmentId,
+                ConsultantId = a.ConsultantId,
+                ScheduleId = a.ScheduleId,
                 ConsultantName = a.Consultant?.Account?.FullName,
+                AccountName = a.Account?.Accountname,
                 Date = a.Schedule?.AvailableDate ?? DateTime.MinValue,
                 StartTime = a.StartTime,
                 EndTime = a.EndTime,
@@ -127,6 +132,7 @@ namespace DrugsPrevention_Service.Service
                 Notes = a.Notes
             };
         }
+
 
         public async Task<AppointmentResponseDTO> CreateAppointmentAsync(AppointmentCreateDTO request)
         {
@@ -176,6 +182,17 @@ namespace DrugsPrevention_Service.Service
             await _repo.DeleteAsync(appointment);
             await _repo.SaveChangesAsync();
             return true;
+        }
+        public async Task<AppointmentResponseDTO> UpdateAppointmentStatusAsync(int id, string status)
+        {
+            var appointment = await _repo.GetByIdAsync(id);
+            if (appointment == null) return null;
+
+            appointment.Status = status;
+            await _repo.UpdateAsync(appointment);
+            await _repo.SaveChangesAsync();
+
+            return await GetAppointmentByIdAsync(appointment.AppointmentId);
         }
     }
 }

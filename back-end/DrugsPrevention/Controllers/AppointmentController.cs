@@ -1,4 +1,5 @@
-﻿using DrugsPrevention_Data.DTO.Appointment;
+﻿using DrugsPrevention_API.Attributes;
+using DrugsPrevention_Data.DTO.Appointment;
 using DrugsPrevention_Service.Service.Iservice;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +15,7 @@ namespace DrugsPrevention_API.Controllers
         {
             _service = service;
         }
-
+        [AuthorizeByRole(4)]
         [HttpPost("book")]
         public async Task<IActionResult> BookAppointment([FromBody] AppointmentCreateDTO dto)
         {
@@ -29,6 +30,7 @@ namespace DrugsPrevention_API.Controllers
             }
         }
 
+        [AuthorizeByRole(3)]
         [HttpGet("consultant/{consultantId}/schedules")]
         public async Task<IActionResult> GetSchedules(int consultantId)
         {
@@ -42,6 +44,8 @@ namespace DrugsPrevention_API.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        [AuthorizeByRole(1, 2, 3)]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -49,14 +53,16 @@ namespace DrugsPrevention_API.Controllers
             return Ok(results);
         }
 
+        [AuthorizeByRole(1, 2, 3, 4)]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var result = await _service.GetAppointmentByIdAsync(id);
-            if (result == null) return NotFound();
+            if (result == null) return NotFound(new { message = "Không tìm thấy cuộc hẹn." });
             return Ok(result);
         }
 
+        [AuthorizeByRole(1, 2)]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AppointmentCreateDTO request)
         {
@@ -64,21 +70,37 @@ namespace DrugsPrevention_API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = result.AppointmentId }, result);
         }
 
+        [AuthorizeByRole(1, 2)]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] AppointmentCreateDTO request)
         {
             var result = await _service.UpdateAppointmentAsync(id, request);
-            if (result == null) return NotFound();
+            if (result == null) return NotFound(new { message = "Không tìm thấy cuộc hẹn để cập nhật." });
             return Ok(result);
         }
 
+        [AuthorizeByRole(1, 2)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var deleted = await _service.DeleteAppointmentAsync(id);
-            if (!deleted) return NotFound();
+            if (!deleted) return NotFound(new { message = "Không tìm thấy cuộc hẹn để xoá." });
             return NoContent();
         }
 
+        [AuthorizeByRole(1, 2)]
+        [HttpPut("{id}/status")]
+        public async Task<IActionResult> UpdateStatus(int id, [FromQuery] string status)
+        {
+            var result = await _service.UpdateAppointmentStatusAsync(id, status);
+            if (result == null) return NotFound(new { message = "Không cập nhật được trạng thái." });
+
+            return Ok(new
+            {
+                message = "Cập nhật trạng thái thành công",
+                status = result.Status,
+                url = $"{Request.Scheme}://{Request.Host}/api/Appointment/{result.AppointmentId}/status?status={result.Status}"
+            });
+        }
     }
 }

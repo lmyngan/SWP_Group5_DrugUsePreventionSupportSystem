@@ -36,7 +36,7 @@ namespace DrugsPrevention_Data.Data
         public ICollection<Test> CreatedTests { get; set; }
         public ICollection<TestResult> TestResults { get; set; }
         public ICollection<Notifications> Notifications { get; set; }
-        public ICollection<EventParticipation> EventParticipation { get; set; }
+        public ICollection<EventParticipation> EventParticipations { get; set; }
         public ICollection<Appointment> Appointments { get; set; }
         public ICollection<Blogs> Blogs { get; set; }
     }

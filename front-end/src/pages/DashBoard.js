@@ -1,66 +1,177 @@
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { useState } from "react";
 
 const DashBoard = () => {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+
+    const data = [
+        { name: 'Mon', visits: 120 },
+        { name: 'Tue', visits: 98 },
+        { name: 'Wed', visits: 150 },
+        { name: 'Thu', visits: 200 },
+        { name: 'Fri', visits: 170 },
+        { name: 'Sat', visits: 90 },
+        { name: 'Sun', visits: 60 },
+    ];
+
+    // Dữ liệu mẫu cho Event Participation Chart
+    const eventParticipationData = [
+        { name: 'Community Outreach', participants: 30 },
+        { name: 'Youth Workshop', participants: 45 },
+        { name: 'Health Fair', participants: 20 },
+        { name: 'School Talk', participants: 15 },
+    ];
+
+    // Dữ liệu mẫu cho Consultant Review Chart
+    const consultantReviewData = [
+        { name: '5 Stars', value: 12 },
+        { name: '4 Stars', value: 8 },
+        { name: '3 Stars', value: 3 },
+        { name: '2 Stars', value: 1 },
+        { name: '1 Star', value: 1 },
+    ];
+    const COLORS = ['#22c55e', '#2563eb', '#eab308', '#f97316', '#ef4444'];
+
+    // Tính trung bình rating consultant
+    const totalReviews = consultantReviewData.reduce((sum, d) => sum + d.value, 0);
+    const avgRating = (
+        consultantReviewData.reduce((sum, d) => {
+            const star = parseInt(d.name);
+            return sum + (isNaN(star) ? 0 : star * d.value);
+        }, 0) / totalReviews
+    ).toFixed(1);
+
+    // Tính trung bình người tham gia event
+    const avgEventParticipants = (
+        eventParticipationData.reduce((sum, d) => sum + d.participants, 0) / eventParticipationData.length
+    ).toFixed(1);
+
+    const stats = [
+        {
+            value: "$2500",
+            label: "All Earnings",
+            icon: '',
+            color: "bg-orange-100 text-orange-800",
+            footer: "10% changes on profit",
+            footerColor: "bg-orange-500 text-white",
+        },
+        {
+            value: `${avgRating}`,
+            label: "Rate Consultant",
+            icon: '',
+            color: "bg-yellow-100 text-yellow-800",
+            footer: "4.3 stars",
+            footerColor: "bg-yellow-500 text-white",
+        },
+        {
+            value: `${avgEventParticipants}`,
+            label: "Join Event",
+            icon: '',
+            color: "bg-green-100 text-green-800",
+            footer: "Average per event",
+            footerColor: "bg-green-500 text-white",
+        },
+
+    ];
+
     return (
         <div className="flex min-h-screen">
-            {/* Hidden Checkbox for Toggle */}
-            <input type="checkbox" id="menu-toggle" className="hidden peer" />
-            {/* Sidebar Menu */}
-            <div className="fixed top-0 left-0 h-full w-64 bg-gray-800 text-white p-4 transform -translate-x-full transition-transform duration-300 peer-checked:translate-x-0 z-20">
-                {/* Close Button inside Menu */}
-                <label
-                    htmlFor="menu-toggle"
-                    className="absolute top-4 right-4 cursor-pointer text-2xl text-white"
-                >
-                    ✖
-                </label>
-                <div className="menu-header text-xl font-bold mb-6">Menu</div>
-                <div className="space-y-4">
-                    <Link to="/dashboard" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
-                        Home
-                    </Link>
-                    <Link to="/manage-consultant" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
-                        Consultant
-                    </Link>
-                    <Link to="/manage-bookappointment" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
-                        Book Appointment
-                    </Link>
-                    <Link to="/manage-program" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
-                        Program
-                    </Link>
-                    <Link to="/manage-blog" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
-                        Blog
-                    </Link>
-                    <Link to="/manage-account" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
-                        Account
-                    </Link>
-                    <Link to="/report" className="block p-3 bg-gray-700 rounded hover:bg-gray-600">
-                        Report
-                    </Link>
+            {/* Nút mở sidebar chỉ hiển thị khi sidebar đóng */}
+            <div
+                className={`transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"} flex-1`}
+                style={{ minHeight: "100vh" }}
+            >
+                <div className="flex-1 p-8 transition-all duration-300 peer-checked:ml-64">
+                    <div className="flex-1 p-8 transition-all duration-300 peer-checked:ml-64">
+
+                        <div className="flex flex-nowrap gap-6 justify-center mt-8 overflow-x-auto pb-2">
+                            {stats.map((stat, idx) => (
+                                <div
+                                    key={idx}
+                                    className={`rounded-xl shadow w-72 min-w-[260px] ${stat.color} flex flex-col justify-between`}
+                                    style={{ minHeight: 140 }}
+                                >
+                                    <div className="flex justify-between items-start p-6 pb-2">
+                                        <div>
+                                            <div className="text-3xl font-bold">{stat.value}</div>
+                                            <div className="text-base font-medium mt-1">{stat.label}</div>
+                                        </div>
+                                        <div className="opacity-80">{stat.icon}</div>
+                                    </div>
+                                    <div className={`rounded-b-xl px-6 py-2 text-sm flex items-center ${stat.footerColor}`}>
+                                        {stat.footer}
+                                        <span className="ml-auto">{idx % 2 === 0 ? <span>&#8599;</span> : <span>&#8600;</span>}</span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Charts Section: User Visits + 2 PieCharts ngang hàng */}
+                        <div className="mt-8 flex flex-wrap gap-8 justify-center">
+                            {/* User Visits BarChart */}
+                            <div className="bg-white rounded shadow p-6 flex-1 min-w-[320px] max-w-[480px]">
+                                <h2 className="text-xl font-semibold mb-4 text-center">User Visits This Week</h2>
+                                <ResponsiveContainer width="100%" height={300}>
+                                    <BarChart data={data}>
+                                        <CartesianGrid strokeDasharray="3 3" />
+                                        <XAxis dataKey="name" />
+                                        <YAxis />
+                                        <Tooltip />
+                                        <Bar dataKey="visits" fill="#2563eb" />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
+
+                            {/* Event Participation PieChart */}
+                            <div className="bg-white rounded shadow p-6 flex-1 min-w-[320px] max-w-[480px]">
+                                <h2 className="text-xl font-semibold mb-4 text-center">Event Participation</h2>
+                                <ResponsiveContainer width="100%" height={300}>
+                                    <PieChart>
+                                        <Pie
+                                            data={eventParticipationData}
+                                            dataKey="participants"
+                                            nameKey="name"
+                                            cx="50%"
+                                            cy="50%"
+                                            outerRadius={100}
+                                            label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
+                                        >
+                                            {eventParticipationData.map((entry, index) => (
+                                                <Cell key={`cell-event-${index}`} fill={COLORS[index % COLORS.length]} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            </div>
+
+                            {/* Consultant Review PieChart */}
+                            <div className="bg-white rounded shadow p-6 flex-1 min-w-[320px] max-w-[480px]">
+                                <h2 className="text-xl font-semibold mb-4 text-center">Consultant Interview Ratings</h2>
+                                <ResponsiveContainer width="100%" height={300}>
+                                    <PieChart>
+                                        <Pie
+                                            data={consultantReviewData}
+                                            dataKey="value"
+                                            nameKey="name"
+                                            cx="50%"
+                                            cy="50%"
+                                            outerRadius={100}
+                                            label
+                                        >
+                                            {consultantReviewData.map((entry, index) => (
+                                                <Cell key={`cell-review-${index}`} fill={COLORS[index % COLORS.length]} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-            </div>
-
-            {/* Top Navbar for sidebar toggle (hamburger only) */}
-            <div className="w-full flex items-center bg-gray-800 text-white p-4 fixed z-10" style={{ top: 0, left: 0 }}>
-                {/* Hamburger Button */}
-                <label htmlFor="menu-toggle" className="cursor-pointer">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-8 w-8 text-white"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            fill="currentColor"
-                            d="M3 6h18v2H3zM3 11h18v2H3zM3 16h18v2H3z"
-                        />
-                    </svg>
-                </label>
-            </div>
-
-            {/* Main Content */}
-            <div className="flex-1 p-8 mt-16 transition-all duration-300 peer-checked:ml-64">
-                <h1 className="text-2xl font-bold mb-4">Welcome to Dashboard</h1>
-                <p>This is the main content area. Use the hamburger menu to toggle sidebar.</p>
             </div>
         </div>
     );

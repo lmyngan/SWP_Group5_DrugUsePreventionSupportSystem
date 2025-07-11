@@ -39,7 +39,10 @@ namespace DrugsPrevention_Data.Repositories
         {
             await _context.Accounts.AddAsync(account);
         }
-
+        public async Task<List<Accounts>> GetAllAccountsAsync()
+        {
+            return await _context.Accounts.ToListAsync();
+        }
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
