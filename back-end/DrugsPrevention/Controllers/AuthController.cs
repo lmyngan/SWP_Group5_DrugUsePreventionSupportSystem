@@ -3,6 +3,7 @@ using DrugsPrevention_Data.DTO.Login;
 using DrugsPrevention_Data.DTO.Register;
 using System.Threading.Tasks;
 using DrugsPrevention_Service.Service.Iservice;
+using DrugsPrevention_Data.DTO.ExternalLogin;
 
 namespace DrugsPrevention_API.Controllers
 {
@@ -46,5 +47,12 @@ namespace DrugsPrevention_API.Controllers
             return Ok(new { message = "Hash mật khẩu thành công!" });
         }
 
+        [HttpPost("login-external")]
+        public async Task<IActionResult> LoginWithExternal([FromBody] ExternalLoginRequestDTO request)
+        {
+            var token = await _authService.LoginWithExternalProviderAsync(request.Provider, request.ProviderKey, request.Email);
+
+            return Ok(new { Token = token });
+        }
     }
 }

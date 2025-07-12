@@ -47,7 +47,7 @@ namespace DrugsPrevention_Service
             new Claim("AccountId", account.AccountId.ToString()),
             new Claim("Gender", account.Gender ?? ""),
             new Claim("Address", account.Address ?? ""),
-            new Claim("DateOfBirth", account.DateOfBirth.ToString("yyyy-MM-dd")),
+            new Claim("DateOfBirth", account.DateOfBirth.GetValueOrDefault().ToString("yyyy-MM-dd")),
             new Claim("CreatedAt", account.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"))
         };
 
@@ -101,6 +101,44 @@ namespace DrugsPrevention_Service
             }
 
             await _repository.SaveChangesAsync();
+        }
+
+        public async Task<string> LoginWithExternalProviderAsync(string provider, string providerKey, string email)
+        {
+            var user = await _repository.GetUserByExternalLoginAsync(provider, providerKey);
+
+            if (user == null)
+            {
+                var newAccount = new Accounts
+                {
+                    Accountname = email,
+                    Password = BCrypt.Net.BCrypt.HashPassword(Guid.NewGuid().ToString()),
+                    FullName = email,
+                    Gender = null,
+                    DateOfBirth = null,
+                    Address = null,
+                    RoleId = 4,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                await _repository.AddAccountAsync(newAccount);
+                await _repository.SaveChangesAsync();
+
+                var newExternal = new ExternalLogins
+                {
+                    Provider = provider,
+                    ProviderKey = providerKey,
+                    AccountId = newAccount.AccountId,
+                    Email = email,
+                    CreatedAt = DateTime.UtcNow
+                };
+                await _repository.AddExternalLoginAsync(newExternal);
+                await _repository.SaveChangesAsync();
+
+                user = newAccount;
+            }
+
+            return GenerateJwtToken(user);
         }
     }
 }
