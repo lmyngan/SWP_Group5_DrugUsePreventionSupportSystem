@@ -26,6 +26,22 @@ export const loginUser = async (credentials) => {
     }
 };
 
+export const loginWithGoogle = async ({ provider, providerKey, email }) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/auth/login-external`, {
+            provider,
+            providerKey,
+            email
+        }, {
+            headers: getAuthHeader(),
+        });
+        const token = response.data.token || response.data.Token;
+        return { token };
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+};
+
 //POST: Register
 export const registerUser = async (data) => {
     try {
