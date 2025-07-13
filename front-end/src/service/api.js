@@ -9,6 +9,18 @@ const getAuthHeader = () => {
     return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
+// Common POST method
+export const postData = async (url, data) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}${url}`, data, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+};
+
 //POST: Login
 export const loginUser = async (credentials) => {
     try {
