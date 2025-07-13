@@ -140,16 +140,24 @@ const Survey = () => {
                                         <h4>{q.questionText}</h4>
                                         <Form.Group>
                                             {q.options.map(opt => (
-                                                <Form.Check
-                                                    key={opt.optionId}
-                                                    type="radio"
-                                                    label={opt.optionText}
-                                                    name={`question_${q.questionId}`}
-                                                    value={opt.optionId}
-                                                    checked={answers[q.questionId] === opt.optionId}
-                                                    onChange={() => handleChange(q.questionId, opt.optionId)}
-                                                    required
-                                                />
+                                                <div key={opt.optionId} className="form-check">
+                                                    <input
+                                                        type="radio"
+                                                        id={`question_${q.questionId}_option_${opt.optionId}`}
+                                                        name={`question_${q.questionId}`}
+                                                        value={opt.optionId}
+                                                        checked={answers[q.questionId] === opt.optionId}
+                                                        onChange={() => handleChange(q.questionId, opt.optionId)}
+                                                        className="form-check-input"
+                                                        required
+                                                    />
+                                                    <label
+                                                        htmlFor={`question_${q.questionId}_option_${opt.optionId}`}
+                                                        className="form-check-label"
+                                                    >
+                                                        {opt.optionText}
+                                                    </label>
+                                                </div>
                                             ))}
                                         </Form.Group>
                                     </div>
