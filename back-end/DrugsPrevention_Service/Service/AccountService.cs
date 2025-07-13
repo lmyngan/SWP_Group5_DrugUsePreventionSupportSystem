@@ -52,11 +52,14 @@ namespace DrugsPrevention_Service.Service
             if (existing == null)
                 throw new Exception("Account not found");
 
-            existing.Accountname = request.Accountname ?? existing.Accountname;
-            existing.FullName = request.FullName ?? existing.FullName;
-            existing.DateOfBirth = request.DateOfBirth ?? existing.DateOfBirth;
-            existing.Gender = request.Gender ?? existing.Gender;
-            existing.Address = request.Address ?? existing.Address;
+            if (request.RoleId != existing.RoleId)
+            {
+                var role = await _repository.FindRoleByIdAsync(request.RoleId);
+                if (role == null)
+                    throw new Exception("Role không tồn tại!");
+
+                existing.RoleId = request.RoleId;
+            }
 
             await _repository.UpdateAsync(existing);
             await _repository.SaveChangesAsync();
@@ -119,5 +122,29 @@ namespace DrugsPrevention_Service.Service
 
             return result;
         }
+        public async Task<Accounts> CreateAccountAsync(CreateAccountRequestDTO request)
+        {
+            var role = await _repository.FindRoleByIdAsync(request.RoleId);
+            if (role == null)
+                throw new Exception("Role không tồn tại!");
+
+            var newAccount = new Accounts
+            {
+                Accountname = request.Accountname,
+                Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
+                FullName = request.FullName,
+                DateOfBirth = request.DateOfBirth,
+                Gender = request.Gender,
+                Address = request.Address,
+                RoleId = request.RoleId,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _repository.AddAsync(newAccount);
+            await _repository.SaveChangesAsync();
+
+            return newAccount;
+        }
+
     }
 }

@@ -35,7 +35,7 @@ namespace DrugsPrevention_Data.Migrations
                     accountname = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     fullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    dateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    dateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: true),
                     gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     role_id = table.Column<int>(type: "int", nullable: false),
@@ -116,6 +116,29 @@ namespace DrugsPrevention_Data.Migrations
                     table.ForeignKey(
                         name: "FK_Event_Accounts_created_by",
                         column: x => x.created_by,
+                        principalTable: "Accounts",
+                        principalColumn: "account_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExternalLogins",
+                columns: table => new
+                {
+                    external_login_id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    provider = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    provider_key = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    account_id = table.Column<int>(type: "int", nullable: false),
+                    email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    created_at = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExternalLogins", x => x.external_login_id);
+                    table.ForeignKey(
+                        name: "FK_ExternalLogins_Accounts_account_id",
+                        column: x => x.account_id,
                         principalTable: "Accounts",
                         principalColumn: "account_id",
                         onDelete: ReferentialAction.Cascade);
@@ -223,17 +246,11 @@ namespace DrugsPrevention_Data.Migrations
                     account_id = table.Column<int>(type: "int", nullable: false),
                     event_id = table.Column<int>(type: "int", nullable: false),
                     status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    feedback = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AccountsAccountId = table.Column<int>(type: "int", nullable: true)
+                    feedback = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EventParticipation", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_EventParticipation_Accounts_AccountsAccountId",
-                        column: x => x.AccountsAccountId,
-                        principalTable: "Accounts",
-                        principalColumn: "account_id");
                     table.ForeignKey(
                         name: "FK_EventParticipation_Accounts_account_id",
                         column: x => x.account_id,
@@ -444,14 +461,20 @@ namespace DrugsPrevention_Data.Migrations
                 column: "account_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EventParticipation_AccountsAccountId",
-                table: "EventParticipation",
-                column: "AccountsAccountId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_EventParticipation_event_id",
                 table: "EventParticipation",
                 column: "event_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExternalLogins_account_id",
+                table: "ExternalLogins",
+                column: "account_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExternalLogins_provider_provider_key",
+                table: "ExternalLogins",
+                columns: new[] { "provider", "provider_key" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notifications_account_id",
@@ -518,6 +541,9 @@ namespace DrugsPrevention_Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "EventParticipation");
+
+            migrationBuilder.DropTable(
+                name: "ExternalLogins");
 
             migrationBuilder.DropTable(
                 name: "Notifications");

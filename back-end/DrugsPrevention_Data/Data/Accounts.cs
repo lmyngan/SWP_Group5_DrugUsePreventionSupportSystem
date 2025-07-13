@@ -21,7 +21,7 @@ namespace DrugsPrevention_Data.Data
         [Column("fullName")]
         public string FullName { get; set; }
         [Column("dateOfBirth")]
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
         [Column("gender")]
         public string Gender { get; set; }
         [Column("address")]
@@ -36,8 +36,9 @@ namespace DrugsPrevention_Data.Data
         public ICollection<Test> CreatedTests { get; set; }
         public ICollection<TestResult> TestResults { get; set; }
         public ICollection<Notifications> Notifications { get; set; }
-        public ICollection<EventParticipation> EventParticipation { get; set; }
+        public ICollection<EventParticipation> EventParticipations { get; set; }
         public ICollection<Appointment> Appointments { get; set; }
         public ICollection<Blogs> Blogs { get; set; }
+        public ICollection<ExternalLogins> ExternalLogins { get; set; }
     }
 }

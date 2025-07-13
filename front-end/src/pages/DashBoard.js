@@ -50,7 +50,7 @@ const DashBoard = () => {
 
     const stats = [
         {
-            value: "$666",
+            value: "$2500",
             label: "All Earnings",
             icon: '',
             color: "bg-orange-100 text-orange-800",
@@ -73,14 +73,7 @@ const DashBoard = () => {
             footer: "Average per event",
             footerColor: "bg-green-500 text-white",
         },
-        {
-            value: "290+",
-            label: "Page Views",
-            icon: '',
-            color: "bg-teal-100 text-teal-800",
-            footer: "10k daily views",
-            footerColor: "bg-teal-500 text-white",
-        },
+
     ];
 
     return (

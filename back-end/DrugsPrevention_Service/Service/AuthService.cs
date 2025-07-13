@@ -26,7 +26,7 @@ namespace DrugsPrevention_Service
         public async Task<string> LoginAsync(string accountName, string password)
         {
             var user = await _repository.GetUserByAccountNameAsync(accountName);
-            if (user == null || user.Password != password)
+            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
             {
                 return null;
             }
@@ -41,13 +41,13 @@ namespace DrugsPrevention_Service
 
             var claims = new[]
             {
-            new Claim("AccountName", account.Accountname),
-            new Claim("FullName", account.FullName ?? ""),
-            new Claim(ClaimTypes.Role, account.Role?.RoleName ?? "Unknown"),
+            new Claim(ClaimTypes.NameIdentifier, account.AccountId.ToString()),
+            new Claim(ClaimTypes.Name, account.Accountname),
+            new Claim(ClaimTypes.Role, account.RoleId.ToString()),
             new Claim("AccountId", account.AccountId.ToString()),
             new Claim("Gender", account.Gender ?? ""),
             new Claim("Address", account.Address ?? ""),
-            new Claim("DateOfBirth", account.DateOfBirth.ToString("yyyy-MM-dd")),
+            new Claim("DateOfBirth", account.DateOfBirth.GetValueOrDefault().ToString("yyyy-MM-dd")),
             new Claim("CreatedAt", account.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"))
         };
 
@@ -74,7 +74,7 @@ namespace DrugsPrevention_Service
             var newAccount = new Accounts
             {
                 Accountname = request.Accountname,
-                Password = request.Password,
+                Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 FullName = request.FullName,
                 Gender = request.Gender,
                 DateOfBirth = request.DateOfBirth,
@@ -88,6 +88,57 @@ namespace DrugsPrevention_Service
 
             return true;
         }
-    }
+        public async Task MigratePlaintextPasswordsToHash()
+        {
+            var allAccounts = await _repository.GetAllAccountsAsync();
 
+            foreach (var acc in allAccounts)
+            {
+                if (!acc.Password.StartsWith("$2a$") && !acc.Password.StartsWith("$2b$"))
+                {
+                    acc.Password = BCrypt.Net.BCrypt.HashPassword(acc.Password);
+                }
+            }
+
+            await _repository.SaveChangesAsync();
+        }
+
+        public async Task<string> LoginWithExternalProviderAsync(string provider, string providerKey, string email)
+        {
+            var user = await _repository.GetUserByExternalLoginAsync(provider, providerKey);
+
+            if (user == null)
+            {
+                var newAccount = new Accounts
+                {
+                    Accountname = email,
+                    Password = BCrypt.Net.BCrypt.HashPassword(Guid.NewGuid().ToString()),
+                    FullName = email,
+                    Gender = null,
+                    DateOfBirth = null,
+                    Address = null,
+                    RoleId = 4,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                await _repository.AddAccountAsync(newAccount);
+                await _repository.SaveChangesAsync();
+
+                var newExternal = new ExternalLogins
+                {
+                    Provider = provider,
+                    ProviderKey = providerKey,
+                    AccountId = newAccount.AccountId,
+                    Email = email,
+                    CreatedAt = DateTime.UtcNow
+                };
+                await _repository.AddExternalLoginAsync(newExternal);
+                await _repository.SaveChangesAsync();
+
+                user = newAccount;
+            }
+
+            return GenerateJwtToken(user);
+        }
+    }
 }

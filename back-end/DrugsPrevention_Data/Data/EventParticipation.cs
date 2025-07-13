@@ -33,5 +33,4 @@ namespace DrugsPrevention_Data.Data
         [ForeignKey(nameof(EventId))]
         public Event Event { get; set; }
     }
-
 }

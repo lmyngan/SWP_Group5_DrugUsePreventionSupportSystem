@@ -30,6 +30,9 @@ namespace DrugsPrevention_Service.Service
                 AccountId = consultant.AccountId,
                 FullName = consultant.Account.FullName,
                 Accountname = consultant.Account.Accountname,
+                Gender = consultant.Account.Gender,
+                DateOfBirth = consultant.Account.DateOfBirth,
+                Address = consultant.Account.Address,
                 Certificate = consultant.Certificate,
                 Price = consultant.Price,
                 CertificateNames = consultant.Certificates?.Select(c => c.CertificateName).ToList()

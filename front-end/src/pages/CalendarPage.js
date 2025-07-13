@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import "../styles/CalendarPage.css"
 
@@ -110,7 +108,7 @@ const CalendarPage = () => {
   for (let i = 0; i < calendarCells.length; i += 7) weeks.push(calendarCells.slice(i, i + 7))
 
   const handleMonthSelect = (monthIndex) => {
-  
+
     if (
       monthIndex === curMonth ||
       (curYear === nextYear && monthIndex === nextMonth) ||
@@ -131,12 +129,12 @@ const CalendarPage = () => {
   return (
     <div className="calendar-root">
       <div className="calendar-layout">
-        
+
         <div className="calendar-sidebar">
           <h2 className="year-title">{curYear}</h2>
           <div className="month-list">
             {monthNames.map((name, idx) => {
-             
+
               const isAllowed =
                 idx === curMonth || idx === nextMonth
               return (
@@ -156,16 +154,16 @@ const CalendarPage = () => {
             })}
           </div>
         </div>
-     
+
         <div className="calendar-main">
           <div className="calendar-container">
-          
+
             <h1 className="calendar-header">
               {monthNames[selectedMonth]} {curYear}
             </h1>
-        
+
             <div className="calendar-grid-container">
-            
+
               <div className="calendar-weekdays">
                 {daysOfWeek.map((day) => (
                   <div key={day} className="calendar-weekday">
@@ -173,7 +171,7 @@ const CalendarPage = () => {
                   </div>
                 ))}
               </div>
-            
+
               <div className="calendar-days">
                 {weeks.map((week, weekIndex) =>
                   week.map((day, dayIndex) => {
@@ -204,7 +202,7 @@ const CalendarPage = () => {
             </div>
           </div>
         </div>
-       
+
         <div className="details-sidebar">
           {selected ? (
             <div>

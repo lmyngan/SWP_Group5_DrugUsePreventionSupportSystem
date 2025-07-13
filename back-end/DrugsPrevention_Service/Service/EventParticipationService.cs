@@ -1,0 +1,37 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using DrugsPrevention_Data.Data;
+using DrugsPrevention_Data.DTO.EventParticipation;
+using DrugsPrevention_Data.Repositories.Irepositories;
+using DrugsPrevention_Service.Service.Iservice;
+using System.Threading.Tasks;
+
+namespace DrugsPrevention_Service.Service.Implementations
+{
+    public class EventParticipationService : IEventParticipationService
+    {
+        private readonly IEventParticipationRepository _repo;
+
+        public EventParticipationService(IEventParticipationRepository repo)
+        {
+            _repo = repo;
+        }
+
+        public async Task<bool> AddParticipationAsync(CreateEventParticipationDTO dto)
+        {
+            var participation = new EventParticipation
+            {
+                AccountId = dto.AccountId,
+                EventId = dto.EventId,
+                Status = dto.Status,
+                Feedback = dto.Feedback
+            };
+
+            await _repo.AddParticipationAsync(participation);
+            return true;
+        }
+    }
+}

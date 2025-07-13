@@ -27,6 +27,7 @@ import ManageConsultant from "./pages/ManageConsultant"
 import ManageEvent from "./pages/ManageEvent"
 import ManageBlog from "./pages/ManageBlog"
 import Report from "./pages/Report"
+import CalendarPage from "./pages/CalendarPage"
 
 
 
@@ -84,11 +85,15 @@ const App = () => {
         return <Login />
       case "register":
         return <Register />
+      case "calendar":
+        return <CalendarPage />
       case "profile":
         return <ProfileUser />
       case "addpost":
         return <AddPost />
-      case "bookappointment":
+      case "manage-consultant":
+        return <ManageConsultant />
+      case "manage-bookappointment":
         return <BookAppointment />
       case "manage-event":
         return <ManageEvent />
@@ -112,13 +117,13 @@ const App = () => {
   return (
     <div className="app">
       {/*Member Navbar*/}
-      {!(currentPage === "dashboard" || currentPage.startsWith("manage-")) && (
+      {!(currentPage === "dashboard" || currentPage.startsWith("manage-") || currentPage === "report") && (
         <Navbar navigateTo={navigateTo} currentPage={currentPage} />
       )}
 
       {/*Admin Dashboard*/}
-      {(currentPage === "dashboard" || currentPage.startsWith("manage-")) && (
-        <DashBoardSidebar />
+      {(currentPage === "dashboard" || currentPage.startsWith("manage-") || currentPage === "report") && (
+        <DashBoardSidebar navigateTo={navigateTo} currentPage={currentPage} />
       )}
 
       {/* Main content */}
