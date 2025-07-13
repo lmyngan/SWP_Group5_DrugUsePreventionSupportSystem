@@ -1,52 +1,69 @@
 // src/pages/LoginPage.js
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
-import { loginUser, getUserById } from '../service/api';
-import '../styles/LoginPage.css';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import jwt_decode from 'jwt-decode';
+import './LoginPage.css';
+import { postData, loginWithGoogle } from '../service/api';
+import { GoogleLogin } from '@react-oauth/google';
 
 const LoginPage = () => {
-  const [accountName, setAccountName] = useState('');
+  const [accountname, setAccountname] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Attempting login with:', { accountName, password });
 
     try {
-      const response = await loginUser({ accountName, password });
-      if (response.error) throw new Error(response.error);
-      console.log('Login successful:', response);
+      const data = {
+        accountname,
+        password
+      };
 
+      const response = await postData('/api/auth/login', data);
 
-      localStorage.setItem('token', response.token);
+      if (response?.Token) {
+        localStorage.setItem('token', response.Token);
 
-      const decoded = jwtDecode(response.token);
-      const accountId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
-      const userInfo = await getUserById(accountId);
-      if (userInfo.error) throw new Error(userInfo.error);
+        const decoded = jwt_decode(response.Token);
+        console.log("Logged in as:", decoded.FullName || decoded.accountname);
 
-
-      if (userInfo.DateOfBirth) {
-        const date = new Date(userInfo.DateOfBirth);
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        userInfo.DateOfBirth = `${day}/${month}/${year}`;
-      }
-
-      localStorage.setItem('user', JSON.stringify(userInfo));
-
-      if (userInfo.roleId === 4) {
-        window.location.href = "/";
+        alert('Login successful!');
+        navigate('/');
       } else {
-        window.location.href = "/dashboard";
+        alert(response.message || 'Login failed!');
       }
-      alert('Login successful!');
     } catch (error) {
-      console.error('Login failed:', error);
-      setError(`Login failed: ${error.message}`);
+      console.error("Login error:", error);
+      alert('Login failed!');
+    }
+  };
+
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+    try {
+      const credential = credentialResponse.credential;
+      const decoded = jwt_decode(credential);
+
+      const googleLoginResult = await loginWithGoogle({
+        provider: "Google",
+        providerKey: decoded.sub,
+        email: decoded.email
+      });
+
+      if (googleLoginResult?.token) {
+        localStorage.setItem('token', googleLoginResult.token);
+
+        const user = jwt_decode(googleLoginResult.token);
+        console.log("Google login as:", user.FullName || user.accountname);
+
+        alert("Login with Google successful!");
+        navigate('/');
+      } else {
+        alert(googleLoginResult?.error || "Google login failed.");
+      }
+    } catch (error) {
+      console.error("Google login error:", error);
+      alert("Google login failed.");
     }
   };
 
@@ -55,32 +72,38 @@ const LoginPage = () => {
       <div className="login-box">
         <form className="login-form" onSubmit={handleSubmit}>
           <h1>Login</h1>
-          {error && <div className="error-message">{error}</div>}
 
           <div className="input-box">
-            <label htmlFor="title">Username: </label>
             <input
               type="text"
-              id="accountName"
-              placeholder="Username"
-              value={accountName}
-              onChange={(e) => setAccountName(e.target.value)}
-              required
-            />
-
+              id="accountname"
+              placeholder="Account Name"
+              value={accountname}
+              onChange={(e) => setAccountname(e.target.value)}
+              required />
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
+              <path d="M10 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3.465 14.493a1.23 1.23 0 0 0 .41 1.412A9.957 9.957 0 0 0 10 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 0 0-13.074.003Z" />
+            </svg>
           </div>
 
           <div className="input-box">
-            <label htmlFor="title">Password: </label>
             <input
               type="password"
               id="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+              required />
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
+              <path fillRule="evenodd" d="M10 1a4.5 4.5 0 0 0-4.5 4.5V9H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-.5V5.5A4.5 4.5 0 0 0 10 1Zm3 8V5.5a3 3 0 1 0-6 0V9h6Z" clipRule="evenodd" />
+            </svg>
+          </div>
 
+          <div className='social-login'>
+            <GoogleLogin
+              onSuccess={handleGoogleLoginSuccess}
+              onError={() => alert("Google login failed.")}
+            />
           </div>
 
           <div className="forgot-password">
