@@ -1,0 +1,454 @@
+/* JoinPage.css */
+.join-page {
+  font-family: "Arial", sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background: #f8f9fa;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Header Section */
+.join-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 80px 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.join-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+  opacity: 0.3;
+}
+
+.join-header-content {
+  position: relative;
+  z-index: 1;
+}
+
+.join-header h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.join-header p {
+  font-size: 1.2rem;
+  margin-bottom: 40px;
+  opacity: 0.9;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Community Stats */
+.community-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 30px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.stat-item {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 25px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-5px);
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #fff;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Main Content */
+.join-content {
+  padding: 60px 0;
+}
+
+.join-layout {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 40px;
+}
+
+/* Community Info */
+.community-info {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.info-section {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.info-section h2 {
+  color: #2c3e50;
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+}
+
+/* Benefits Grid */
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.benefit-card {
+  background: #f8f9fa;
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.benefit-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.benefit-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.benefit-card h3 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+}
+
+.benefit-card p {
+  color: #666;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* Features List */
+.features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+
+.feature-item:hover {
+  transform: translateX(5px);
+}
+
+.feature-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  background: #667eea;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feature-content h4 {
+  color: #2c3e50;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+}
+
+.feature-content p {
+  color: #666;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+/* Participants List */
+.participants-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.participant-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.participant-item:hover {
+  background: #e9ecef;
+}
+
+.participant-avatar {
+  font-size: 2rem;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 50%;
+  border: 2px solid #667eea;
+}
+
+.participant-info {
+  flex: 1;
+}
+
+.participant-name {
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 3px;
+}
+
+.participant-role {
+  color: #667eea;
+  font-size: 0.9rem;
+  margin-bottom: 3px;
+}
+
+.participant-date {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.no-participants {
+  text-align: center;
+  padding: 30px;
+  color: #666;
+}
+
+/* Join Sidebar */
+.join-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* Join Action Card */
+.join-action-card {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.join-action-card h2 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.logged-in-join {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.user-avatar {
+  font-size: 2rem;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 50%;
+  border: 2px solid #667eea;
+}
+
+.user-details {
+  text-align: left;
+  flex: 1;
+}
+
+.user-name {
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 3px;
+}
+
+.user-role {
+  color: #667eea;
+  font-size: 0.9rem;
+}
+
+.already-joined {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.success-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px;
+  background: #d4edda;
+  color: #155724;
+  border-radius: 10px;
+  border: 1px solid #c3e6cb;
+}
+
+.success-icon {
+  font-size: 1.5rem;
+}
+
+.success-message p {
+  margin: 0;
+  font-weight: bold;
+}
+
+.join-action p {
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.btn-join {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.btn-join:hover {
+  background: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+}
+
+.btn-leave {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-leave:hover {
+  background: #c82333;
+}
+
+.not-logged-join p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.login-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-login,
+.btn-register {
+  padding: 12px 25px;
+  border-radius: 20px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.btn-login {
+  background: #667eea;
+  color: white;
+}
+
+.btn-login:hover {
+  background: #5a6fd8;
+}
+
+.btn-register {
+  background: transparent;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.btn-register:hover {
+  background: #667eea;
+  color: white;
+}
+
+/* Quick Links Card */
+.quick-links-card {
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.quick-links-card h3 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+}
+

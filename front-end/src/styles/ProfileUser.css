@@ -1,731 +1,241 @@
-/* ProfileUser.css - Modern Design with Background Customization */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
-
+/* Profile Container với Background Image */
 .profile-container {
-  margin-top: 60px;
-  margin-bottom: 60px;
-  padding: 20px;
-  font-family: "Inter", sans-serif;
   min-height: 100vh;
-  transition: all 0.5s ease;
-}
-
-/* Background Customization Panel */
-.background-panel {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  margin-bottom: 30px;
-  overflow: hidden;
-}
-
-.panel-title {
-  color: #1e293b;
-  font-weight: 700;
-  margin-bottom: 25px;
-  text-align: center;
-  font-size: 1.3rem;
-}
-
-.background-options {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-}
-
-.option-group h6 {
-  color: #475569;
-  font-weight: 600;
-  margin-bottom: 15px;
-  font-size: 1rem;
-}
-
-/* Upload Background Section */
-.upload-background-section {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.upload-background-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  display: inline-block;
-}
-
-.upload-background-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-}
-
-.remove-background-btn {
-  background: #ef4444;
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 0.9rem;
+  padding: 2rem 0;
   transition: all 0.3s ease;
 }
 
-.remove-background-btn:hover {
-  background: #dc2626;
-  transform: translateY(-2px);
-}
 
-/* Gradient Options */
-.gradient-options {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 12px;
-}
 
-.gradient-btn {
-  border: 3px solid transparent;
-  border-radius: 12px;
-  padding: 15px 10px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 0.85rem;
-  color: white;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
+.profile-container > * {
   position: relative;
-  overflow: hidden;
-}
-
-.gradient-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-}
-
-.gradient-btn.active {
-  border-color: #1e293b;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-}
-
-.gradient-btn::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.1);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.gradient-btn:hover::before {
-  opacity: 1;
-}
-
-/* Color Options */
-.color-options {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-  gap: 12px;
-}
-
-.color-btn {
-  width: 50px;
-  height: 50px;
-  border: 3px solid transparent;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.color-btn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-.color-btn.active {
-  border-color: #1e293b;
-  transform: scale(1.1);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.color-btn::after {
-  content: "✓";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  font-weight: bold;
-  font-size: 1.2rem;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.color-btn.active::after {
-  opacity: 1;
+  z-index: 2;
 }
 
 /* Profile Card */
 .profile-card {
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(15px);
   background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 24px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 0;
   overflow: hidden;
-  max-width: 480px;
-  margin: 0 auto;
-  position: relative;
-}
-
-.profile-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 120px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  z-index: 1;
+  margin-top: 2rem;
 }
 
 .profile-header {
-  position: relative;
-  z-index: 2;
-  background: transparent;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  border-radius: 0;
-  padding: 40px 0 80px 0;
+  padding: 1.5rem;
   text-align: center;
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  margin: 0;
 }
 
 .profile-body {
-  position: relative;
-  z-index: 3;
-  padding: 80px 40px 40px;
-  margin-top: -40px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 24px 24px 0 0;
+  padding: 2rem;
 }
 
 /* Profile Image Section */
 .profile-image-section {
-  position: absolute;
-  top: -50px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
 }
 
 .profile-avatar {
   position: relative;
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
-  border: 4px solid white;
-  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
   overflow: hidden;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+  border: 4px solid #fff;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
+}
+
+.profile-avatar-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.7rem;
 }
 
 .profile-avatar:hover {
   transform: scale(1.05);
-  box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
 }
 
 .profile-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 50%;
 }
 
 .default-avatar {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #bdc3c7, #95a5a6);
   font-size: 3rem;
   color: white;
 }
 
 .image-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  right: 0;
+  display: flex;
+  gap: 0.3rem;
+}
+
+.upload-btn, .remove-btn {
+ width: 40px;
+  height: 40px;
   border-radius: 50%;
+  border: none;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  opacity: 0;
+  font-size: 1.2rem;
   transition: all 0.3s ease;
-}
-
-.profile-avatar:hover .image-overlay {
-  opacity: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .upload-btn {
-  background: rgba(255, 255, 255, 0.9);
-  border: none;
-  border-radius: 50%;
-  width: 35px;
-  height: 35px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 1.2rem;
-  transition: all 0.3s ease;
-  text-decoration: none;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
 }
 
 .upload-btn:hover {
-  background: white;
+  background: linear-gradient(135deg, #2980b9, #1f5f8b);
   transform: scale(1.1);
 }
 
 .remove-btn {
-  background: rgba(255, 59, 48, 0.9);
-  border: none;
-  border-radius: 50%;
-  width: 35px;
-  height: 35px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 1rem;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
   color: white;
-  transition: all 0.3s ease;
 }
 
 .remove-btn:hover {
-  background: #ff3b30;
+  background: linear-gradient(135deg, #c0392b, #a93226);
   transform: scale(1.1);
 }
 
-/* Profile Fields */
-.profile-body .card-text {
+/* Profile Information */
+.card-text {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 0;
-  border-bottom: 1px solid rgba(241, 245, 249, 0.8);
-  margin-bottom: 0;
-  position: relative;
-  transition: all 0.3s ease;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #ecf0f1;
+  margin-bottom: 0.5rem;
 }
 
-.profile-body .card-text:hover {
-  background: rgba(248, 250, 252, 0.8);
-  margin: 0 -20px;
-  padding: 20px;
-  border-radius: 12px;
-  border-bottom: 1px solid transparent;
-}
-
-.profile-body .card-text:last-child {
+.card-text:last-child {
   border-bottom: none;
-}
-
-.profile-body .card-text:first-child {
-  text-align: center;
-  margin-bottom: 40px;
-  padding-top: 20px;
-}
-
-.profile-body .card-text:first-child .profile-value {
-  display: block;
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 8px;
-  letter-spacing: -0.5px;
-}
-
-.profile-body .card-text:first-child .profile-label {
-  display: none;
+  margin-bottom: 0;
 }
 
 .profile-label {
-  color: #475569;
   font-weight: 600;
-  font-size: 0.95rem;
-  margin-right: 0;
-  min-width: 100px;
-  text-transform: capitalize;
+  color: #2c3e50;
+  flex: 0 0 40%;
 }
 
 .profile-value {
-  color: #1e293b;
-  font-weight: 500;
-  font-size: 1rem;
+  color: #34495e;
   flex: 1;
   text-align: right;
-  margin-left: 20px;
+  font-weight: 500;
 }
 
-/* Edit Icons */
-.profile-body .card-text::after {
-  content: "✏️";
-  font-size: 1rem;
-  margin-left: 15px;
-  opacity: 0.6;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  padding: 8px;
-  border-radius: 8px;
-}
-
-.profile-body .card-text:hover::after {
-  opacity: 1;
-  background: #667eea;
+.profile-score .profile-value {
+  background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
-  transform: scale(1.1);
-}
-
-/* Special styling for score */
-.profile-score {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: white !important;
-  padding: 20px;
-  border-radius: 16px;
-  text-align: center;
-  font-size: 1.2rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
   font-weight: 600;
-  margin-top: 30px;
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
-  border: none;
-  position: relative;
-  overflow: hidden;
 }
 
-.profile-score::before {
-  content: "🏆";
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 1.5rem;
-  opacity: 0.7;
-}
-
-.profile-score::after {
-  display: none;
-}
-
-.profile-score:hover {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  margin: 30px 0 0 0;
-  padding: 20px;
-  transform: translateY(-2px);
-  box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
-}
-
-/* Login Message Styling */
-.profile-container h4 {
-  text-align: center;
-  color: #64748b;
-  font-weight: 600;
-  font-size: 1.5rem;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 60px 40px;
-  border-radius: 24px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  max-width: 480px;
-  margin: 0 auto;
-}
-
-.profile-container h4::before {
-  content: "🔐";
-  display: block;
-  font-size: 3rem;
-  margin-bottom: 20px;
+/* Loading and Error States */
+.text-danger .profile-value {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .profile-container {
-     width: 100vw;
-  min-height: 100vh;
-  margin: 0;
-  padding: 20px 0;
-  font-family: "Inter", sans-serif;
-  transition: all 0.5s ease;
-  position: relative;
-  left: 50%;
-  right: 50%;
-  transform: translateX(-50%);
-  box-sizing: border-box;
-  overflow-x: hidden;
+    padding: 1rem 0;
+    background-attachment: scroll; /* Tắt fixed background trên mobile */
   }
-
-  .background-panel {
-    margin-bottom: 20px;
-  }
-
-  .panel-title {
-    font-size: 1.1rem;
-  }
-
-  .background-options {
-    gap: 20px;
-  }
-
-  .gradient-options {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 10px;
-  }
-
-  .gradient-btn {
-    padding: 12px 8px;
-    font-size: 0.8rem;
-  }
-
-  .color-options {
-    grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
-    gap: 10px;
-  }
-
-  .color-btn {
-    width: 40px;
-    height: 40px;
-  }
-
-  .upload-background-section {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .profile-card {
-    border-radius: 20px;
-    max-width: 100%;
-  }
-
-  .profile-header {
-    font-size: 1.5rem;
-    padding: 30px 0 70px 0;
-  }
-
-  .profile-body {
-    padding: 70px 25px 30px;
-    margin-top: -30px;
-  }
-
+  
   .profile-avatar {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
   }
-
-  .profile-image-section {
-    top: -40px;
-  }
-
+  
   .default-avatar {
     font-size: 2.5rem;
   }
-
-  .upload-btn,
-  .remove-btn {
-    width: 30px;
-    height: 30px;
-    font-size: 1rem;
-  }
-
-  .profile-body .card-text:first-child .profile-value {
-    font-size: 1.5rem;
-  }
-
-  .profile-body .card-text {
-    padding: 15px 0;
+  
+  .card-text {
     flex-direction: column;
     align-items: flex-start;
-    text-align: left;
+    gap: 0.3rem;
   }
-
+  
   .profile-value {
     text-align: left;
-    margin-left: 0;
-    margin-top: 5px;
-    font-size: 0.95rem;
-  }
-
-  .profile-label {
-    font-size: 0.9rem;
-    min-width: auto;
-  }
-
-  .profile-body .card-text::after {
-    position: absolute;
-    top: 15px;
-    right: 0;
-  }
-
-  .profile-score {
-    font-size: 1.1rem;
-    padding: 18px;
-    margin-top: 25px;
-  }
-
-  .profile-container h4 {
-    font-size: 1.3rem;
-    padding: 40px 25px;
   }
 }
 
 @media (max-width: 480px) {
-  .profile-container {
-    padding: 10px;
-  }
-
-  .gradient-options {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .color-options {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .profile-body {
-    padding: 60px 20px 25px;
-  }
-
-  .profile-avatar {
-    width: 70px;
-    height: 70px;
-  }
-
-  .profile-image-section {
-    top: -35px;
-  }
-
-  .default-avatar {
-    font-size: 2rem;
-  }
-
-  .profile-body .card-text:first-child .profile-value {
-    font-size: 1.4rem;
-  }
-
-  .profile-header {
-    font-size: 1.3rem;
-  }
-
-  .profile-score {
-    font-size: 1rem;
-    padding: 16px;
-  }
-
-  .upload-btn,
-  .remove-btn {
-    width: 28px;
-    height: 28px;
-    font-size: 0.9rem;
+  .profile-container::before {
+    background:white; /* Tăng độ mờ trên mobile để text dễ đọc hơn */
   }
 }
-
-/* Animation Effects */
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
-@keyframes backgroundTransition {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.profile-container {
-  animation: backgroundTransition 0.5s ease-out;
-}
-
-.background-panel {
-  animation: slideUp 0.6s ease-out;
-}
-
-.profile-card {
-  animation: slideUp 0.8s ease-out;
-}
-
-.profile-body .card-text {
-  animation: slideUp 0.8s ease-out;
-  animation-fill-mode: both;
-}
-
-.profile-body .card-text:nth-child(2) {
-  animation-delay: 0.1s;
-}
-.profile-body .card-text:nth-child(3) {
-  animation-delay: 0.2s;
-}
-.profile-body .card-text:nth-child(4) {
-  animation-delay: 0.3s;
-}
-.profile-body .card-text:nth-child(5) {
-  animation-delay: 0.4s;
-}
-.profile-body .card-text:nth-child(6) {
-  animation-delay: 0.5s;
-}
-
-/* Hover Effects */
-.profile-card {
+/* Smooth Animations */
+* {
   transition: all 0.3s ease;
 }
 
-.profile-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15);
-}
+/* Alternative Background Styles - Bạn có thể chọn một trong những style này */
 
-/* Focus States for Accessibility */
-.profile-body .card-text:focus-within {
-  outline: 2px solid #667eea;
-  outline-offset: 2px;
-  border-radius: 12px;
+/* Style 1: Background với gradient overlay */
+/*
+.profile-container::before {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
 }
+*/
 
-.upload-btn:focus,
-.remove-btn:focus,
-.gradient-btn:focus,
-.color-btn:focus {
-  outline: 2px solid #667eea;
-  outline-offset: 2px;
+/* Style 2: Background với pattern overlay */
+/*
+.profile-container::before {
+  background: 
+    radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    rgba(0, 0, 0, 0.3);
 }
+*/
+
+/* Style 3: Background mờ nhẹ hơn */
+/*
+.profile-container::before {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(2px);
+}
+*/
