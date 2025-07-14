@@ -47,5 +47,20 @@ namespace DrugsPrevention_Data.Repositories
         {
             await _context.SaveChangesAsync();
         }
+        public async Task<Accounts> GetUserByExternalLoginAsync(string provider, string providerKey)
+        {
+            var externalLogin = await _context.ExternalLogins
+                .Include(e => e.Account)
+                .ThenInclude(a => a.Role)
+                .FirstOrDefaultAsync(e => e.Provider == provider && e.ProviderKey == providerKey);
+
+            return externalLogin?.Account;
+        }
+
+        public async Task AddExternalLoginAsync(ExternalLogins externalLogin)
+        {
+            await _context.ExternalLogins.AddAsync(externalLogin);
+        }
+
     }
 }

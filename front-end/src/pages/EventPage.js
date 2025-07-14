@@ -242,7 +242,7 @@ const EventPage = () => {
                                 <span className="views">👁️ {post.views}</span>
                               </div>
                             </div>
-                            <button className="read-more-btn">Read More →</button>
+                            <button className="join-btn">Join →</button>
                           </div>
                         </article>
                       ))}

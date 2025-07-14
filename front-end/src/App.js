@@ -21,13 +21,17 @@ import Survey from "./pages/Survey"
 import DashBoard from "./pages/DashBoard"
 import BookAppointment from "./pages/BookAppointment"
 import Account from "./pages/Account"
-
-import Consultant from "./pages/Consultant"
+import Join from "./pages/JoinPage"
+import ManageConsultant from "./pages/ManageConsultant"
 
 import ManageEvent from "./pages/ManageEvent"
 import ManageBlog from "./pages/ManageBlog"
 import Report from "./pages/Report"
 import CalendarPage from "./pages/CalendarPage"
+
+
+
+
 
 
 const App = () => {
@@ -75,6 +79,8 @@ const App = () => {
         return <Event />
       case "survey":
         return <Survey />
+      case "join":
+        return <Join />
       case "login":
         return <Login />
       case "register":
@@ -86,7 +92,7 @@ const App = () => {
       case "addpost":
         return <AddPost />
       case "manage-consultant":
-        return <Consultant />
+        return <ManageConsultant />
       case "manage-bookappointment":
         return <BookAppointment />
       case "manage-event":
@@ -95,6 +101,10 @@ const App = () => {
         return <ManageBlog />
       case "manage-account":
         return <Account />
+
+      case "manage-consultant":
+        return <ManageConsultant />
+
       case "report":
         return <Report />
 
