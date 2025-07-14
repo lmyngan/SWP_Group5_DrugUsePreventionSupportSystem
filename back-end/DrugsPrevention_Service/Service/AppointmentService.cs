@@ -1,16 +1,17 @@
-﻿using System;
+﻿using DrugsPrevention.Utilities;
+using DrugsPrevention_Data;
+using DrugsPrevention_Data.Data;
+using DrugsPrevention_Data.DTO.Appointment;
+using DrugsPrevention_Data.DTO.Schedule;
+using DrugsPrevention_Data.Repositories.Irepositories;
+using DrugsPrevention_Service.Service.Iservice;
+using Microsoft.EntityFrameworkCore;
+using ServiceStack;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DrugsPrevention_Data.Data;
-using DrugsPrevention_Data.DTO.Appointment;
-using DrugsPrevention_Data.Repositories.Irepositories;
-using DrugsPrevention_Data;
-using DrugsPrevention_Service.Service.Iservice;
-using Microsoft.EntityFrameworkCore;
-using DrugsPrevention_Data.DTO.Schedule;
-using ServiceStack;
 
 namespace DrugsPrevention_Service.Service
 {
@@ -18,11 +19,13 @@ namespace DrugsPrevention_Service.Service
     {
         private readonly IAppointmentRepository _repo;
         private readonly DrugsPrevention_DBContext _context;
+        private readonly VNPayHelper _vnpayHelper;
 
-        public AppointmentService(IAppointmentRepository repo, DrugsPrevention_DBContext context)
+        public AppointmentService(IAppointmentRepository repo, DrugsPrevention_DBContext context, VNPayHelper vnpayHelper)
         {
             _repo = repo;
             _context = context;
+            _vnpayHelper = vnpayHelper;
         }
 
         public async Task<AppointmentResponseDTO> BookAppointmentAsync(AppointmentCreateDTO dto)
