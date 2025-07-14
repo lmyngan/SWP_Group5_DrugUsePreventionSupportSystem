@@ -197,5 +197,58 @@ namespace DrugsPrevention_Service.Service
 
             return await GetAppointmentByIdAsync(appointment.AppointmentId);
         }
+        // Tạo URL thanh toán VNPay cho Appointment
+        public async Task<string> CreateVNPayPaymentUrlAsync(int appointmentId, string ipAddress)
+        {
+            var appointment = await _repo.GetByIdAsync(appointmentId);
+            if (appointment == null)
+            {
+                throw new Exception("Appointment not found!");
+            }
+
+            if (appointment.Status != "pending")
+            {
+                throw new Exception("Appointment must be in pending status to proceed with payment!");
+            }
+
+            string paymentUrl = _vnpayHelper.CreatePaymentUrl(
+                appointment.AppointmentId.ToString(),  // dùng Id dạng string
+                (decimal)appointment.Price,           // giá tiền
+                ipAddress);
+
+            return paymentUrl;
+        }
+
+        // Xử lý callback VNPay cho Appointment
+        public async Task<bool> HandleVNPayCallbackAsync(Dictionary<string, string> vnpayData)
+        {
+            bool isValid = _vnpayHelper.VerifyCallback(vnpayData);
+            if (!isValid)
+            {
+                return false;
+            }
+
+            string appointmentIdStr = vnpayData["vnp_TxnRef"];
+            int appointmentId = int.Parse(appointmentIdStr);
+
+            string responseCode = vnpayData["vnp_ResponseCode"];
+            string transactionStatus = vnpayData["vnp_TransactionStatus"];
+
+            var appointment = await _repo.GetByIdAsync(appointmentId);
+            if (appointment == null)
+            {
+                throw new Exception("Appointment not found!");
+            }
+
+            if (responseCode == "00" && transactionStatus == "00")
+            {
+                appointment.Status = "paid";
+                await _repo.UpdateAsync(appointment);
+                await _repo.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
+        }
     }
 }
