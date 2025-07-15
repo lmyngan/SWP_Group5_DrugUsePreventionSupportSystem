@@ -11,7 +11,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+ const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
@@ -24,6 +24,10 @@ const LoginPage = () => {
 
       if (response?.token) {
         localStorage.setItem('token', response.token);
+
+
+        const decoded = jwtDecode(response.token);
+
 
         const user = await getUserById(response.accountId);
         localStorage.setItem('user', JSON.stringify(user));
