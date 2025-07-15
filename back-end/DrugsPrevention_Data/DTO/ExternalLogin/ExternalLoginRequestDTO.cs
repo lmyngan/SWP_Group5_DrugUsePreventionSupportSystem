@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,5 +13,4 @@ namespace DrugsPrevention_Data.DTO.ExternalLogin
         public string Email { get; set; } // email user
         public string IdToken { get; set; }
     }
-
 }
