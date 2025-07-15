@@ -83,6 +83,8 @@ namespace DrugsPrevention
             builder.Services.AddScoped<ICertificateRepository, CertificateRepository>();
             builder.Services.AddScoped<IEventParticipationService, EventParticipationService>();
             builder.Services.AddScoped<IEventParticipationRepository, EventParticipationRepository>();
+            builder.Services.AddScoped<INotificationService, NotificationService>();
+            builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 
             builder.Services.AddScoped<VNPayHelper>();
             // Swagger
