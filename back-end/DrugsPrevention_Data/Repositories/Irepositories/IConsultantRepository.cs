@@ -11,5 +11,7 @@ namespace DrugsPrevention_Data.Repositories.Irepositories
     {
         Task<Consultant> GetConsultantByIdAsync(int consultantId);
         Task<List<Consultant>> GetAllConsultantsAsync();
+        Task UpdateConsultantAsync(Consultant consultant);
+        Task SaveChangesAsync();
     }
 }

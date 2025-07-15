@@ -32,5 +32,14 @@ namespace DrugsPrevention_Data.Repositories
                 .Include(c => c.Certificates)
                 .ToListAsync();
         }
+        public async Task UpdateConsultantAsync(Consultant consultant)
+        {
+            _context.Consultants.Update(consultant);
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }
