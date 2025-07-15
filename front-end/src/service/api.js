@@ -269,21 +269,12 @@ export const appointmentId = async (appointmentIdData) => {
 export const updateAppointmentStatus = async (scheduleId, status) => {
     try {
         const url = `${API_BASE_URL}/api/Appointment/${scheduleId}/status?status=${encodeURIComponent(status)}`;
-        console.log("Sending request to:", url);
-
-        const response = await axios.put(url, {
+        const response = await axios.put(url, null, {
             headers: getAuthHeader(),
         });
         console.log("Response:", response.data);
         return response.data;
     } catch (error) {
-        console.error("API Error Details:", {
-            status: error.response?.status,
-            statusText: error.response?.statusText,
-            data: error.response?.data,
-            message: error.message,
-            url: error.config?.url
-        });
         return { error: error.response?.data?.message || error.message };
     }
 };
