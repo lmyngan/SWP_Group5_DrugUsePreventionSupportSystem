@@ -1,20 +1,21 @@
-﻿using DrugsPrevention_Data;
-using DrugsPrevention_Data.Repositories;
-using DrugsPrevention_Service.Service.Iservice;
-using DrugsPrevention_Service;
-using Microsoft.EntityFrameworkCore;
+﻿using DrugsPrevention.Utilities;
+using DrugsPrevention_Data;
 using DrugsPrevention_Data.IRepositories;
-using DrugsPrevention_Service.Service;
+using DrugsPrevention_Data.Repositories;
+using DrugsPrevention_Data.Repositories.Implementations;
 using DrugsPrevention_Data.Repositories.Irepositories;
 using DrugsPrevention_Data.Services.Implementations;
-using DrugsPrevention_Data.Repositories.Implementations;
+using DrugsPrevention_Service;
+using DrugsPrevention_Service.Service;
 using DrugsPrevention_Service.Service.Implementations;
-using Microsoft.OpenApi.Models;
+using DrugsPrevention_Service.Service.Iservice;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.Security.Cryptography;
+using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace DrugsPrevention
 {
@@ -82,7 +83,10 @@ namespace DrugsPrevention
             builder.Services.AddScoped<ICertificateRepository, CertificateRepository>();
             builder.Services.AddScoped<IEventParticipationService, EventParticipationService>();
             builder.Services.AddScoped<IEventParticipationRepository, EventParticipationRepository>();
+            builder.Services.AddScoped<INotificationService, NotificationService>();
+            builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 
+            builder.Services.AddScoped<VNPayHelper>();
             // Swagger
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>

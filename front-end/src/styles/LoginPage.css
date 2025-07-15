@@ -60,10 +60,15 @@
 
 .login-form .input-box {
   position: relative;
+  text-align: left;
   margin: 10px 0;
   width: 100%;
   height: 50px;
   margin: 30px 0;
+}
+
+.input-box label {
+  padding-left: 15px;
 }
 
 .input-box input {
@@ -81,6 +86,10 @@
 
 .input-box input::placeholder {
   color: white;
+}
+
+.input-box input:focus {
+  
 }
 
 .input-box svg {
@@ -118,6 +127,7 @@
 
 .login-box .forgot-password {
   display: flex;
+  padding-top: 20px;
   justify-content: space-between;
   font-size: 14.5px;
   margin: -15px 0 15px;

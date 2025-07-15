@@ -1,6 +1,7 @@
 ﻿using DrugsPrevention_API.Attributes;
 using DrugsPrevention_Data.DTO.Appointment;
 using DrugsPrevention_Service.Service.Iservice;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DrugsPrevention_API.Controllers
@@ -30,7 +31,7 @@ namespace DrugsPrevention_API.Controllers
             }
         }
 
-        [AuthorizeByRole(3)]
+        [AuthorizeByRole(3, 4)]
         [HttpGet("consultant/{consultantId}/schedules")]
         public async Task<IActionResult> GetSchedules(int consultantId)
         {
@@ -88,7 +89,7 @@ namespace DrugsPrevention_API.Controllers
             return NoContent();
         }
 
-        [AuthorizeByRole(1, 2)]
+        [AuthorizeByRole(1, 2, 3)]
         [HttpPut("{id}/status")]
         public async Task<IActionResult> UpdateStatus(int id, [FromQuery] string status)
         {
@@ -102,5 +103,44 @@ namespace DrugsPrevention_API.Controllers
                 url = $"{Request.Scheme}://{Request.Host}/api/Appointment/{result.AppointmentId}/status?status={result.Status}"
             });
         }
+        [AuthorizeByRole(4)]
+        [HttpGet("{appointmentId}/vnpay-url")]
+        public async Task<IActionResult> CreateVNPayUrl(int appointmentId)
+        {
+            try
+            {
+                var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+                var url = await _service.CreateVNPayPaymentUrlAsync(appointmentId, ipAddress);
+                return Ok(new { paymentUrl = url });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpGet("vnpay-callback")]
+        public async Task<IActionResult> VNPayCallback()
+        {
+            try
+            {
+                var vnpayData = Request.Query.ToDictionary(k => k.Key, v => v.Value.ToString());
+                bool success = await _service.HandleVNPayCallbackAsync(vnpayData);
+                if (success)
+                {
+                    return Ok(new { message = "Thanh toán VNPay thành công!" });
+                }
+                else
+                {
+                    return BadRequest(new { message = "Thanh toán thất bại hoặc không hợp lệ." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = $"Lỗi xử lý callback: {ex.Message}" });
+            }
+        }
+
     }
 }

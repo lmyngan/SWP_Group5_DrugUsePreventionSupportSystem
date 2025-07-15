@@ -140,16 +140,24 @@ const Survey = () => {
                                         <h4>{q.questionText}</h4>
                                         <Form.Group>
                                             {q.options.map(opt => (
-                                                <Form.Check
-                                                    key={opt.optionId}
-                                                    type="radio"
-                                                    label={opt.optionText}
-                                                    name={`question_${q.questionId}`}
-                                                    value={opt.optionId}
-                                                    checked={answers[q.questionId] === opt.optionId}
-                                                    onChange={() => handleChange(q.questionId, opt.optionId)}
-                                                    required
-                                                />
+                                                <div key={opt.optionId} className="form-check">
+                                                    <input
+                                                        type="radio"
+                                                        id={`question_${q.questionId}_option_${opt.optionId}`}
+                                                        name={`question_${q.questionId}`}
+                                                        value={opt.optionId}
+                                                        checked={answers[q.questionId] === opt.optionId}
+                                                        onChange={() => handleChange(q.questionId, opt.optionId)}
+                                                        className="form-check-input"
+                                                        required
+                                                    />
+                                                    <label
+                                                        htmlFor={`question_${q.questionId}_option_${opt.optionId}`}
+                                                        className="form-check-label"
+                                                    >
+                                                        {opt.optionText}
+                                                    </label>
+                                                </div>
                                             ))}
                                         </Form.Group>
                                     </div>
@@ -158,42 +166,38 @@ const Survey = () => {
                         })}
                     </>
                 )}
-                <Button type="submit" className="survey-submit-btn">
-                    Submit Survey
-                </Button>
+                <Button type="submit" className="survey-submit-btn">Submit Survey</Button>
             </Form>
 
-            <Modal show={showModal} onHide={handleClose} centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>Survey Result</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div>Your total score is: {score}</div>
-                    <div>Risk Level: {getRiskLevel(score)}</div>
-                    {getRiskLevel(score) === "Medium Risk" && (
-                        <div>You should Join Event.</div>
-                    )}
-                    {getRiskLevel(score) === "High Risk" && (
-                        <div>You should Book Appointment with Consultant.</div>
-                    )}
-
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Close
-                    </Button>
-                    {getRiskLevel(score) === "Medium Risk" && (
-                        <Button variant="primary" onClick={() => window.location.href = '/event'}>
-                            Join Event
-                        </Button>
-                    )}
-                    {getRiskLevel(score) === "High Risk" && (
-                        <Button variant="primary" onClick={() => window.location.href = '/book-appointment'}>
-                            Book Appointment
-                        </Button>
-                    )}
-                </Modal.Footer>
-            </Modal>
+            {/* Modal kết quả survey */}
+            {showModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content-custom">
+                        <h2>Survey Result</h2>
+                        <div>Your total score is: {score}</div>
+                        <div>Risk Level: {getRiskLevel(score)}</div>
+                        {getRiskLevel(score) === "moderate" && (
+                            <div>You should Join Event.</div>
+                        )}
+                        {getRiskLevel(score) === "high" && (
+                            <div>You should Book Appointment with Consultant.</div>
+                        )}
+                        <div style={{ marginTop: 24, display: 'flex', gap: 12, justifyContent: 'center' }}>
+                            <button className="btn btn-secondary" onClick={handleClose}>Close</button>
+                            {getRiskLevel(score) === "moderate" && (
+                                <button className="btn btn-primary" onClick={() => window.location.href = '/event'}>
+                                    Join Event
+                                </button>
+                            )}
+                            {getRiskLevel(score) === "high" && (
+                                <button className="btn btn-primary" onClick={() => window.location.href = '/mentor'}>
+                                    Book Appointment
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

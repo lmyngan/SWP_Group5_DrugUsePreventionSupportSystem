@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DrugsPrevention_Data.Migrations
 {
     [DbContext(typeof(DrugsPrevention_DBContext))]
-    [Migration("20250702050810_InitiateCreate")]
+    [Migration("20250715143049_InitiateCreate")]
     partial class InitiateCreate
     {
         /// <inheritdoc />
@@ -48,7 +48,7 @@ namespace DrugsPrevention_Data.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("created_at");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime2")
                         .HasColumnName("dateOfBirth");
 
@@ -312,6 +312,49 @@ namespace DrugsPrevention_Data.Migrations
                     b.ToTable("EventParticipation");
                 });
 
+            modelBuilder.Entity("DrugsPrevention_Data.Data.ExternalLogins", b =>
+                {
+                    b.Property<int>("ExternalLoginId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("external_login_id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExternalLoginId"));
+
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int")
+                        .HasColumnName("account_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("email");
+
+                    b.Property<string>("Provider")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("provider");
+
+                    b.Property<string>("ProviderKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("provider_key");
+
+                    b.HasKey("ExternalLoginId");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("Provider", "ProviderKey")
+                        .IsUnique();
+
+                    b.ToTable("ExternalLogins");
+                });
+
             modelBuilder.Entity("DrugsPrevention_Data.Data.Notifications", b =>
                 {
                     b.Property<int>("NotificationId")
@@ -324,9 +367,6 @@ namespace DrugsPrevention_Data.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("int")
                         .HasColumnName("account_id");
-
-                    b.Property<int?>("AccountsAccountId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
@@ -345,8 +385,6 @@ namespace DrugsPrevention_Data.Migrations
                     b.HasKey("NotificationId");
 
                     b.HasIndex("AccountId");
-
-                    b.HasIndex("AccountsAccountId");
 
                     b.ToTable("Notifications");
                 });
@@ -701,17 +739,24 @@ namespace DrugsPrevention_Data.Migrations
                     b.Navigation("Event");
                 });
 
+            modelBuilder.Entity("DrugsPrevention_Data.Data.ExternalLogins", b =>
+                {
+                    b.HasOne("DrugsPrevention_Data.Data.Accounts", "Account")
+                        .WithMany("ExternalLogins")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
             modelBuilder.Entity("DrugsPrevention_Data.Data.Notifications", b =>
                 {
                     b.HasOne("DrugsPrevention_Data.Data.Accounts", "Account")
-                        .WithMany()
+                        .WithMany("Notifications")
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("DrugsPrevention_Data.Data.Accounts", null)
-                        .WithMany("Notifications")
-                        .HasForeignKey("AccountsAccountId");
 
                     b.Navigation("Account");
                 });
@@ -807,6 +852,8 @@ namespace DrugsPrevention_Data.Migrations
                     b.Navigation("CreatedTests");
 
                     b.Navigation("EventParticipations");
+
+                    b.Navigation("ExternalLogins");
 
                     b.Navigation("Notifications");
 

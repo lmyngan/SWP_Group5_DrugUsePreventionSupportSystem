@@ -18,5 +18,6 @@ namespace DrugsPrevention_Service.Service.Iservice
         Task<bool> DeleteAccountAsync(int accountId);
         Task<List<AccountResponseDTO>> GetAllAccountDTOsAsync();
         Task<Accounts> CreateAccountAsync(CreateAccountRequestDTO request);
+        Task<Accounts> UpdateAccountProfileAsync(int accountId, UpdateAccountProfileRequestDTO request);    
     }
 }

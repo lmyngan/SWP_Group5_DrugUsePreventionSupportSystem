@@ -10,5 +10,8 @@ namespace DrugsPrevention_Data.Repositories.Irepositories
     public interface IConsultantRepository
     {
         Task<Consultant> GetConsultantByIdAsync(int consultantId);
+        Task<List<Consultant>> GetAllConsultantsAsync();
+        Task UpdateConsultantAsync(Consultant consultant);
+        Task SaveChangesAsync();
     }
 }

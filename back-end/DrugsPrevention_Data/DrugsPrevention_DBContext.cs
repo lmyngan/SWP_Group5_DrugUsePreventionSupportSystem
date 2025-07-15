@@ -34,6 +34,7 @@ namespace DrugsPrevention_Data
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Blogs> Blogs { get; set; }
+        public DbSet<ExternalLogins> ExternalLogins { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -150,7 +151,7 @@ namespace DrugsPrevention_Data
             // Notifications -> Account
             modelBuilder.Entity<Notifications>()
                 .HasOne(n => n.Account)
-                .WithMany()
+                .WithMany(a => a.Notifications)
                 .HasForeignKey(n => n.AccountId)
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -160,6 +161,17 @@ namespace DrugsPrevention_Data
                 .WithMany(a => a.Blogs)
                 .HasForeignKey(b => b.AuthorId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // ExternalLogins -> Accounts
+            modelBuilder.Entity<ExternalLogins>()
+                .HasOne(e => e.Account)
+                .WithMany(a => a.ExternalLogins)
+                .HasForeignKey(e => e.AccountId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ExternalLogins>()
+                .HasIndex(e => new { e.Provider, e.ProviderKey })
+                .IsUnique();
         }
     }
 }

@@ -1,14 +1,16 @@
-﻿using System;
+﻿using DrugsPrevention_Data.Data;
+using DrugsPrevention_Data.DTO.Register;
+using DrugsPrevention_Data.IRepositories;
+using DrugsPrevention_Service.Service.Iservice;
+using Google.Apis.Auth;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using ServiceStack;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using DrugsPrevention_Data.Data;
-using DrugsPrevention_Data.DTO.Register;
-using DrugsPrevention_Data.IRepositories;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using DrugsPrevention_Service.Service.Iservice;
 
 namespace DrugsPrevention_Service
 {
@@ -47,7 +49,7 @@ namespace DrugsPrevention_Service
             new Claim("AccountId", account.AccountId.ToString()),
             new Claim("Gender", account.Gender ?? ""),
             new Claim("Address", account.Address ?? ""),
-            new Claim("DateOfBirth", account.DateOfBirth.ToString("yyyy-MM-dd")),
+            new Claim("DateOfBirth", account.DateOfBirth.GetValueOrDefault().ToString("yyyy-MM-dd")),
             new Claim("CreatedAt", account.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"))
         };
 
@@ -101,6 +103,61 @@ namespace DrugsPrevention_Service
             }
 
             await _repository.SaveChangesAsync();
+        }
+
+        public async Task<string> LoginWithExternalProviderAsync(string idToken)
+        {
+            var clientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
+            if (string.IsNullOrEmpty(clientId))
+                throw new Exception("GOOGLE_CLIENT_ID not set.");
+
+            // Verify Google token
+            var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, new GoogleJsonWebSignature.ValidationSettings
+            {
+                Audience = new[] { clientId }
+            });
+
+            var provider = "Google";
+            var providerKey = payload.Subject;
+            var email = payload.Email;
+
+            // Tìm user theo Provider + ProviderKey
+            var user = await _repository.GetUserByExternalLoginAsync(provider, providerKey);
+
+            if (user == null)
+            {
+                // Tạo tài khoản mới
+                var newAccount = new Accounts
+                {
+                    Accountname = email,
+                    Password = BCrypt.Net.BCrypt.HashPassword(Guid.NewGuid().ToString()),
+                    FullName = payload.Name ?? email,
+                    Gender = null,
+                    DateOfBirth = null,
+                    Address = null,
+                    RoleId = 4,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                await _repository.AddAccountAsync(newAccount);
+                await _repository.SaveChangesAsync();
+
+                var newExternal = new ExternalLogins
+                {
+                    Provider = provider,
+                    ProviderKey = providerKey,
+                    AccountId = newAccount.AccountId,
+                    Email = email,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                await _repository.AddExternalLoginAsync(newExternal);
+                await _repository.SaveChangesAsync();
+
+                user = newAccount;
+            }
+
+            return GenerateJwtToken(user);
         }
     }
 }

@@ -16,6 +16,7 @@ namespace DrugsPrevention_Data.IRepositories
         Task AddAccountAsync(Accounts account);
         Task<List<Accounts>> GetAllAccountsAsync();
         Task SaveChangesAsync();
-
+        Task<Accounts> GetUserByExternalLoginAsync(string provider, string providerKey);
+        Task AddExternalLoginAsync(ExternalLogins externalLogin);
     }
 }

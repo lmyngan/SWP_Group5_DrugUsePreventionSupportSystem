@@ -33,7 +33,55 @@
 }
 
 .form-check {
-    margin: 0.5rem 0;
+    margin: 0.8rem 0;
+    padding: 0.8rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.form-check:hover {
+    background: rgba(74, 144, 226, 0.1);
+    border-color: #4A90E2;
+    transform: translateX(5px);
+}
+
+.form-check-input {
+    width: 1.2em !important;
+    height: 1.2em !important;
+    margin-right: 0.8rem !important;
+    border: 2px solid #4A90E2 !important;
+    border-radius: 50% !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: #4A90E2 !important;
+    border-color: #4A90E2 !important;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2) !important;
+}
+
+.form-check-input:focus {
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3) !important;
+}
+
+.form-check-label {
+    font-size: 1rem;
+    color: #333;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    flex: 1;
+    margin: 0;
+}
+
+.form-check:hover .form-check-label {
+    color: #4A90E2;
 }
 
 .survey-submit-btn {
@@ -50,4 +98,43 @@
 
 .survey-submit-btn:hover {
     background: #357ABD;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: modal-fade-in 0.3s;
+}
+
+@keyframes modal-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content-custom {
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px 24px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+  min-width: 320px;
+  max-width: 90vw;
+  text-align: center;
+  z-index: 1001;
+  animation: modal-zoom-in 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+
+@keyframes modal-zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.85) translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }

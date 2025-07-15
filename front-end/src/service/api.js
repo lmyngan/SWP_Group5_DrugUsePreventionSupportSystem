@@ -9,6 +9,18 @@ const getAuthHeader = () => {
     return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
+// Common POST method
+export const postData = async (url, data) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}${url}`, data, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+};
+
 //POST: Login
 export const loginUser = async (credentials) => {
     try {
@@ -21,6 +33,19 @@ export const loginUser = async (credentials) => {
         const accountId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
 
         return { token, accountId };
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+};
+
+export const loginWithGoogle = async (idToken) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/auth/login-external`, {
+            IdToken: idToken
+        }, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
     } catch (error) {
         return { error: error.response?.data?.message || error.message };
     }
@@ -191,11 +216,39 @@ export const getConsultantSchedules = async (consultantId) => {
 // POST: Book Appointment
 export const bookAppointment = async (appointmentData) => {
     try {
+        console.log("API: Sending request to book appointment");
+        console.log("API: Headers:", getAuthHeader());
+        console.log("API: Data:", appointmentData);
+
         const response = await axios.post(`${API_BASE_URL}/api/Appointment/book`, appointmentData, {
             headers: getAuthHeader(),
         });
+
+        console.log("API: Response received:", response.data);
         return response.data;
     } catch (error) {
+        console.error("API: Booking error details:", {
+            status: error.response?.status,
+            statusText: error.response?.statusText,
+            data: error.response?.data,
+            message: error.message,
+            config: {
+                url: error.config?.url,
+                method: error.config?.method,
+                headers: error.config?.headers
+            }
+        });
+
+        if (error.response?.status === 403) {
+            return { error: "Access denied. You may not have permission to book appointments or your session has expired. Please login again." };
+        }
+
+        if (error.response?.status === 400) {
+            const errorMessage = error.response?.data?.message || "Invalid request data";
+            console.error("400 Bad Request Details:", error.response?.data);
+            return { error: `Bad Request: ${errorMessage}. Please check your input data.` };
+        }
+
         return { error: error.response?.data?.message || error.message };
     }
 };
@@ -216,21 +269,12 @@ export const appointmentId = async (appointmentIdData) => {
 export const updateAppointmentStatus = async (scheduleId, status) => {
     try {
         const url = `${API_BASE_URL}/api/Appointment/${scheduleId}/status?status=${encodeURIComponent(status)}`;
-        console.log("Sending request to:", url);
-
-        const response = await axios.put(url, {
+        const response = await axios.put(url, null, {
             headers: getAuthHeader(),
         });
         console.log("Response:", response.data);
         return response.data;
     } catch (error) {
-        console.error("API Error Details:", {
-            status: error.response?.status,
-            statusText: error.response?.statusText,
-            data: error.response?.data,
-            message: error.message,
-            url: error.config?.url
-        });
         return { error: error.response?.data?.message || error.message };
     }
 };
@@ -330,3 +374,54 @@ export const deleteBlog = async (blogId) => {
         return { error: error.message };
     }
 }
+
+//POST: Notification
+export const addNotification = async (data) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/Notification`, data, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+};
+
+//GET: Notification by AccountId
+export const getNotificationsByAccountId = async (accountId) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Notification/${accountId}`, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+};
+
+// VNPay Payment Functions
+// GET: Create VNPay Payment URL
+export const createVNPayUrl = async (appointmentId) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Appointment/${appointmentId}/vnpay-url`, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+};
+
+// GET: Handle VNPay Callback
+export const handleVNPayCallback = async (queryParams) => {
+    try {
+        const queryString = new URLSearchParams(queryParams).toString();
+        const response = await axios.get(`${API_BASE_URL}/api/Appointment/vnpay-callback?${queryString}`, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+};
+
