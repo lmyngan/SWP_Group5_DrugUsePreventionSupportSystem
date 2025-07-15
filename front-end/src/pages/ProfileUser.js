@@ -93,31 +93,31 @@ const ProfileUser = () => {
             <Card.Body className="profile-body">
               {/* Profile Image Upload Section */}
               <div className="profile-image-section">
-  <div className="profile-avatar">
-    {profileImage ? (
-      <img src={profileImage || "/placeholder.svg"} alt="Profile" className="profile-image" />
-    ) : (
-      <div className="default-avatar">👤</div>
-    )}
-  </div>
-  <div className="profile-avatar-actions">
-    <label htmlFor="imageUpload" className="upload-btn" title="Upload image">
-      📷
-    </label>
-    {profileImage && (
-      <button className="remove-btn" onClick={removeProfileImage} title="Remove image" type="button">
-        🗑️
-      </button>
-    )}
-    <input
-      id="imageUpload"
-      type="file"
-      accept="image/*"
-      onChange={handleImageUpload}
-      style={{ display: "none" }}
-    />
-  </div>
-</div>
+                <div className="profile-avatar">
+                  {profileImage ? (
+                    <img src={profileImage || "/placeholder.svg"} alt="Profile" className="profile-image" />
+                  ) : (
+                    <div className="default-avatar">👤</div>
+                  )}
+                </div>
+                <div className="profile-avatar-actions">
+                  <label htmlFor="imageUpload" className="upload-btn" title="Upload image">
+                    📷
+                  </label>
+                  {profileImage && (
+                    <button className="remove-btn" onClick={removeProfileImage} title="Remove image" type="button">
+                      🗑️
+                    </button>
+                  )}
+                  <input
+                    id="imageUpload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    style={{ display: "none" }}
+                  />
+                </div>
+              </div>
 
               <Card.Text>
                 <span className="profile-label">Full Name:</span>
