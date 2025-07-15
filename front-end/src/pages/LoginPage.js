@@ -11,24 +11,15 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
- const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const credentials = {
-        accountname,
-        password
-      };
-
+      const credentials = { accountname, password };
       const response = await loginUser(credentials);
 
       if (response?.token) {
         localStorage.setItem('token', response.token);
-
-
         const decoded = jwtDecode(response.token);
-
-
         const user = await getUserById(response.accountId);
         localStorage.setItem('user', JSON.stringify(user));
 
@@ -36,8 +27,7 @@ const LoginPage = () => {
 
         if (user.roleId === 4) {
           window.location.href = '/';
-        }
-        if (user.roleId !== 4) {
+        } else {
           window.location.href = '/dashboard';
         }
       } else {
@@ -52,12 +42,10 @@ const LoginPage = () => {
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     try {
       const credential = credentialResponse.credential;
-      // Gọi loginWithGoogle với idToken (credential)
       const googleLoginResult = await loginWithGoogle(credential);
 
       if (googleLoginResult?.token) {
         localStorage.setItem('token', googleLoginResult.token);
-
         const user = jwtDecode(googleLoginResult.token);
         console.log("Google login as:", user.FullName || user.accountname);
 
@@ -106,6 +94,7 @@ const LoginPage = () => {
 
           <div className='social-login'>
             <GoogleLogin
+              clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
               onSuccess={handleGoogleLoginSuccess}
               onError={() => alert("Google login failed.")}
             />
@@ -117,13 +106,10 @@ const LoginPage = () => {
           </div>
 
           <button type="submit" className='btn'>Login</button>
-
         </form>
 
         <div className="register-link">
-          <p>
-            Don't have an account? <Link to="/register">Register</Link>
-          </p>
+          <p>Don't have an account? <Link to="/register">Register</Link></p>
         </div>
       </div>
     </div>
