@@ -1,6 +1,6 @@
 // src/pages/LoginPage.js
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { loginUser, getUserById } from '../service/api';
 import '../styles/LoginPage.css';
@@ -9,46 +9,43 @@ const LoginPage = () => {
   const [accountName, setAccountName] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Attempting login with:', { accountName, password });
 
     try {
-      const response = await loginUser({ accountName, password });
-      console.log('Login successful:', response);
-
-      localStorage.setItem('token', response.token);
-
-      const decoded = jwtDecode(response.token);
-      console.log("Account: ", decoded);
-
-      const userInfo = await getUserById(decoded.AccountId);
-
-      const user = {
-        accountId: decoded.AccountId,
-        consultantId: userInfo.consultantId,
-        accountName: accountName,
-        password: password,
-        fullName: decoded.FullName,
-        dateOfBirth: decoded.DateOfBirth,
-        gender: decoded.Gender,
-        address: decoded.Address,
-        roleName: decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"],
+      const credentials = {
+        accountName,
+        password
       };
-      localStorage.setItem('user', JSON.stringify(user));
 
-      // Chuyển hướng sau khi đăng nhập thành công
-      if (user.roleName === "User") {
-        window.location.href = "/";
+      const response = await loginUser(credentials);
+
+      if (response?.token) {
+        localStorage.setItem('token', response.token);
+
+        const decoded = jwtDecode(response.token);
+        console.log("Logged in as:", decoded.FullName || decoded.accountname);
+
+
+        const user = await getUserById(response.accountId);
+        localStorage.setItem('user', JSON.stringify(user));
+
+        alert('Login successful!');
+
+        if (user.roleId === 4) {
+          navigate('/');
+        }
+        if (user.roleId !== 4) {
+          navigate('/dashboard');
+        }
+      } else {
+        alert(response.message || 'Login failed!');
       }
-      if (user.roleName !== "User") {
-        window.location.href = "/dashboard";
-      }
-      alert('Login successful!');
     } catch (error) {
-      console.error('Login failed:', error);
-      setError(`Login failed: ${error.message}`);
+      console.error("Login error:", error);
+      alert('Login failed!');
     }
   };
 

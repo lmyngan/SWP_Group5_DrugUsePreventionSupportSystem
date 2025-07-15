@@ -1,55 +1,54 @@
-import React, { useState, useEffect } from "react"
-import { getConsultantInfo } from "../service/api"
+import React, { useState, useEffect } from "react";
+import { getConsultantInfo } from "../service/api";
+import "../styles/Consultant.css";
 
 const Consultant = () => {
-  const [profile, setProfile] = useState(null)
-  const [editMode, setEditMode] = useState(false)
-  const [editData, setEditData] = useState(null)
-  const [newCert, setNewCert] = useState("")
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [profile, setProfile] = useState(null);
+  const [editMode, setEditMode] = useState(false);
+  const [editData, setEditData] = useState(null);
+  const [newCert, setNewCert] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Lấy dữ liệu profile từ API
   useEffect(() => {
     const fetchConsultantInfo = async () => {
       try {
-        setLoading(true)
-        // Lấy consultantId từ localStorage hoặc từ user data
-        const user = JSON.parse(localStorage.getItem("user"))
-        const consultantId = user?.consultantId || 1 // Default to 1 if not found
+        setLoading(true);
+        const user = JSON.parse(localStorage.getItem("user"));
+        const consultantId = user?.consultantId || 1;
 
-        const response = await getConsultantInfo(consultantId)
+        const response = await getConsultantInfo(consultantId);
         if (response.error) {
-          setError(response.error)
+          setError(response.error);
         } else {
-          setProfile(response)
+          setProfile(response);
         }
       } catch (err) {
-        setError("Failed to fetch consultant information")
+        setError("Failed to fetch consultant information");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchConsultantInfo()
-  }, [])
+    fetchConsultantInfo();
+  }, []);
 
   useEffect(() => {
     if (profile) {
-      setEditData(profile)
+      setEditData(profile);
     }
-  }, [profile])
+  }, [profile]);
 
   if (loading) {
-    return <div className="max-w-xl mx-auto bg-white shadow rounded p-8 mt-8">Đang tải thông tin...</div>
+    return <div className="consultant-container status-message">Loading information...</div>;
   }
 
   if (error) {
-    return <div className="max-w-xl mx-auto bg-white shadow rounded p-8 mt-8 text-red-600">Lỗi: {error}</div>
+    return <div className="consultant-container status-message error">Error: {error}</div>;
   }
 
   if (!profile || !editData) {
-    return <div className="max-w-xl mx-auto bg-white shadow rounded p-8 mt-8">Không tìm thấy thông tin tư vấn viên</div>
+    return <div className="consultant-container status-message">Consultant information not found</div>;
   }
 
   const handleChange = (e) => {
@@ -58,22 +57,22 @@ const Consultant = () => {
   };
 
   const handleCertChange = (idx, value) => {
-    const updated = [...editData.certificateNames]
-    updated[idx] = value
-    setEditData({ ...editData, certificateNames: updated })
-  }
+    const updated = [...editData.certificateNames];
+    updated[idx] = value;
+    setEditData({ ...editData, certificateNames: updated });
+  };
 
   const handleAddCert = () => {
     if (newCert.trim()) {
-      setEditData({ ...editData, certificateNames: [...editData.certificateNames, newCert.trim()] })
-      setNewCert("")
+      setEditData({ ...editData, certificateNames: [...editData.certificateNames, newCert.trim()] });
+      setNewCert("");
     }
   };
 
   const handleRemoveCert = (idx) => {
-    const updated = editData.certificateNames.filter((_, i) => i !== idx)
-    setEditData({ ...editData, certificateNames: updated })
-  }
+    const updated = editData.certificateNames.filter((_, i) => i !== idx);
+    setEditData({ ...editData, certificateNames: updated });
+  };
 
   const handleEdit = () => setEditMode(true);
   const handleCancel = () => {
@@ -83,158 +82,118 @@ const Consultant = () => {
   };
 
   const handleSave = () => {
-    setProfile(editData)
-    setEditMode(false)
-    setNewCert("")
-    // TODO: Gọi API cập nhật thông tin ở đây
-  }
+    setProfile(editData);
+    setEditMode(false);
+    setNewCert("");
+    // TODO: Call API to update information here
+  };
 
   const c = editData;
 
   return (
-    <div className="max-w-xl mx-auto bg-white shadow rounded p-8 mt-8">
-      <h2 className="text-2xl font-bold mb-4 text-blue-700">Thông tin tư vấn viên</h2>
-      <div className="mb-4">
-        <span className="font-semibold">Họ tên: </span>
+    <div className="consultant-container">
+       <h2 className="bg-blue-500 px-2 py-2 rounded-lg text-white text-2xl font-bold mb-4">Consultant Information</h2>
+      <div className="info-field">
+        <span className="info-label">Full Name:</span>
         {editMode ? (
-          <input
-            type="text"
-            name="fullName"
-            value={c.fullName}
-            onChange={handleChange}
-            className="border rounded px-2 py-1 ml-2"
-          />
-        ) : c.fullName}
-      </div>
-      <div className="mb-4">
-        <span className="font-semibold">Tên tài khoản: </span>{c.accountname}
-      </div>
-      <div className="mb-4">
-        <span className="font-semibold">Ngày sinh: </span>
-        {editMode ? (
-          <input
-            type="date"
-            name="dateOfBirth"
-            value={c.dateOfBirth}
-            onChange={handleChange}
-            className="border rounded px-2 py-1 ml-2"
-          />
-        ) : c.dateOfBirth}
-      </div>
-      <div className="mb-4">
-        <span className="font-semibold">Giới tính: </span>
-        {editMode ? (
-          <select
-            name="gender"
-            value={c.gender}
-            onChange={handleChange}
-            className="border rounded px-2 py-1 ml-2"
-          >
-            <option value="Male">Nam</option>
-            <option value="Female">Nữ</option>
-            <option value="Other">Khác</option>
-          </select>
-        ) : c.gender}
-      </div>
-      <div className="mb-4">
-        <span className="font-semibold">Địa chỉ: </span>
-        {editMode ? (
-          <input
-            type="text"
-            name="address"
-            value={c.address}
-            onChange={handleChange}
-            className="border rounded px-2 py-1 ml-2"
-          />
-        ) : c.address}
-      </div>
-      <div className="mb-4">
-        <span className="font-semibold">Chứng chỉ chính: </span>
-        {editMode ? (
-          <input
-            type="text"
-            name="certificate"
-            value={c.certificate}
-            onChange={handleChange}
-            className="border rounded px-2 py-1 ml-2"
-          />
-        ) : c.certificate}
-      </div>
-      <div className="mb-4">
-        <span className="font-semibold">Các chứng chỉ khác:</span>
-        <ul className="list-disc ml-6">
-          {c.certificateNames.map((cert, idx) =>
-            editMode ? (
-              <li key={idx} className="flex items-center mb-1">
-                <input
-                  type="text"
-                  value={cert}
-                  onChange={e => handleCertChange(idx, e.target.value)}
-                  className="border rounded px-2 py-1 mr-2"
-                />
-                <button
-                  type="button"
-                  onClick={() => handleRemoveCert(idx)}
-                  className="text-red-500 ml-1"
-                  title="Xóa chứng chỉ"
-                >
-                  X
-                </button>
-              </li>
-            ) : (
-              <li key={idx}>{cert}</li>
-            )
-          )}
-        </ul>
-        {editMode && (
-          <div className="flex mt-2">
-            <input
-              type="text"
-              value={newCert}
-              onChange={e => setNewCert(e.target.value)}
-              placeholder="Thêm chứng chỉ mới"
-              className="border rounded px-2 py-1 mr-2"
-            />
-            <button
-              type="button"
-              onClick={handleAddCert}
-              className="bg-blue-500 text-white px-3 py-1 rounded"
-            >
-              Thêm
-            </button>
-          </div>
+          <input type="text" name="fullName" value={c.fullName} onChange={handleChange} className="form-input" />
+        ) : (
+          <span className="info-value">{c.fullName}</span>
         )}
       </div>
-      <div className="mb-4">
-        <span className="font-semibold">Giá tư vấn: </span>
+
+      <div className="info-field">
+        <span className="info-label">Account Name:</span>
+        <span className="info-value">{c.accountname}</span>
+      </div>
+
+      <div className="info-field">
+        <span className="info-label">Date of Birth:</span>
         {editMode ? (
-          <input
-            type="number"
-            name="price"
-            value={c.price}
-            onChange={handleChange}
-            className="border rounded px-2 py-1 ml-2"
-            min={0}
-          />
+          <input type="date" name="dateOfBirth" value={c.dateOfBirth} onChange={handleChange} className="form-input" />
         ) : (
-          <span className="text-green-700 font-bold">{c.price} USD / buổi</span>
+          <span className="info-value">{c.dateOfBirth}</span>
+        )}
+      </div>
+
+      <div className="info-field">
+        <span className="info-label">Gender:</span>
+        {editMode ? (
+          <select name="gender" value={c.gender} onChange={handleChange} className="form-input">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        ) : (
+          <span className="info-value">{c.gender}</span>
+        )}
+      </div>
+
+      <div className="info-field">
+        <span className="info-label">Address:</span>
+        {editMode ? (
+          <input type="text" name="address" value={c.address} onChange={handleChange} className="form-input" />
+        ) : (
+          <span className="info-value">{c.address}</span>
+        )}
+      </div>
+
+      <div className="info-field">
+        <span className="info-label">Main Certificate:</span>
+        {editMode ? (
+          <input type="text" name="certificate" value={c.certificate} onChange={handleChange} className="form-input" />
+        ) : (
+          <span className="info-value">{c.certificate}</span>
+        )}
+      </div>
+
+      <div className="info-field">
+        <span className="info-label">Other Certificates:</span>
+        <div className="info-value-group">
+          <ul className="certificate-list">
+            {c.certificateNames.map((cert, idx) => (
+              <li key={idx} className="certificate-item">
+                {editMode ? (
+                  <>
+                    <input type="text" value={cert} onChange={(e) => handleCertChange(idx, e.target.value)} className="form-input" />
+                    <button type="button" onClick={() => handleRemoveCert(idx)} className="remove-cert-btn" title="Remove certificate">
+                      &times;
+                    </button>
+                  </>
+                ) : (
+                  cert
+                )}
+              </li>
+            ))}
+          </ul>
+          {editMode && (
+            <div className="add-cert-field">
+              <input type="text" value={newCert} onChange={(e) => setNewCert(e.target.value)} placeholder="Add new certificate" className="form-input"/>
+              <button type="button" onClick={handleAddCert} className="add-cert-btn">
+                Add
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+      
+      <div className="info-field">
+        <span className="info-label">Consultation Price:</span>
+        {editMode ? (
+          <input type="number" name="price" value={c.price} onChange={handleChange} className="form-input" min={0}/>
+        ) : (
+          <span className="info-value price-display">{c.price} USD / session</span>
         )}
       </div>
 
       <div className="action-buttons">
         {editMode ? (
           <>
-            <button onClick={handleSave} className="save-btn">
-              Save Changes
-            </button>
-            <button onClick={handleCancel} className="cancel-btn">
-              Cancel
-            </button>
+            <button onClick={handleSave} className="save-btn">Save Changes</button>
+            <button onClick={handleCancel} className="cancel-btn">Cancel</button>
           </>
         ) : (
-          <button onClick={handleEdit} className="edit-btn">
-            Edit Profile
-          </button>
+          <button onClick={handleEdit} className="edit-btn">Edit Profile</button>
         )}
       </div>
     </div>
