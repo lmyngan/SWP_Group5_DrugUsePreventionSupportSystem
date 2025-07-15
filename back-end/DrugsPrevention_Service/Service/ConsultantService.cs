@@ -38,6 +38,24 @@ namespace DrugsPrevention_Service.Service
                 CertificateNames = consultant.Certificates?.Select(c => c.CertificateName).ToList()
             };
         }
+        public async Task<List<ConsultantResponseDTO>> GetAllConsultantsAsync()
+        {
+            var consultants = await _repository.GetAllConsultantsAsync();
+
+            return consultants.Select(consultant => new ConsultantResponseDTO
+            {
+                ConsultantId = consultant.ConsultantId,
+                AccountId = consultant.AccountId,
+                FullName = consultant.Account.FullName,
+                Accountname = consultant.Account.Accountname,
+                Gender = consultant.Account.Gender,
+                DateOfBirth = consultant.Account.DateOfBirth,
+                Address = consultant.Account.Address,
+                Certificate = consultant.Certificate,
+                Price = consultant.Price,
+                CertificateNames = consultant.Certificates?.Select(c => c.CertificateName).ToList()
+            }).ToList();
+        }
     }
 }
 
