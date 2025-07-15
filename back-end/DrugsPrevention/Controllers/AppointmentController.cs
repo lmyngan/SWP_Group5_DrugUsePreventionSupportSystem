@@ -31,7 +31,7 @@ namespace DrugsPrevention_API.Controllers
             }
         }
 
-        [AuthorizeByRole(3)]
+        [AuthorizeByRole(3, 4)]
         [HttpGet("consultant/{consultantId}/schedules")]
         public async Task<IActionResult> GetSchedules(int consultantId)
         {
