@@ -77,5 +77,20 @@ namespace DrugsPrevention_API.Controllers
 
             return Ok(new { message = "Xoá thành công" });
         }
+        [AuthorizeByRole(1, 2, 3, 4)] // Member có thể chỉnh profile
+        [HttpPut("{accountId}/profile")]
+        public async Task<IActionResult> UpdateAccountProfile(int accountId, [FromBody] UpdateAccountProfileRequestDTO request)
+        {
+            try
+            {
+                var updated = await _accountService.UpdateAccountProfileAsync(accountId, request);
+                return Ok(new { message = "Cập nhật thông tin cá nhân thành công", accountId = updated.AccountId });
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+
     }
 }
