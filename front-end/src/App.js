@@ -29,9 +29,7 @@ import ManageBlog from "./pages/ManageBlog"
 import Report from "./pages/Report"
 import CalendarPage from "./pages/CalendarPage"
 
-
-
-
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 
 const App = () => {
@@ -115,20 +113,22 @@ const App = () => {
   }
 
   return (
-    <div className="app">
-      {/*Member Navbar*/}
-      {!(currentPage === "dashboard" || currentPage.startsWith("manage-") || currentPage === "report") && (
-        <Navbar navigateTo={navigateTo} currentPage={currentPage} />
-      )}
+    <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
+      <div className="app">
+        {/*Member Navbar*/}
+        {!(currentPage === "dashboard" || currentPage.startsWith("manage-") || currentPage === "report") && (
+          <Navbar navigateTo={navigateTo} currentPage={currentPage} />
+        )}
 
-      {/*Admin Dashboard*/}
-      {(currentPage === "dashboard" || currentPage.startsWith("manage-") || currentPage === "report") && (
-        <DashBoardSidebar navigateTo={navigateTo} currentPage={currentPage} />
-      )}
+        {/*Admin Dashboard*/}
+        {(currentPage === "dashboard" || currentPage.startsWith("manage-") || currentPage === "report") && (
+          <DashBoardSidebar navigateTo={navigateTo} currentPage={currentPage} />
+        )}
 
-      {/* Main content */}
-      <main className="main-content">{renderPage()}</main>
-    </div>
+        {/* Main content */}
+        <main className="main-content">{renderPage()}</main>
+      </div>
+    </GoogleOAuthProvider>
   )
 }
 

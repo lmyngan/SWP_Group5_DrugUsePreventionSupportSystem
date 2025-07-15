@@ -1,9 +1,9 @@
 // src/pages/LoginPage.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import jwt_decode from 'jwt-decode';
-import './LoginPage.css';
-import { postData, loginWithGoogle } from '../service/api';
+import { jwtDecode } from 'jwt-decode';
+import '../styles/LoginPage.css';
+import { loginUser, postData, getUserById, loginWithGoogle } from '../service/api';
 import { GoogleLogin } from '@react-oauth/google';
 
 const LoginPage = () => {
@@ -19,17 +19,31 @@ const LoginPage = () => {
         accountname,
         password
       };
+      const credentials = {
+        accountname,
+        password
+      };
 
-      const response = await postData('/api/auth/login', data);
+      const response = await loginUser(credentials);
 
-      if (response?.Token) {
-        localStorage.setItem('token', response.Token);
+      if (response?.token) {
+        localStorage.setItem('token', response.token);
 
-        const decoded = jwt_decode(response.Token);
+        const decoded = jwtDecode(response.token);
         console.log("Logged in as:", decoded.FullName || decoded.accountname);
 
+
+        const user = await getUserById(response.accountId);
+        localStorage.setItem('user', JSON.stringify(user));
+
         alert('Login successful!');
-        navigate('/');
+
+        if (user.roleId === 4) {
+          navigate('/');
+        }
+        if (user.roleId !== 4) {
+          navigate('/dashboard');
+        }
       } else {
         alert(response.message || 'Login failed!');
       }
@@ -42,7 +56,7 @@ const LoginPage = () => {
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     try {
       const credential = credentialResponse.credential;
-      const decoded = jwt_decode(credential);
+      const decoded = jwtDecode(credential);
 
       const googleLoginResult = await loginWithGoogle({
         provider: "Google",
@@ -53,7 +67,7 @@ const LoginPage = () => {
       if (googleLoginResult?.token) {
         localStorage.setItem('token', googleLoginResult.token);
 
-        const user = jwt_decode(googleLoginResult.token);
+        const user = jwtDecode(googleLoginResult.token);
         console.log("Google login as:", user.FullName || user.accountname);
 
         alert("Login with Google successful!");
