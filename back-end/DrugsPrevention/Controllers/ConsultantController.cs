@@ -16,7 +16,7 @@ namespace DrugsPrevention_API.Controllers
             _consultantService = consultantService;
         }
 
-        [AuthorizeByRole(1, 2, 3)]
+        [AuthorizeByRole(1, 2, 3, 4)]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetConsultantById(int id)
         {
@@ -30,7 +30,7 @@ namespace DrugsPrevention_API.Controllers
                 return NotFound(new { message = ex.Message });
             }
         }
-        [AuthorizeByRole(1, 2, 3)]
+        [AuthorizeByRole(1, 2, 3, 4)]
         [HttpGet]
         public async Task<IActionResult> GetAllConsultants()
         {
