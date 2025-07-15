@@ -365,9 +365,6 @@ namespace DrugsPrevention_Data.Migrations
                         .HasColumnType("int")
                         .HasColumnName("account_id");
 
-                    b.Property<int?>("AccountsAccountId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2")
                         .HasColumnName("created_at");
@@ -385,8 +382,6 @@ namespace DrugsPrevention_Data.Migrations
                     b.HasKey("NotificationId");
 
                     b.HasIndex("AccountId");
-
-                    b.HasIndex("AccountsAccountId");
 
                     b.ToTable("Notifications");
                 });
@@ -755,14 +750,10 @@ namespace DrugsPrevention_Data.Migrations
             modelBuilder.Entity("DrugsPrevention_Data.Data.Notifications", b =>
                 {
                     b.HasOne("DrugsPrevention_Data.Data.Accounts", "Account")
-                        .WithMany()
+                        .WithMany("Notifications")
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("DrugsPrevention_Data.Data.Accounts", null)
-                        .WithMany("Notifications")
-                        .HasForeignKey("AccountsAccountId");
 
                     b.Navigation("Account");
                 });

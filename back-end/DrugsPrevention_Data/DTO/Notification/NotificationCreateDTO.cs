@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace DrugsPrevention_Data.DTO.Notification
 {
-    internal class NotificationDTO
+    public class NotificationCreateDTO
     {
+        public int AccountId { get; set; }
+        public string Message { get; set; }
     }
 }
