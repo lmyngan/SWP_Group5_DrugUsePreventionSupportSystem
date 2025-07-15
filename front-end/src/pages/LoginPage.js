@@ -48,13 +48,8 @@ const LoginPage = () => {
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     try {
       const credential = credentialResponse.credential;
-      const decoded = jwtDecode(credential);
-
-      const googleLoginResult = await loginWithGoogle({
-        provider: "Google",
-        providerKey: decoded.sub,
-        email: decoded.email
-      });
+      // Gọi loginWithGoogle với idToken (credential)
+      const googleLoginResult = await loginWithGoogle(credential);
 
       if (googleLoginResult?.token) {
         localStorage.setItem('token', googleLoginResult.token);
