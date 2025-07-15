@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react"
 import { Card, Container, Row, Col } from "react-bootstrap"
-import { getTestScore } from "../service/api"
+import { getTestScore, getNotificationsByAccountId } from "../service/api"
 import "../styles/ProfileUser.css"
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
 const ProfileUser = () => {
   const [user, setUser] = useState(null)
@@ -11,6 +13,8 @@ const ProfileUser = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [profileImage, setProfileImage] = useState(null)
+  const [notifications, setNotifications] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user")
@@ -21,6 +25,7 @@ const ProfileUser = () => {
       // Fetch test results if user has accountId
       if (userData.accountId) {
         fetchTestResults(userData.accountId)
+        fetchNotifications(userData.accountId)
       }
     }
 
@@ -54,6 +59,21 @@ const ProfileUser = () => {
       setLoading(false)
     }
   }
+
+  const fetchNotifications = async (accountId) => {
+    try {
+      const res = await getNotificationsByAccountId(accountId);
+      if (Array.isArray(res)) {
+        setNotifications(res);
+      } else if (res && res.data && Array.isArray(res.data)) {
+        setNotifications(res.data);
+      } else {
+        setNotifications([]);
+      }
+    } catch {
+      setNotifications([]);
+    }
+  };
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0]
@@ -118,6 +138,44 @@ const ProfileUser = () => {
                   />
                 </div>
               </div>
+
+              {/* Notification Section */}
+              {notifications.length > 0 && (
+                <Card.Text className="profile-notification">
+                  <span
+                    className="profile-label"
+                    style={{ cursor: "pointer", color: "#007bff", textDecoration: "underline" }}
+                    onClick={() => setShowModal(true)}
+                  >
+                    You have {notifications.length} notification{notifications.length > 1 ? "s" : ""}.
+                  </span>
+                </Card.Text>
+              )}
+
+              <Modal show={showModal} onHide={() => setShowModal(false)}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Notifications</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  {notifications.length === 0 ? (
+                    <div>No notifications found.</div>
+                  ) : (
+                    <ul>
+                      {notifications.map((n, idx) => (
+                        <li key={n.notificationId || idx}>
+                          <strong>{n.message}</strong>
+                          {/* Thêm các trường khác nếu muốn */}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={() => setShowModal(false)}>
+                    Close
+                  </Button>
+                </Modal.Footer>
+              </Modal>
 
               <Card.Text>
                 <span className="profile-label">Full Name:</span>

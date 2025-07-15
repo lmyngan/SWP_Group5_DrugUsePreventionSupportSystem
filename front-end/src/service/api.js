@@ -375,6 +375,30 @@ export const deleteBlog = async (blogId) => {
     }
 }
 
+//POST: Notification
+export const addNotification = async (data) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/Notification`, data, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+};
+
+//GET: Notification by AccountId
+export const getNotificationsByAccountId = async (accountId) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Notification/${accountId}`, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+};
+
 // VNPay Payment Functions
 // GET: Create VNPay Payment URL
 export const createVNPayUrl = async (appointmentId) => {
