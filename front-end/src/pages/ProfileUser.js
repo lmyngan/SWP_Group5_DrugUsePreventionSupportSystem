@@ -4,8 +4,6 @@ import { useEffect, useState } from "react"
 import { Card, Container, Row, Col } from "react-bootstrap"
 import { getTestScore, getNotificationsByAccountId } from "../service/api"
 import "../styles/ProfileUser.css"
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
 
 const ProfileUser = () => {
   const [user, setUser] = useState(null)
@@ -152,30 +150,30 @@ const ProfileUser = () => {
                 </Card.Text>
               )}
 
-              <Modal show={showModal} onHide={() => setShowModal(false)}>
-                <Modal.Header closeButton>
-                  <Modal.Title>Notifications</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  {notifications.length === 0 ? (
-                    <div>No notifications found.</div>
-                  ) : (
-                    <ul>
-                      {notifications.map((n, idx) => (
-                        <li key={n.notificationId || idx}>
-                          <strong>{n.message}</strong>
-                          {/* Thêm các trường khác nếu muốn */}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={() => setShowModal(false)}>
-                    Close
-                  </Button>
-                </Modal.Footer>
-              </Modal>
+              {/* Custom Notification Modal */}
+              {showModal && (
+                <div className="modal-overlay" onClick={() => setShowModal(false)}>
+                  <div className="modal-content-custom" onClick={e => e.stopPropagation()}>
+                    <h2 style={{ marginBottom: 16 }}>Notifications</h2>
+                    {notifications.length === 0 ? (
+                      <div>No notifications found.</div>
+                    ) : (
+                      <ul className="notification-list">
+                        {notifications.map((n, idx) => (
+                          <li key={n.notificationId || idx} className="notification-item">
+                            <strong>{n.message}</strong>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <div style={{ marginTop: 24, textAlign: 'right' }}>
+                      <button className="btn btn-secondary" onClick={() => setShowModal(false)}>
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <Card.Text>
                 <span className="profile-label">Full Name:</span>
