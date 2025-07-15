@@ -31,7 +31,7 @@ namespace DrugsPrevention_API.Controllers
             }
         }
 
-        [AuthorizeByRole(3)]
+        [AuthorizeByRole(3, 4)]
         [HttpGet("consultant/{consultantId}/schedules")]
         public async Task<IActionResult> GetSchedules(int consultantId)
         {
@@ -89,7 +89,7 @@ namespace DrugsPrevention_API.Controllers
             return NoContent();
         }
 
-        [AuthorizeByRole(1, 2)]
+        [AuthorizeByRole(1, 2, 3)]
         [HttpPut("{id}/status")]
         public async Task<IActionResult> UpdateStatus(int id, [FromQuery] string status)
         {

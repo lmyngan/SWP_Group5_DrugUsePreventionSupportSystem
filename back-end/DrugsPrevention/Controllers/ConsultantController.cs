@@ -30,5 +30,34 @@ namespace DrugsPrevention_API.Controllers
                 return NotFound(new { message = ex.Message });
             }
         }
+        [AuthorizeByRole(1, 2, 3)]
+        [HttpGet]
+        public async Task<IActionResult> GetAllConsultants()
+        {
+            try
+            {
+                var result = await _consultantService.GetAllConsultantsAsync();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+        [AuthorizeByRole(3)]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateConsultantProfile(int id, [FromBody] ConsultantUpdateDTO dto)
+        {
+            try
+            {
+                var result = await _consultantService.UpdateConsultantProfileAsync(id, dto);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+
     }
 }

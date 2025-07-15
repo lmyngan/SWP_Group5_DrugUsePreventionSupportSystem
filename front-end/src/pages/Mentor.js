@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { getConsultantSchedules, bookAppointment } from "../service/api";
+import { useState, useEffect } from "react";
+import { getConsultantSchedules, bookAppointment, createVNPayUrl, handleVNPayCallback } from "../service/api";
 import "../styles/MentorPage.css";
 import Footer from "../components/Footer";
 
@@ -9,6 +9,9 @@ const Mentor = () => {
   const [bookingMessage, setBookingMessage] = useState("");
   const [loadingSchedules, setLoadingSchedules] = useState({});
   const [scheduleErrors, setScheduleErrors] = useState({});
+  const [qrUrl, setQrUrl] = useState(null);
+  const [paymentStatus, setPaymentStatus] = useState(null); // null | 'pending' | 'success' | 'fail'
+  const [currentAppointmentId, setCurrentAppointmentId] = useState(null);
 
   const handleScheduleClick = async (consultantId) => {
     try {
@@ -163,10 +166,32 @@ const Mentor = () => {
     };
 
     const response = await bookAppointment(payload);
-    if (response.error) {
-      setBookingMessage("Booking failed: " + response.error);
+    if (response && response.appointmentId) {
+      setCurrentAppointmentId(response.appointmentId);
+      // Gọi API lấy VNPay URL
+      const vnpayRes = await createVNPayUrl(response.appointmentId);
+      if (vnpayRes && vnpayRes.paymentUrl) {
+        setQrUrl(vnpayRes.paymentUrl);
+        setPaymentStatus('pending');
+      } else {
+        setQrUrl(null);
+        setPaymentStatus('fail');
+      }
     } else {
-      setBookingMessage("Booking successful!");
+      setQrUrl(null);
+      setPaymentStatus('fail');
+    }
+  };
+
+  // Hàm giả lập xác nhận đã thanh toán (gọi handleVNPayCallback)
+  const handleConfirmPayment = async () => {
+    if (!currentAppointmentId) return;
+    // Giả lập callback, thực tế cần truyền params đúng từ VNPay
+    const callbackRes = await handleVNPayCallback({ appointmentId: currentAppointmentId });
+    if (callbackRes && callbackRes.message && callbackRes.message.includes('thành công')) {
+      setPaymentStatus('success');
+    } else {
+      setPaymentStatus('fail');
     }
   };
 
@@ -321,6 +346,20 @@ const Mentor = () => {
                     }}>
                       {bookingMessage}
                     </div>
+                  )}
+                  {qrUrl && paymentStatus === 'pending' && (
+                    <div style={{ marginTop: 16, textAlign: 'center' }}>
+                      <h3>Quét mã QR để thanh toán</h3>
+                      <img src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrUrl)}`} alt="VNPay QR" />
+                      <p>Vui lòng quét mã QR bằng app ngân hàng để thanh toán.</p>
+                      <button className="contact-btn" style={{ marginTop: 12 }} onClick={handleConfirmPayment}>Tôi đã thanh toán</button>
+                    </div>
+                  )}
+                  {paymentStatus === 'success' && (
+                    <div style={{ color: 'green', fontWeight: 'bold', marginTop: 16 }}>Thanh toán thành công!</div>
+                  )}
+                  {paymentStatus === 'fail' && (
+                    <div style={{ color: 'red', fontWeight: 'bold', marginTop: 16 }}>Thanh toán thất bại!</div>
                   )}
                 </div>
               </div>

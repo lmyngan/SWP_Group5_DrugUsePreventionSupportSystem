@@ -38,17 +38,14 @@ export const loginUser = async (credentials) => {
     }
 };
 
-export const loginWithGoogle = async ({ provider, providerKey, email }) => {
+export const loginWithGoogle = async (idToken) => {
     try {
         const response = await axios.post(`${API_BASE_URL}/api/auth/login-external`, {
-            provider,
-            providerKey,
-            email
+            IdToken: idToken
         }, {
             headers: getAuthHeader(),
         });
-        const token = response.data.token || response.data.Token;
-        return { token };
+        return response.data;
     } catch (error) {
         return { error: error.response?.data?.message || error.message };
     }
@@ -412,3 +409,4 @@ export const handleVNPayCallback = async (queryParams) => {
         return { error: error.response?.data?.message || error.message };
     }
 };
+

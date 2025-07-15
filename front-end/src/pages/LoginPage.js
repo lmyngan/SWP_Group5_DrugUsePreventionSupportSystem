@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import '../styles/LoginPage.css';
-import { loginUser, postData, getUserById, loginWithGoogle } from '../service/api';
+import { loginUser, getUserById, loginWithGoogle } from '../service/api';
 import { GoogleLogin } from '@react-oauth/google';
 
 const LoginPage = () => {
@@ -15,10 +15,6 @@ const LoginPage = () => {
     e.preventDefault();
 
     try {
-      const data = {
-        accountname,
-        password
-      };
       const credentials = {
         accountname,
         password
@@ -29,7 +25,9 @@ const LoginPage = () => {
       if (response?.token) {
         localStorage.setItem('token', response.token);
 
+
         const decoded = jwtDecode(response.token);
+
 
         const user = await getUserById(response.accountId);
         localStorage.setItem('user', JSON.stringify(user));
@@ -37,10 +35,10 @@ const LoginPage = () => {
         alert('Login successful!');
 
         if (user.roleId === 4) {
-          navigate('/');
+          window.location.href = '/';
         }
         if (user.roleId !== 4) {
-          navigate('/dashboard');
+          window.location.href = '/dashboard';
         }
       } else {
         alert(response.message || 'Login failed!');
@@ -54,13 +52,8 @@ const LoginPage = () => {
   const handleGoogleLoginSuccess = async (credentialResponse) => {
     try {
       const credential = credentialResponse.credential;
-      const decoded = jwtDecode(credential);
-
-      const googleLoginResult = await loginWithGoogle({
-        provider: "Google",
-        providerKey: decoded.sub,
-        email: decoded.email
-      });
+      // Gọi loginWithGoogle với idToken (credential)
+      const googleLoginResult = await loginWithGoogle(credential);
 
       if (googleLoginResult?.token) {
         localStorage.setItem('token', googleLoginResult.token);
