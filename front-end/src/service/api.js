@@ -327,6 +327,18 @@ export const deleteEvent = async (eventId) => {
     }
 }
 
+//POST: Event Participation
+export const joinEvent = async (data) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/EventParticipation`, data, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
 //GET: Blog
 export const blogData = async () => {
     try {
