@@ -16,7 +16,7 @@ namespace DrugsPrevention_API.Controllers
             _eventService = eventService;
         }
 
-        [AuthorizeByRole(1, 2)]
+        [AuthorizeByRole(1, 2, 3, 4)]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
