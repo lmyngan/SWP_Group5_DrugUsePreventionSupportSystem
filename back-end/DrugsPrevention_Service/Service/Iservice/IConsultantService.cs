@@ -10,6 +10,9 @@ namespace DrugsPrevention_Service.Service.Iservice
     public interface IConsultantService
     {
         Task<ConsultantResponseDTO> GetConsultantByIdAsync(int consultantId);
+        Task<List<ConsultantResponseDTO>> GetAllConsultantsAsync();
+        Task<ConsultantResponseDTO> UpdateConsultantProfileAsync(int consultantId, ConsultantUpdateDTO dto);
     }
+
 }
 

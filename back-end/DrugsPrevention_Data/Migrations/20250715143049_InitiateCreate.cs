@@ -153,17 +153,11 @@ namespace DrugsPrevention_Data.Migrations
                     account_id = table.Column<int>(type: "int", nullable: false),
                     message = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AccountsAccountId = table.Column<int>(type: "int", nullable: true)
+                    status = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Notifications", x => x.notification_id);
-                    table.ForeignKey(
-                        name: "FK_Notifications_Accounts_AccountsAccountId",
-                        column: x => x.AccountsAccountId,
-                        principalTable: "Accounts",
-                        principalColumn: "account_id");
                     table.ForeignKey(
                         name: "FK_Notifications_Accounts_account_id",
                         column: x => x.account_id,
@@ -480,11 +474,6 @@ namespace DrugsPrevention_Data.Migrations
                 name: "IX_Notifications_account_id",
                 table: "Notifications",
                 column: "account_id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Notifications_AccountsAccountId",
-                table: "Notifications",
-                column: "AccountsAccountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Schedule_consultant_id",

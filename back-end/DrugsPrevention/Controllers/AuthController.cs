@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DrugsPrevention_Data.DTO.ExternalLogin;
 using DrugsPrevention_Data.DTO.Login;
 using DrugsPrevention_Data.DTO.Register;
-using System.Threading.Tasks;
 using DrugsPrevention_Service.Service.Iservice;
-using DrugsPrevention_Data.DTO.ExternalLogin;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace DrugsPrevention_API.Controllers
 {
-    [Route("api/auth")]
     [ApiController]
+    [Route("api/auth")]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -50,8 +50,7 @@ namespace DrugsPrevention_API.Controllers
         [HttpPost("login-external")]
         public async Task<IActionResult> LoginWithExternal([FromBody] ExternalLoginRequestDTO request)
         {
-            var token = await _authService.LoginWithExternalProviderAsync(request.Provider, request.ProviderKey, request.Email);
-
+            var token = await _authService.LoginWithExternalProviderAsync(request.IdToken);
             return Ok(new { Token = token });
         }
     }

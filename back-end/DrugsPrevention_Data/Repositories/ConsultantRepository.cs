@@ -25,5 +25,21 @@ namespace DrugsPrevention_Data.Repositories
                 .Include(c => c.Certificates)
                 .FirstOrDefaultAsync(c => c.ConsultantId == consultantId);
         }
+        public async Task<List<Consultant>> GetAllConsultantsAsync()
+        {
+            return await _context.Consultants
+                .Include(c => c.Account)
+                .Include(c => c.Certificates)
+                .ToListAsync();
+        }
+        public async Task UpdateConsultantAsync(Consultant consultant)
+        {
+            _context.Consultants.Update(consultant);
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }

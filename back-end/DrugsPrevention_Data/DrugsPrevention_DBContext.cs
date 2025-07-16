@@ -151,7 +151,7 @@ namespace DrugsPrevention_Data
             // Notifications -> Account
             modelBuilder.Entity<Notifications>()
                 .HasOne(n => n.Account)
-                .WithMany()
+                .WithMany(a => a.Notifications)
                 .HasForeignKey(n => n.AccountId)
                 .OnDelete(DeleteBehavior.Restrict);
 

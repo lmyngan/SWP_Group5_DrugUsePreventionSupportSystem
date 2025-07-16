@@ -38,17 +38,14 @@ export const loginUser = async (credentials) => {
     }
 };
 
-export const loginWithGoogle = async ({ provider, providerKey, email }) => {
+export const loginWithGoogle = async (idToken) => {
     try {
         const response = await axios.post(`${API_BASE_URL}/api/auth/login-external`, {
-            provider,
-            providerKey,
-            email
+            IdToken: idToken
         }, {
             headers: getAuthHeader(),
         });
-        const token = response.data.token || response.data.Token;
-        return { token };
+        return response.data;
     } catch (error) {
         return { error: error.response?.data?.message || error.message };
     }
@@ -272,21 +269,12 @@ export const appointmentId = async (appointmentIdData) => {
 export const updateAppointmentStatus = async (scheduleId, status) => {
     try {
         const url = `${API_BASE_URL}/api/Appointment/${scheduleId}/status?status=${encodeURIComponent(status)}`;
-        console.log("Sending request to:", url);
-
-        const response = await axios.put(url, {
+        const response = await axios.put(url, null, {
             headers: getAuthHeader(),
         });
         console.log("Response:", response.data);
         return response.data;
     } catch (error) {
-        console.error("API Error Details:", {
-            status: error.response?.status,
-            statusText: error.response?.statusText,
-            data: error.response?.data,
-            message: error.message,
-            url: error.config?.url
-        });
         return { error: error.response?.data?.message || error.message };
     }
 };
@@ -387,6 +375,30 @@ export const deleteBlog = async (blogId) => {
     }
 }
 
+//POST: Notification
+export const addNotification = async (data) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/Notification`, data, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+};
+
+//GET: Notification by AccountId
+export const getNotificationsByAccountId = async (accountId) => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Notification/${accountId}`, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+};
+
 // VNPay Payment Functions
 // GET: Create VNPay Payment URL
 export const createVNPayUrl = async (appointmentId) => {
@@ -412,3 +424,4 @@ export const handleVNPayCallback = async (queryParams) => {
         return { error: error.response?.data?.message || error.message };
     }
 };
+

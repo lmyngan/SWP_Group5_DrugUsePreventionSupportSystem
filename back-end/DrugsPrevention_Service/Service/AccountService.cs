@@ -145,6 +145,21 @@ namespace DrugsPrevention_Service.Service
 
             return newAccount;
         }
+        public async Task<Accounts> UpdateAccountProfileAsync(int accountId, UpdateAccountProfileRequestDTO request)
+        {
+            var existing = await _repository.GetByIdAsync(accountId);
+            if (existing == null)
+                throw new Exception("Account not found");
 
+            existing.FullName = request.FullName;
+            existing.DateOfBirth = request.DateOfBirth;
+            existing.Gender = request.Gender;
+            existing.Address = request.Address;
+
+            await _repository.UpdateAsync(existing);
+            await _repository.SaveChangesAsync();
+
+            return existing;
+        }
     }
 }

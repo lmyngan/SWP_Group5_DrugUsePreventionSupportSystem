@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Card, Container, Row, Col } from "react-bootstrap"
-import { getTestScore } from "../service/api"
+import { getTestScore, getNotificationsByAccountId } from "../service/api"
 import "../styles/ProfileUser.css"
 
 const ProfileUser = () => {
@@ -11,6 +11,8 @@ const ProfileUser = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [profileImage, setProfileImage] = useState(null)
+  const [notifications, setNotifications] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user")
@@ -21,6 +23,7 @@ const ProfileUser = () => {
       // Fetch test results if user has accountId
       if (userData.accountId) {
         fetchTestResults(userData.accountId)
+        fetchNotifications(userData.accountId)
       }
     }
 
@@ -54,6 +57,21 @@ const ProfileUser = () => {
       setLoading(false)
     }
   }
+
+  const fetchNotifications = async (accountId) => {
+    try {
+      const res = await getNotificationsByAccountId(accountId);
+      if (Array.isArray(res)) {
+        setNotifications(res);
+      } else if (res && res.data && Array.isArray(res.data)) {
+        setNotifications(res.data);
+      } else {
+        setNotifications([]);
+      }
+    } catch {
+      setNotifications([]);
+    }
+  };
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0]
@@ -93,31 +111,69 @@ const ProfileUser = () => {
             <Card.Body className="profile-body">
               {/* Profile Image Upload Section */}
               <div className="profile-image-section">
-  <div className="profile-avatar">
-    {profileImage ? (
-      <img src={profileImage || "/placeholder.svg"} alt="Profile" className="profile-image" />
-    ) : (
-      <div className="default-avatar">👤</div>
-    )}
-  </div>
-  <div className="profile-avatar-actions">
-    <label htmlFor="imageUpload" className="upload-btn" title="Upload image">
-      📷
-    </label>
-    {profileImage && (
-      <button className="remove-btn" onClick={removeProfileImage} title="Remove image" type="button">
-        🗑️
-      </button>
-    )}
-    <input
-      id="imageUpload"
-      type="file"
-      accept="image/*"
-      onChange={handleImageUpload}
-      style={{ display: "none" }}
-    />
-  </div>
-</div>
+                <div className="profile-avatar">
+                  {profileImage ? (
+                    <img src={profileImage || "/placeholder.svg"} alt="Profile" className="profile-image" />
+                  ) : (
+                    <div className="default-avatar">👤</div>
+                  )}
+                </div>
+                <div className="profile-avatar-actions">
+                  <label htmlFor="imageUpload" className="upload-btn" title="Upload image">
+                    📷
+                  </label>
+                  {profileImage && (
+                    <button className="remove-btn" onClick={removeProfileImage} title="Remove image" type="button">
+                      🗑️
+                    </button>
+                  )}
+                  <input
+                    id="imageUpload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    style={{ display: "none" }}
+                  />
+                </div>
+              </div>
+
+              {/* Notification Section */}
+              {notifications.length > 0 && (
+                <Card.Text className="profile-notification">
+                  <span
+                    className="profile-label"
+                    style={{ cursor: "pointer", color: "#007bff", textDecoration: "underline" }}
+                    onClick={() => setShowModal(true)}
+                  >
+                    You have {notifications.length} notification{notifications.length > 1 ? "s" : ""}.
+                  </span>
+                </Card.Text>
+              )}
+
+              {/* Custom Notification Modal */}
+              {showModal && (
+                <div className="modal-overlay" onClick={() => setShowModal(false)}>
+                  <div className="modal-content-custom" onClick={e => e.stopPropagation()}>
+                    <h2 style={{ marginBottom: 16 }}>Notifications</h2>
+                    {notifications.length === 0 ? (
+                      <div>No notifications found.</div>
+                    ) : (
+                      <ul className="notification-list">
+                        {notifications.map((n, idx) => (
+                          <li key={n.notificationId || idx} className="notification-item">
+                            <strong>{n.message}</strong>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <div style={{ marginTop: 24, textAlign: 'right' }}>
+                      <button className="btn btn-secondary" onClick={() => setShowModal(false)}>
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               <Card.Text>
                 <span className="profile-label">Full Name:</span>
