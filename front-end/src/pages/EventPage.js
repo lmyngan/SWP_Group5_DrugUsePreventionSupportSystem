@@ -123,7 +123,7 @@ const handleShareExperience = (eventId) => {
           </div>
         </div>
         <div className="hero-image">
-          <img src="/images/event-blogs.png" alt="Community Events" />
+          <img src="/images/event.jpg" alt="Community Events" />
         </div>
       </section>
 

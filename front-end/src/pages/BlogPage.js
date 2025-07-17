@@ -178,6 +178,7 @@ const BlogPage = ({ navigateTo }) => {
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-content">
+          <div className="hero-left">
           <h1>Share Your Recovery Journey</h1>
           <p>
             Your story matters. Share your experiences, inspire others, and build connections within our supportive
@@ -193,10 +194,12 @@ const BlogPage = ({ navigateTo }) => {
             <button className="btn-secondary" onClick={() => document.getElementById("blogs-section").scrollIntoView()}>
               Read Experiences
             </button>
+
+          </div>
           </div>
         </div>
         <div className="hero-image">
-          <img src="/images/event-blogs.png" alt="Community Stories" />
+          <img src="/images/matuy.webp" alt="Community Stories" />
         </div>
       </section>
 
