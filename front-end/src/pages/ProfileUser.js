@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { Card, Container, Row, Col } from "react-bootstrap"
 import { getTestScore, getNotificationsByAccountId } from "../service/api"
 import "../styles/ProfileUser.css"
@@ -12,7 +12,26 @@ const ProfileUser = () => {
   const [error, setError] = useState(null)
   const [profileImage, setProfileImage] = useState(null)
   const [notifications, setNotifications] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const bellRef = useRef(null);
+  const dropdownRef = useRef(null);
+
+  // Đóng dropdown khi click ra ngoài
+  useEffect(() => {
+    if (!showDropdown) return;
+    function handleClickOutside(event) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        bellRef.current &&
+        !bellRef.current.contains(event.target)
+      ) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showDropdown]);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user")
@@ -138,42 +157,40 @@ const ProfileUser = () => {
               </div>
 
               {/* Notification Section */}
-              {notifications.length > 0 && (
-                <Card.Text className="profile-notification">
-                  <span
-                    className="profile-label"
-                    style={{ cursor: "pointer", color: "#007bff", textDecoration: "underline" }}
-                    onClick={() => setShowModal(true)}
-                  >
-                    You have {notifications.length} notification{notifications.length > 1 ? "s" : ""}.
-                  </span>
-                </Card.Text>
-              )}
-
-              {/* Custom Notification Modal */}
-              {showModal && (
-                <div className="modal-overlay" onClick={() => setShowModal(false)}>
-                  <div className="modal-content-custom" onClick={e => e.stopPropagation()}>
-                    <h2 style={{ marginBottom: 16 }}>Notifications</h2>
+              <div style={{ position: 'absolute', top: 18, right: 24, zIndex: 10 }}>
+                <button
+                  className="notification-btn"
+                  style={{ position: 'relative', background: '#f5f6fa', border: '1px solid #667eea', color: '#2c3e50', borderRadius: '50%', padding: '0.6rem', width: 44, height: 44, minWidth: 44, minHeight: 44, fontWeight: 600, fontSize: 22, cursor: 'pointer', outline: 'none', boxShadow: '0 2px 8px rgba(102,126,234,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  onClick={() => setShowDropdown((v) => !v)}
+                  aria-label="Notifications"
+                  ref={bellRef}
+                >
+                  <span role="img" aria-label="notification">🔔</span>
+                  {notifications.length > 0 && (
+                    <span className="notification-badge">
+                      {notifications.length}
+                    </span>
+                  )}
+                </button>
+                {showDropdown && (
+                  <div className="notification-dropdown" ref={dropdownRef}>
+                    <div className="dropdown-arrow" />
+                    <div className="dropdown-header">Notifications</div>
                     {notifications.length === 0 ? (
-                      <div>No notifications found.</div>
+                      <div className="dropdown-empty">No notifications found.</div>
                     ) : (
-                      <ul className="notification-list">
+                      <ul className="notification-list" style={{ margin: 0 }}>
                         {notifications.map((n, idx) => (
-                          <li key={n.notificationId || idx} className="notification-item">
-                            <strong>{n.message}</strong>
+                          <li key={n.notificationId || idx} className="notification-item" style={{ width: '100%', maxWidth: 400, justifyContent: 'center' }}>
+                            <span className="notification-icon" role="img" aria-label="notification">🔔</span>
+                            <span className="notification-message" style={{ textAlign: 'center', width: '100%' }}>{n.message}</span>
                           </li>
                         ))}
                       </ul>
                     )}
-                    <div style={{ marginTop: 24, textAlign: 'right' }}>
-                      <button className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                        Close
-                      </button>
-                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
 
               <Card.Text>
                 <span className="profile-label">Full Name:</span>
