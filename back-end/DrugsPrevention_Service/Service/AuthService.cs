@@ -12,7 +12,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DrugsPrevention_Service
+namespace DrugsPrevention_Service.Service
 {
     public class AuthService : IAuthService
     {
@@ -159,5 +159,6 @@ namespace DrugsPrevention_Service
 
             return GenerateJwtToken(user);
         }
+
     }
 }
