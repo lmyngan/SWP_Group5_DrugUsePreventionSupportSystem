@@ -1,10 +1,16 @@
 //import { Link } from "react-router-dom";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 
 const DashBoard = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) setUser(JSON.parse(storedUser));
+    }, []);
 
     const data = [
         { name: 'Mon', visits: 120 },
@@ -84,6 +90,11 @@ const DashBoard = () => {
                 style={{ minHeight: "100vh" }}
             >
                 <div className="flex-1 p-8 transition-all duration-300 peer-checked:ml-64">
+                    {user && (
+                        <h1 className="text-2xl font-bold mb-4 text-right">
+                            Welcome, {user.fullName || user.accountname}!
+                        </h1>
+                    )}
                     <div className="flex-1 p-8 transition-all duration-300 peer-checked:ml-64">
 
                         <div className="flex flex-nowrap gap-6 justify-center mt-8 overflow-x-auto pb-2">
