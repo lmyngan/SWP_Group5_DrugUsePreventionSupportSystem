@@ -22,30 +22,6 @@ namespace DrugsPrevention_Service.Service
             _logger = logger;
         }
 
-        public async Task<List<Accounts>> GetAllAccountsAsync()
-        {
-            return await _repository.GetAllAsync();
-        }
-
-        public async Task<Accounts> GetAccountByIdAsync(int accountId)
-        {
-            return await _repository.GetByIdAsync(accountId);
-        }
-
-        public async Task<Accounts> CreateAccountAsync(Accounts account)
-        {
-            var role = await _repository.FindRoleByIdAsync(account.RoleId);
-            if (role == null)
-                throw new Exception("Role not found!");
-
-            int count = await _repository.GetAccountCountByRoleAsync(account.RoleId);
-            account.CreatedAt = DateTime.UtcNow;
-
-            await _repository.AddAsync(account);
-            await _repository.SaveChangesAsync();
-            return account;
-        }
-
         public async Task<Accounts> UpdateAccountAsync(int accountId, UpdateAccountRequestDTO request)
         {
             var existing = await _repository.GetByIdAsync(accountId);

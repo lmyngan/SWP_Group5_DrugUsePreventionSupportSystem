@@ -27,7 +27,6 @@ const RegisterPage = () => {
     e.preventDefault();
     setError('');
 
-    // Validation
     if (!formData.email || !formData.email.trim()) {
       setError('Username is required');
       return;
@@ -50,7 +49,6 @@ const RegisterPage = () => {
     }
 
     try {
-      // Map đúng tên trường backend yêu cầu
       const payload = {
         accountname: formData.email,
         password: formData.password,
@@ -58,7 +56,7 @@ const RegisterPage = () => {
         dateOfBirth: formData.dateOfBirth,
         gender: formData.gender,
         address: formData.address,
-        roleName: "User" // hoặc bỏ nếu backend không yêu cầu
+        roleName: "User"
       };
       const response = await registerUser(payload);
       if (response.error) {
@@ -82,8 +80,8 @@ const RegisterPage = () => {
           <h1>Register</h1>
 
           {error && <div className="error-message">{error}</div>}
-          
-          
+
+
           <div className="input-box">
             <label htmlFor="title">Email/Username</label>
             <input

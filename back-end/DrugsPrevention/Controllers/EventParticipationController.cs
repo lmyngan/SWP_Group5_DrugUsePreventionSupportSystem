@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace DrugsPrevention_API.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public class EventParticipationController : ControllerBase
     {
         private readonly IEventParticipationService _service;
@@ -17,15 +17,29 @@ namespace DrugsPrevention_API.Controllers
             _service = service;
         }
 
-        [AuthorizeByRole(4)]
         [HttpPost]
-        public async Task<IActionResult> AddParticipation([FromBody] CreateEventParticipationDTO dto)
+        public async Task<IActionResult> Create([FromBody] CreateEventParticipationDTO dto)
         {
-            var success = await _service.AddParticipationAsync(dto);
-            if (!success)
-                return BadRequest(new { message = "Tham gia sự kiện thất bại." });
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            return Ok(new { message = "Tham gia sự kiện thành công." });
+            await _service.AddParticipationAsync(dto);
+            return Ok(new { message = "Đăng ký tham gia sự kiện thành công." });
+        }
+
+        [HttpGet("{accountId}")]
+        public async Task<IActionResult> GetByAccount(int accountId)
+        {
+            var result = await _service.GetByAccountIdAsync(accountId);
+            return Ok(result);
+        }
+
+        [HttpPut("{accountId}")]
+        public async Task<IActionResult> Update([FromBody] UpdateEventParticipationDTO dto)
+        {
+            var updated = await _service.UpdateParticipationAsync(dto);
+            if (!updated) return NotFound(new { message = "Không tìm thấy thông tin để cập nhật." });
+
+            return Ok(new { message = "Cập nhật trạng thái và phản hồi thành công." });
         }
     }
 }
