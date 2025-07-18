@@ -1,6 +1,7 @@
 ﻿using DrugsPrevention_Data.DTO.Schedule;
 using DrugsPrevention_Service.Service.Iservice;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace DrugsPrevention_API.Controllers
 {
@@ -26,23 +27,35 @@ namespace DrugsPrevention_API.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var result = await _service.GetByIdAsync(id);
-            if (result == null) return NotFound();
+            if (result == null)
+                return NotFound(new { message = $"Không tìm thấy lịch với id = {id}" });
+
             return Ok(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ScheduleDTO dto)
         {
+            if (string.IsNullOrWhiteSpace(dto.AccountName))
+                return BadRequest(new { message = "Thiếu accountName để xác định consultant" });
+
             var success = await _service.CreateAsync(dto);
-            if (!success) return BadRequest(new { message = "Consultant không tồn tại" });
+            if (!success)
+                return BadRequest(new { message = "Consultant không tồn tại" });
+
             return Ok(new { message = "Tạo thành công" });
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] ScheduleDTO dto)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] ScheduleDTO dto)
         {
+            if (dto.ScheduleId != id)
+                return BadRequest(new { message = "Lỗi: ScheduleId trong route và body không khớp" });
+
             var success = await _service.UpdateAsync(dto);
-            if (!success) return NotFound();
+            if (!success)
+                return NotFound(new { message = $"Không tìm thấy schedule với id = {id}" });
+
             return Ok(new { message = "Cập nhật thành công" });
         }
 
@@ -50,9 +63,10 @@ namespace DrugsPrevention_API.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var success = await _service.DeleteAsync(id);
-            if (!success) return NotFound();
+            if (!success)
+                return NotFound(new { message = $"Không tìm thấy schedule với id = {id}" });
+
             return Ok(new { message = "Xóa thành công" });
         }
     }
-
 }
