@@ -43,7 +43,7 @@ namespace DrugsPrevention
                     });
             });
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            // 🔥 AUTHENTICATION – Đặt chỗ này nè
+            // 🔥 AUTHENTICATION
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -87,6 +87,8 @@ namespace DrugsPrevention
             builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
             builder.Services.AddScoped<IReportService, ReportService>();
             builder.Services.AddScoped<IReportRepository, ReportRepository>();
+            builder.Services.AddScoped<IScheduleService, ScheduleService>();
+            builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
 
             builder.Services.AddScoped<VNPayHelper>();
             // Swagger

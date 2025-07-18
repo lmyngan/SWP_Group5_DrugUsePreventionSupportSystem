@@ -18,7 +18,6 @@ namespace DrugsPrevention_Service.Service.Iservice
         Task<AppointmentResponseDTO> UpdateAppointmentAsync(int id, AppointmentCreateDTO request);
         Task<AppointmentResponseDTO> UpdateAppointmentStatusAsync(int id, string status);
         Task<bool> DeleteAppointmentAsync(int id);
-
         Task<string> CreateVNPayPaymentUrlAsync(int appointmentId, string ipAddress);
         Task<bool> HandleVNPayCallbackAsync(Dictionary<string, string> vnpayData);
     }

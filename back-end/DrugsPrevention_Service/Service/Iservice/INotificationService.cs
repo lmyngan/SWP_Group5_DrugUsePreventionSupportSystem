@@ -11,5 +11,6 @@ namespace DrugsPrevention_Service.Service.Iservice
     {
         Task<NotificationResponseDTO> CreateNotificationAsync(NotificationCreateDTO dto);
         Task<List<NotificationResponseDTO>> GetNotificationsByAccountIdAsync(int accountId);
+        Task<bool> MarkAsReadAsync(int notificationId);
     }
 }
