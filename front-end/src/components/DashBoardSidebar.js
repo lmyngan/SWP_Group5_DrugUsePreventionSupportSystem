@@ -21,6 +21,11 @@ const DashBoardSidebar = ({ navigateTo, currentPage }) => {
         setOpen(false);
     };
 
+    const handleSchedule = () => {
+        navigateTo("manage-schedule");
+        setOpen(false);
+    }
+
     const handleEvent = () => {
         navigateTo("manage-event");
         setOpen(false);
@@ -100,6 +105,11 @@ const DashBoardSidebar = ({ navigateTo, currentPage }) => {
                         className={`block w-full text-left p-3 rounded ${currentPage === "manage-bookappointment" ? "bg-gray-600" : "bg-gray-700"} hover:bg-gray-600`}
                         onClick={handleBookAppointment}>
                         Book Appointment
+                    </button>
+                    <button
+                        className={`block w-full text-left p-3 rounded ${currentPage === "manage-bookappointment" ? "bg-gray-600" : "bg-gray-700"} hover:bg-gray-600`}
+                        onClick={handleSchedule}>
+                        Manage Schedule
                     </button>
                     <button
                         className={`block w-full text-left p-3 rounded ${currentPage === "manage-event" ? "bg-gray-600" : "bg-gray-700"} hover:bg-gray-600`}

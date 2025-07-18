@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react"
 import { Card, Container, Row, Col } from "react-bootstrap"
-import { getTestScore, getNotificationsByAccountId } from "../service/api"
+import { getTestScore, getNotificationsByAccountId, markAsReadNotification, editProfileAccount } from "../service/api"
 import "../styles/ProfileUser.css"
 
 const ProfileUser = () => {
@@ -15,8 +15,9 @@ const ProfileUser = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const bellRef = useRef(null);
   const dropdownRef = useRef(null);
+  const [editMode, setEditMode] = useState(false);
+  const [editProfile, setEditProfile] = useState({ fullName: '', dateOfBirth: '', gender: '', address: '' });
 
-  // Đóng dropdown khi click ra ngoài
   useEffect(() => {
     if (!showDropdown) return;
     function handleClickOutside(event) {
@@ -39,14 +40,19 @@ const ProfileUser = () => {
       const userData = JSON.parse(storedUser)
       setUser(userData)
 
-      // Fetch test results if user has accountId
+      setEditProfile({
+        fullName: userData.fullName || '',
+        dateOfBirth: userData.dateOfBirth || '',
+        gender: userData.gender || '',
+        address: userData.address || ''
+      });
+
       if (userData.accountId) {
         fetchTestResults(userData.accountId)
         fetchNotifications(userData.accountId)
       }
     }
 
-    // Load saved profile image
     const savedImage = localStorage.getItem("profileImage")
     if (savedImage) {
       setProfileImage(savedImage)
@@ -62,10 +68,8 @@ const ProfileUser = () => {
       if (response.error) {
         setError(response.error)
       } else {
-        // Get the latest test result score
         const results = Array.isArray(response) ? response : [response]
         if (results.length > 0) {
-          // Get the most recent result (assuming results are ordered by date)
           const latestResult = results[0]
           setTestScore(latestResult.score)
         }
@@ -92,6 +96,19 @@ const ProfileUser = () => {
     }
   };
 
+  const handleNotificationClick = async (notificationId) => {
+    try {
+      await markAsReadNotification(notificationId);
+      setNotifications((prev) =>
+        prev.map((n) =>
+          n.notificationId === notificationId ? { ...n, isRead: true, status: "Read" } : n
+        )
+      );
+    } catch (error) {
+      // handle error if needed
+    }
+  };
+
   const handleImageUpload = (event) => {
     const file = event.target.files[0]
     if (file && file.type.startsWith("image/")) {
@@ -112,6 +129,45 @@ const ProfileUser = () => {
     localStorage.removeItem("profileImage")
   }
 
+  const handleEditProfile = () => {
+    setEditMode(true);
+  };
+
+  const handleCancelEdit = () => {
+    setEditMode(false);
+    if (user) {
+      setEditProfile({
+        fullName: user.fullName || '',
+        dateOfBirth: user.dateOfBirth || '',
+        gender: user.gender || '',
+        address: user.address || ''
+      });
+    }
+  };
+
+  const handleSaveProfile = async () => {
+    if (!user) return;
+    try {
+      const body = {
+        fullName: editProfile.fullName,
+        dateOfBirth: editProfile.dateOfBirth,
+        gender: editProfile.gender,
+        address: editProfile.address
+      };
+      const res = await editProfileAccount(user.accountId, body);
+      if (!res.error) {
+        const updatedUser = { ...user, ...body };
+        setUser(updatedUser);
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        setEditMode(false);
+      } else {
+        alert(res.error || 'Failed to update profile');
+      }
+    } catch (err) {
+      alert('Failed to update profile');
+    }
+  };
+
   if (!user) {
     return (
       <Container className="mt-5">
@@ -124,11 +180,9 @@ const ProfileUser = () => {
     <Container className="profile-container">
       <Row className="justify-content-center">
         <Col xs={12} md={10} lg={8}>
-          {/* Profile Card */}
           <Card className="profile-card">
             <div className="profile-header">User Profile</div>
             <Card.Body className="profile-body">
-              {/* Profile Image Upload Section */}
               <div className="profile-image-section">
                 <div className="profile-avatar">
                   {profileImage ? (
@@ -156,7 +210,6 @@ const ProfileUser = () => {
                 </div>
               </div>
 
-              {/* Notification Section */}
               <div style={{ position: 'absolute', top: 18, right: 24, zIndex: 10 }}>
                 <button
                   className="notification-btn"
@@ -166,9 +219,9 @@ const ProfileUser = () => {
                   ref={bellRef}
                 >
                   <span role="img" aria-label="notification">🔔</span>
-                  {notifications.length > 0 && (
+                  {notifications.filter(n => !n.isRead && n.status !== 'Read').length > 0 && (
                     <span className="notification-badge">
-                      {notifications.length}
+                      {notifications.filter(n => !n.isRead && n.status !== 'Read').length}
                     </span>
                   )}
                 </button>
@@ -181,7 +234,12 @@ const ProfileUser = () => {
                     ) : (
                       <ul className="notification-list" style={{ margin: 0 }}>
                         {notifications.map((n, idx) => (
-                          <li key={n.notificationId || idx} className="notification-item" style={{ width: '100%', maxWidth: 400, justifyContent: 'center' }}>
+                          <li
+                            key={n.notificationId || idx}
+                            className={`notification-item${n.isRead || n.status === 'Read' ? " read" : ""}`}
+                            style={{ width: '100%', maxWidth: 400, justifyContent: 'center', cursor: (n.isRead || n.status === 'Read') ? 'default' : 'pointer' }}
+                            onClick={() => (!n.isRead && n.status !== 'Read') && handleNotificationClick(n.notificationId)}
+                          >
                             <span className="notification-icon" role="img" aria-label="notification">🔔</span>
                             <span className="notification-message" style={{ textAlign: 'center', width: '100%' }}>{n.message}</span>
                           </li>
@@ -192,24 +250,86 @@ const ProfileUser = () => {
                 )}
               </div>
 
-              <Card.Text>
-                <span className="profile-label">Full Name:</span>
-                <span className="profile-value">{user.fullName}</span>
-              </Card.Text>
-              <Card.Text>
-                <span className="profile-label">Date of Birth:</span>
-                <span className="profile-value">{user.dateOfBirth}</span>
-              </Card.Text>
-              <Card.Text>
-                <span className="profile-label">Gender:</span>
-                <span className="profile-value">{user.gender}</span>
-              </Card.Text>
-              <Card.Text>
-                <span className="profile-label">Address:</span>
-                <span className="profile-value">{user.address}</span>
-              </Card.Text>
+              {editMode ? (
+                <>
+                  <Card.Text>
+                    <span className="profile-label">Full Name:</span>
+                    <input
+                      className="profile-value-input"
+                      value={editProfile.fullName}
+                      onChange={e => setEditProfile(p => ({ ...p, fullName: e.target.value }))}
+                    />
+                  </Card.Text>
+                  <Card.Text>
+                    <span className="profile-label">Date of Birth:</span>
+                    <input
+                      className="profile-value-input"
+                      type="date"
+                      value={editProfile.dateOfBirth ? editProfile.dateOfBirth.slice(0, 10) : ''}
+                      onChange={e => setEditProfile(p => ({ ...p, dateOfBirth: e.target.value }))}
+                    />
+                  </Card.Text>
+                  <Card.Text>
+                    <span className="profile-label">Gender:</span>
+                    <select
+                      className="profile-value-input rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 text-base font-medium"
+                      value={editProfile.gender}
+                      onChange={e => setEditProfile(p => ({ ...p, gender: e.target.value }))}
+                    >
+                      <option value="" disabled>Select gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </select>
+                  </Card.Text>
+                  <Card.Text>
+                    <span className="profile-label">Address:</span>
+                    <input
+                      className="profile-value-input"
+                      value={editProfile.address}
+                      onChange={e => setEditProfile(p => ({ ...p, address: e.target.value }))}
+                    />
+                  </Card.Text>
+                  <div className="flex gap-2 mt-2 justify-end">
+                    <button
+                      className="px-4 py-2 rounded-lg bg-green-500 text-white font-semibold hover:bg-green-600 transition"
+                      onClick={handleSaveProfile}
+                      type="button"
+                    >
+                      Save
+                    </button>
+                    <button
+                      className="px-4 py-2 rounded-lg bg-gray-300 text-gray-700 font-semibold hover:bg-gray-400 transition"
+                      onClick={handleCancelEdit}
+                      type="button"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Card.Text>
+                    <span className="profile-label">Full Name:</span>
+                    <span className="profile-value">{user.fullName}</span>
+                  </Card.Text>
+                  <Card.Text>
+                    <span className="profile-label">Date of Birth:</span>
+                    <span className="profile-value">{user.dateOfBirth}</span>
+                  </Card.Text>
+                  <Card.Text>
+                    <span className="profile-label">Gender:</span>
+                    <span className="profile-value">{user.gender}</span>
+                  </Card.Text>
+                  <Card.Text>
+                    <span className="profile-label">Address:</span>
+                    <span className="profile-value">{user.address}</span>
+                  </Card.Text>
+                  <div className="flex justify-end mt-3">
+                    <button className="btn btn-primary" onClick={handleEditProfile} type="button">Edit Profile</button>
+                  </div>
+                </>
+              )}
 
-              {/* Test Score Section */}
               {loading && (
                 <Card.Text className="profile-score">
                   <span className="profile-label">Survey Total Score:</span>

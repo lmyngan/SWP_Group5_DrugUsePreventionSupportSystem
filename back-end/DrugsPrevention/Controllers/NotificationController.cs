@@ -1,4 +1,5 @@
 ﻿using DrugsPrevention_Data.DTO.Notification;
+using DrugsPrevention_Service.Service;
 using DrugsPrevention_Service.Service.Iservice;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,6 +42,15 @@ namespace DrugsPrevention_API.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
+        }
+        [HttpPut("mark-as-read/{notificationId}")]
+        public async Task<IActionResult> MarkAsRead(int notificationId)
+        {
+            var result = await _service.MarkAsReadAsync(notificationId);
+            if (!result)
+                return NotFound("Notification not found.");
+
+            return Ok("Notification marked as read.");
         }
     }
 }

@@ -22,13 +22,14 @@ import BookAppointment from "./pages/BookAppointment"
 import Account from "./pages/Account"
 import BlogPage from "./pages/BlogPage"
 import ManageConsultant from "./pages/ManageConsultant"
-
 import ManageEvent from "./pages/ManageEvent"
 import ManageBlog from "./pages/ManageBlog"
 import Report from "./pages/Report"
 import CalendarPage from "./pages/CalendarPage"
 
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import ManageSchedule from "./pages/ManageSchedule"
+
 
 
 const App = () => {
@@ -90,19 +91,16 @@ const App = () => {
         return <ManageConsultant />
       case "manage-bookappointment":
         return <BookAppointment />
+      case "manage-schedule":
+        return <ManageSchedule />
       case "manage-event":
         return <ManageEvent />
       case "manage-blog":
         return <ManageBlog />
       case "manage-account":
         return <Account />
-
-      case "manage-consultant":
-        return <ManageConsultant />
-
       case "report":
         return <Report />
-
 
       default:
         return <HomePage /> // Fallback về trang chủ

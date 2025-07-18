@@ -318,6 +318,12 @@ body {
   box-shadow: 0 4px 16px rgba(102, 126, 234, 0.13);
 }
 
+.notification-item.read {
+  background: #f0f0f0 !important;
+  color: #aaa !important;
+  opacity: 0.7;
+}
+
 .notification-icon {
   font-size: 1.5rem;
   color: #667eea;

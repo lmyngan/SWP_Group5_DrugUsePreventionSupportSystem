@@ -99,6 +99,18 @@ export const addAccount = async (data) => {
     }
 }
 
+//PUT: Edit Profile Account
+export const editProfileAccount = async (accountId, data) => {
+    try {
+        const response = await axios.put(`${API_BASE_URL}/api/Account/${accountId}/profile`, data, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
 //PUT: Edit Account
 export const editAccount = async (accountId, data) => {
     try {
@@ -277,19 +289,53 @@ export const appointmentId = async (appointmentIdData) => {
     }
 }
 
-// PUT: Update Appointment Status
-export const updateAppointmentStatus = async (scheduleId, status) => {
+// PUT: Update Appointment Status (new API: appointmentId, status)
+export const updateAppointmentStatus = async (appointmentId, status) => {
     try {
-        const url = `${API_BASE_URL}/api/Appointment/${scheduleId}/status?status=${encodeURIComponent(status)}`;
-        const response = await axios.put(url, null, {
+        const response = await axios.put(`${API_BASE_URL}/api/Appointment/${appointmentId}/status`, status, {
             headers: getAuthHeader(),
         });
-        console.log("Response:", response.data);
         return response.data;
     } catch (error) {
         return { error: error.response?.data?.message || error.message };
     }
 };
+
+//Get: Data Schedule
+export const getScheduleData = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/schedule`, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
+//POST: Add Schedule
+export const addSchedule = async (data) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/schedule`, data, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
+//PUT: Delete schedule
+export const deleteSchedule = async (scheduleId) => {
+    try {
+        const response = await axios.delete(`${API_BASE_URL}/api/schedule/${scheduleId},${scheduleId}`, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
 
 //GET: Event
 export const eventData = async () => {
@@ -423,6 +469,30 @@ export const getNotificationsByAccountId = async (accountId) => {
     }
 };
 
+//PUT: Mark Notification as Read
+export const markAsReadNotification = async (notificationId) => {
+    try {
+        const response = await axios.put(`${API_BASE_URL}/api/Notification/mark-as-read/${notificationId}`, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+}
+
+//GET: Data Report
+export const getReportData = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Report/summary`, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+}
+
 // VNPay Payment Functions
 // GET: Create VNPay Payment URL
 export const createVNPayUrl = async (appointmentId) => {
@@ -448,4 +518,3 @@ export const handleVNPayCallback = async (queryParams) => {
         return { error: error.response?.data?.message || error.message };
     }
 };
-

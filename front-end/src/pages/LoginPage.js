@@ -10,6 +10,12 @@ const LoginPage = () => {
   const [accountname, setAccountname] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const showModal = (msg) => {
+    setModalMessage(msg);
+    setModalOpen(true);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,19 +28,18 @@ const LoginPage = () => {
         const user = await getUserById(response.accountId);
         localStorage.setItem('user', JSON.stringify(user));
 
-        alert('Login successful!');
-
+        localStorage.setItem('loginMessage', 'Login successful!');
         if (user.roleId === 4) {
           window.location.href = '/';
         } else {
           window.location.href = '/dashboard';
         }
       } else {
-        alert(response.message || 'Login failed!');
+        showModal(response.message || 'Login failed!');
       }
     } catch (error) {
       console.error("Login error:", error);
-      alert('Login failed!');
+      showModal('Login failed!');
     }
   };
 
@@ -48,14 +53,14 @@ const LoginPage = () => {
         const user = jwtDecode(googleLoginResult.token);
         console.log("Google login as:", user.FullName || user.accountname);
 
-        alert("Login with Google successful!");
+        localStorage.setItem('loginMessage', 'Login with Google successful!');
         navigate('/');
       } else {
-        alert(googleLoginResult?.error || "Google login failed.");
+        showModal(googleLoginResult?.error || "Google login failed.");
       }
     } catch (error) {
       console.error("Google login error:", error);
-      alert("Google login failed.");
+      showModal("Google login failed.");
     }
   };
 
