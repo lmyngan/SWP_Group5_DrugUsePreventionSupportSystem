@@ -1,5 +1,5 @@
 import "../styles/HomePage.css"
-import Footer from "../components/Footer";
+
 import { useState, useEffect } from "react";
 
 
@@ -135,7 +135,7 @@ const HomePage = ({ navigateTo }) => {
           </div>
         </div>
       </section>
-       <Footer/>
+       
     </div>
   )
 }
