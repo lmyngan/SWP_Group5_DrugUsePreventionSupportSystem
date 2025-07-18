@@ -203,46 +203,7 @@ const BlogPage = ({ navigateTo }) => {
         </div>
       </section>
 
-      {/* Blog Categories Section */}
-      <section className="overview-section">
-        <div className="container">
-          <h2>Types of Stories</h2>
-          <div className="overview-grid">
-            <div className="overview-card">
-              <div className="overview-icon">💭</div>
-              <h3>Personal Experiences</h3>
-              <p>Share your personal journey of recovery, challenges overcome, and lessons learned along the way.</p>
-              <button className="overview-link" onClick={() => setSelectedCategory(1)}>
-                Read Stories
-              </button>
-            </div>
-            <div className="overview-card">
-              <div className="overview-icon">📖</div>
-              <h3>Educational Content</h3>
-              <p>Professional insights, research findings, and educational resources about prevention and recovery.</p>
-              <button className="overview-link" onClick={() => setSelectedCategory(2)}>
-                Learn More
-              </button>
-            </div>
-            <div className="overview-card">
-              <div className="overview-icon">🤲</div>
-              <h3>Support & Advice</h3>
-              <p>Practical tips, advice for families, and guidance for supporting loved ones in their journey.</p>
-              <button className="overview-link" onClick={() => setSelectedCategory(3)}>
-                Get Support
-              </button>
-            </div>
-            <div className="overview-card">
-              <div className="overview-icon">🎯</div>
-              <h3>Event Experiences</h3>
-              <p>Share your experiences from community events and how they impacted your journey.</p>
-              <button className="overview-link" onClick={() => navigateTo && navigateTo("events")}>
-                Join Events
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+      
 
       {/* Filter Section */}
       <section className="filter-section">
@@ -428,35 +389,7 @@ const BlogPage = ({ navigateTo }) => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="features-section">
-        <div className="container">
-          <h2>Why Share Your Experience?</h2>
-          <div className="features-grid">
-            <div className="feature-card">
-              <div className="feature-icon">💪</div>
-              <h3>Inspire Others</h3>
-              <p>Your story can provide hope and motivation to others who are facing similar challenges</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">🤝</div>
-              <h3>Build Community</h3>
-              <p>Connect with others who understand your journey and create meaningful relationships</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">🌱</div>
-              <h3>Personal Growth</h3>
-              <p>Reflecting on and sharing your experience can be therapeutic and aid in your own healing</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">📚</div>
-              <h3>Educate & Inform</h3>
-              <p>Help others learn from your experiences and contribute to prevention efforts</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
+     
       {/* Call to Action Section */}
       <section className="cta-section">
         <div className="container">

@@ -122,48 +122,6 @@ const EventPage = ({ navigateTo }) => {
           <img src="/images/event.jpg" alt="Community Events" />
         </div>
       </section>
-
-      {/* Event Categories Section */}
-      <section className="overview-section">
-        <div className="container">
-          <h2>Event Categories</h2>
-          <div className="overview-grid">
-            <div className="overview-card">
-              <div className="overview-icon">🎯</div>
-              <h3>Awareness Events</h3>
-              <p>Community outreach programs to raise awareness about drug prevention and healthy living.</p>
-              <button className="overview-link" onClick={() => setSelectedType("Awareness")}>
-                View Events
-              </button>
-            </div>
-            <div className="overview-card">
-              <div className="overview-icon">📚</div>
-              <h3>Educational Workshops</h3>
-              <p>Interactive learning sessions for youth, parents, and professionals about prevention strategies.</p>
-              <button className="overview-link" onClick={() => setSelectedType("Education")}>
-                Join Workshops
-              </button>
-            </div>
-            <div className="overview-card">
-              <div className="overview-icon">🤝</div>
-              <h3>Support Groups</h3>
-              <p>Safe spaces for individuals and families to share experiences and receive mutual support.</p>
-              <button className="overview-link" onClick={() => setSelectedType("Support")}>
-                Find Support
-              </button>
-            </div>
-            <div className="overview-card">
-              <div className="overview-icon">✍️</div>
-              <h3>Share Stories</h3>
-              <p>Share your journey and experiences to inspire and help others in the community.</p>
-              <button className="overview-link" onClick={() => navigateTo && navigateTo("blogs")}>
-                Read Stories
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Event Filter Section */}
       <section className="filter-section">
         <div className="container">
@@ -227,35 +185,7 @@ const EventPage = ({ navigateTo }) => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="features-section">
-        <div className="container">
-          <h2>Why Join Our Events?</h2>
-          <div className="features-grid">
-            <div className="feature-card">
-              <div className="feature-icon">🌟</div>
-              <h3>Expert Guidance</h3>
-              <p>Learn from certified professionals and experienced counselors in drug prevention</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">👥</div>
-              <h3>Community Support</h3>
-              <p>Connect with like-minded individuals who share your commitment to a drug-free lifestyle</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">📈</div>
-              <h3>Personal Growth</h3>
-              <p>Develop skills and knowledge to help yourself and others in prevention and recovery</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">💬</div>
-              <h3>Share & Learn</h3>
-              <p>Share your experiences through blogs and learn from others' journeys</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
+    
       {/* Call to Action Section */}
       <section className="cta-section">
         <div className="container">
