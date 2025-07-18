@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react"
 import { Card, Container, Row, Col } from "react-bootstrap"
-import { getTestScore, getNotificationsByAccountId } from "../service/api"
+import { getTestScore, getNotificationsByAccountId, markNotificationAsRead } from "../service/api"
 import "../styles/ProfileUser.css"
 
 const ProfileUser = () => {
@@ -92,6 +92,15 @@ const ProfileUser = () => {
     }
   };
 
+  const handleNotificationClick = async (notificationId) => {
+    await markNotificationAsRead(notificationId);
+    setNotifications((prev) =>
+      prev.map((n) =>
+        n.notificationId === notificationId ? { ...n, isRead: true, status: "read" } : n
+      )
+    );
+  };
+
   const handleImageUpload = (event) => {
     const file = event.target.files[0]
     if (file && file.type.startsWith("image/")) {
@@ -166,9 +175,9 @@ const ProfileUser = () => {
                   ref={bellRef}
                 >
                   <span role="img" aria-label="notification">🔔</span>
-                  {notifications.length > 0 && (
+                  {notifications.filter(n => !n.isRead).length > 0 && (
                     <span className="notification-badge">
-                      {notifications.length}
+                      {notifications.filter(n => !n.isRead).length}
                     </span>
                   )}
                 </button>
@@ -181,7 +190,12 @@ const ProfileUser = () => {
                     ) : (
                       <ul className="notification-list" style={{ margin: 0 }}>
                         {notifications.map((n, idx) => (
-                          <li key={n.notificationId || idx} className="notification-item" style={{ width: '100%', maxWidth: 400, justifyContent: 'center' }}>
+                          <li
+                            key={n.notificationId || idx}
+                            className={`notification-item${n.isRead ? " read" : ""}`}
+                            style={{ width: '100%', maxWidth: 400, justifyContent: 'center', cursor: n.isRead ? 'default' : 'pointer' }}
+                            onClick={() => !n.isRead && handleNotificationClick(n.notificationId)}
+                          >
                             <span className="notification-icon" role="img" aria-label="notification">🔔</span>
                             <span className="notification-message" style={{ textAlign: 'center', width: '100%' }}>{n.message}</span>
                           </li>

@@ -423,6 +423,18 @@ export const getNotificationsByAccountId = async (accountId) => {
     }
 };
 
+//PUT: Mark Notification as Read
+export const markNotificationAsRead = async (notificationId) => {
+    try {
+        const response = await axios.put(`${API_BASE_URL}/api/Notification/${notificationId}`, { status: 'read' }, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+};
+
 //GET: Data Report
 export const getReportData = async () => {
     try {
