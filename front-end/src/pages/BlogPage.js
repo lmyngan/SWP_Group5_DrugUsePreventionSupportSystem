@@ -396,7 +396,7 @@ const BlogPage = ({ navigateTo }) => {
 
                   <div className="blog-author">
                     <span className="author-icon">👤</span>
-                    <span>by {blog.author_name}</span>
+                    <span>by {blog.authorFullName}</span>
                     {blog.event_name && (
                       <>
                         <span className="event-separator">•</span>
