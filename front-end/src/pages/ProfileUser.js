@@ -272,14 +272,13 @@ const ProfileUser = () => {
                   <Card.Text>
                     <span className="profile-label">Gender:</span>
                     <select
-                      className="profile-value-input"
+                      className="profile-value-input rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 text-base font-medium"
                       value={editProfile.gender}
                       onChange={e => setEditProfile(p => ({ ...p, gender: e.target.value }))}
                     >
-                      <option value="">Select</option>
+                      <option value="" disabled>Select gender</option>
                       <option value="Male">Male</option>
                       <option value="Female">Female</option>
-                      <option value="Other">Other</option>
                     </select>
                   </Card.Text>
                   <Card.Text>
@@ -290,9 +289,21 @@ const ProfileUser = () => {
                       onChange={e => setEditProfile(p => ({ ...p, address: e.target.value }))}
                     />
                   </Card.Text>
-                  <div className="flex gap-2 mt-2">
-                    <button className="btn btn-success" onClick={handleSaveProfile} type="button">Save</button>
-                    <button className="btn btn-secondary" onClick={handleCancelEdit} type="button">Cancel</button>
+                  <div className="flex gap-2 mt-2 justify-end">
+                    <button
+                      className="px-4 py-2 rounded-lg bg-green-500 text-white font-semibold hover:bg-green-600 transition"
+                      onClick={handleSaveProfile}
+                      type="button"
+                    >
+                      Save
+                    </button>
+                    <button
+                      className="px-4 py-2 rounded-lg bg-gray-300 text-gray-700 font-semibold hover:bg-gray-400 transition"
+                      onClick={handleCancelEdit}
+                      type="button"
+                    >
+                      Cancel
+                    </button>
                   </div>
                 </>
               ) : (
@@ -313,7 +324,9 @@ const ProfileUser = () => {
                     <span className="profile-label">Address:</span>
                     <span className="profile-value">{user.address}</span>
                   </Card.Text>
-                  <button className="btn btn-primary mt-2" onClick={handleEditProfile} type="button">Edit Profile</button>
+                  <div className="flex justify-end mt-3">
+                    <button className="btn btn-primary" onClick={handleEditProfile} type="button">Edit Profile</button>
+                  </div>
                 </>
               )}
 

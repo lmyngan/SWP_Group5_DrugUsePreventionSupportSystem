@@ -301,7 +301,41 @@ export const updateAppointmentStatus = async (appointmentId, status) => {
     }
 };
 
-//POST: Schedule
+//Get: Data Schedule
+export const getScheduleData = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/schedule`, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
+//POST: Add Schedule
+export const addSchedule = async (data) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/schedule`, data, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
+//PUT: Delete schedule
+export const deleteSchedule = async (scheduleId) => {
+    try {
+        const response = await axios.delete(`${API_BASE_URL}/api/schedule/${scheduleId},${scheduleId}`, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
 
 //GET: Event
 export const eventData = async () => {
