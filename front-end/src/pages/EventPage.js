@@ -10,6 +10,11 @@ const EventPage = ({ navigateTo }) => {
   const [user, setUser] = useState(null);
   const [selectedType, setSelectedType] = useState("all");
   const [loading, setLoading] = useState(true);
+  // Sắp xếp events theo ngày mới nhất (dùng createdAt nếu có, nếu không dùng date)
+  const sortedEvents = [...events].sort((a, b) => new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date));
+  // Lấy 3 event mới đăng nhất
+  const featuredEvents = sortedEvents.slice(0, 3);
+
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -205,7 +210,7 @@ const EventPage = ({ navigateTo }) => {
         </div>
       </section>
 
-      <Footer navigateTo={navigateTo} />
+      <Footer  featuredEvents={featuredEvents} navigateTo={navigateTo} />
     </div>
   )
 }

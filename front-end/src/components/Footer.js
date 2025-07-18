@@ -1,6 +1,6 @@
 import "./Footer.css"
 
-const Footer = () => {
+const Footer = ({ featuredEvents, navigateTo }) => {
   return (
     <footer className="site-footer">
       <div className="container">
@@ -47,26 +47,47 @@ const Footer = () => {
 
           {/* Featured Articles */}
           <div className="footer-section">
-            <h3>FEATURED ARTICLES</h3>
+            <h3>FEATURED Events</h3>
             <div className="random-articles">
-              <article className="footer-article">
-                <h4>
-                  <a href="/">How to Recognize Signs of Drug Use in Teenagers</a>
-                </h4>
-                <span className="article-date">📅 March 24, 2024</span>
-              </article>
-              <article className="footer-article">
-                <h4>
-                  <a href="/">ASSIST Test - Tool for Assessing Substance Use Risk</a>
-                </h4>
-                <span className="article-date">📅 March 22, 2024</span>
-              </article>
-              <article className="footer-article">
-                <h4>
-                  <a href="/">The Role of Family in Preventing Social Evils</a>
-                </h4>
-                <span className="article-date">📅 March 20, 2024</span>
-              </article>
+              {featuredEvents && featuredEvents.length > 0 ? (
+                featuredEvents.map(event => (
+                  <article className="footer-article" key={event.event_id}>
+                    <h4>
+                      <a href={`/events/${event.event_id}`}>
+                        {event.name}
+                      </a>
+                    </h4>
+                    <span className="article-date">
+                      📅 {new Date(event.date).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric"
+                      })}
+                    </span>
+                  </article>
+                ))
+              ) : (
+                <>
+                  <article className="footer-article">
+                    <h4>
+                      <a href="/">How to Recognize Signs of Drug Use in Teenagers</a>
+                    </h4>
+                    <span className="article-date">📅 March 24, 2024</span>
+                  </article>
+                  <article className="footer-article">
+                    <h4>
+                      <a href="/">ASSIST Test - Tool for Assessing Substance Use Risk</a>
+                    </h4>
+                    <span className="article-date">📅 March 22, 2024</span>
+                  </article>
+                  <article className="footer-article">
+                    <h4>
+                      <a href="/">The Role of Family in Preventing Social Evils</a>
+                    </h4>
+                    <span className="article-date">📅 March 20, 2024</span>
+                  </article>
+                </>
+              )}
             </div>
           </div>
 
