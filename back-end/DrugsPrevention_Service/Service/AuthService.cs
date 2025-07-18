@@ -32,7 +32,6 @@ namespace DrugsPrevention_Service.Service
             {
                 return null;
             }
-
             return GenerateJwtToken(user);
         }
 
@@ -43,15 +42,15 @@ namespace DrugsPrevention_Service.Service
 
             var claims = new[]
             {
-            new Claim(ClaimTypes.NameIdentifier, account.AccountId.ToString()),
-            new Claim(ClaimTypes.Name, account.Accountname),
-            new Claim(ClaimTypes.Role, account.RoleId.ToString()),
-            new Claim("AccountId", account.AccountId.ToString()),
-            new Claim("Gender", account.Gender ?? ""),
-            new Claim("Address", account.Address ?? ""),
-            new Claim("DateOfBirth", account.DateOfBirth.GetValueOrDefault().ToString("yyyy-MM-dd")),
-            new Claim("CreatedAt", account.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"))
-        };
+                new Claim(ClaimTypes.NameIdentifier, account.AccountId.ToString()),
+                new Claim(ClaimTypes.Name, account.Accountname),
+                new Claim(ClaimTypes.Role, account.RoleId.ToString()),
+                new Claim("AccountId", account.AccountId.ToString()),
+                new Claim("Gender", account.Gender ?? ""),
+                new Claim("Address", account.Address ?? ""),
+                new Claim("DateOfBirth", account.DateOfBirth.GetValueOrDefault().ToString("yyyy-MM-dd")),
+                new Claim("CreatedAt", account.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"))
+            };
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
@@ -87,13 +86,12 @@ namespace DrugsPrevention_Service.Service
 
             await _repository.AddAccountAsync(newAccount);
             await _repository.SaveChangesAsync();
-
             return true;
         }
+
         public async Task MigratePlaintextPasswordsToHash()
         {
             var allAccounts = await _repository.GetAllAccountsAsync();
-
             foreach (var acc in allAccounts)
             {
                 if (!acc.Password.StartsWith("$2a$") && !acc.Password.StartsWith("$2b$"))
@@ -101,17 +99,15 @@ namespace DrugsPrevention_Service.Service
                     acc.Password = BCrypt.Net.BCrypt.HashPassword(acc.Password);
                 }
             }
-
             await _repository.SaveChangesAsync();
         }
 
-        public async Task<string> LoginWithExternalProviderAsync(string idToken)
+        public async Task<string> LoginWithGoogleAsync(string idToken)
         {
             var clientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
             if (string.IsNullOrEmpty(clientId))
                 throw new Exception("GOOGLE_CLIENT_ID not set.");
 
-            // Verify Google token
             var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, new GoogleJsonWebSignature.ValidationSettings
             {
                 Audience = new[] { clientId }
@@ -121,12 +117,9 @@ namespace DrugsPrevention_Service.Service
             var providerKey = payload.Subject;
             var email = payload.Email;
 
-            // Tìm user theo Provider + ProviderKey
             var user = await _repository.GetUserByExternalLoginAsync(provider, providerKey);
-
             if (user == null)
             {
-                // Tạo tài khoản mới
                 var newAccount = new Accounts
                 {
                     Accountname = email,
