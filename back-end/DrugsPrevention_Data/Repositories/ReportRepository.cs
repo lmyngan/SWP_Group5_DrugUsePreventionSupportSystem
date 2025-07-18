@@ -28,11 +28,14 @@ namespace DrugsPrevention_Data.Repositories.Implementations
                     .CountAsync(e => !string.IsNullOrEmpty(e.Feedback)),
 
                 TotalNewUsersThisMonth = await _context.Accounts
-                    .CountAsync(a => a.CreatedAt.Month == DateTime.Now.Month &&
-                                     a.CreatedAt.Year == DateTime.Now.Year),
+                    .CountAsync(a => a.CreatedAt.Month == DateTime.Now.Month && a.CreatedAt.Year == DateTime.Now.Year),
 
                 TotalAppointmentsCompleted = await _context.Appointments
-                    .CountAsync(a => a.Status == "Completed")
+                    .CountAsync(a => a.Status == "Completed"),
+
+                AverageBlogRating = await _context.Blogs
+                    .Where(b => b.Rate > 0)
+                    .AverageAsync(b => (double?)b.Rate) ?? 0
             };
 
             return report;

@@ -34,7 +34,8 @@ namespace DrugsPrevention_Data.Repositories
         public async Task<bool> MarkAsReadAsync(int notificationId)
         {
             var notification = await _context.Notifications.FindAsync(notificationId);
-            if (notification == null) return false;
+            if (notification == null)
+                return false;
 
             notification.Status = "Read";
             await _context.SaveChangesAsync();

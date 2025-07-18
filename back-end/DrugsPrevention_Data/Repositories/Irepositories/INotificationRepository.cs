@@ -11,6 +11,7 @@ namespace DrugsPrevention_Data.Repositories.Irepositories
     {
         Task AddNotificationAsync(Notifications notification);
         Task<List<Notifications>> GetNotificationsByAccountIdAsync(int accountId);
+        Task<bool> MarkAsReadAsync(int notificationId);
         Task SaveChangesAsync();
     }
 }
