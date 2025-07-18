@@ -15,6 +15,7 @@ namespace DrugsPrevention_Data.Repositories.Irepositories
         Task UpdateAsync(Schedule schedule);
         Task DeleteAsync(Schedule schedule);
         Task<Consultant?> GetConsultantByAccountNameAsync(string accountName);
+        Task<Consultant?> GetConsultantByIdAsync(int consultantId);
         Task SaveAsync();
     }
 }
