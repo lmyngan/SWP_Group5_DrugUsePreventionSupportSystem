@@ -4,10 +4,10 @@ using DrugsPrevention_Data.IRepositories;
 using DrugsPrevention_Data.Repositories;
 using DrugsPrevention_Data.Repositories.Implementations;
 using DrugsPrevention_Data.Repositories.Irepositories;
-using DrugsPrevention_Data.Services.Implementations;
+using DrugsPrevention_Data.Service;
+using DrugsPrevention_Data.Service.Implementations;
 using DrugsPrevention_Service;
 using DrugsPrevention_Service.Service;
-using DrugsPrevention_Service.Service.Implementations;
 using DrugsPrevention_Service.Service.Iservice;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -85,6 +85,8 @@ namespace DrugsPrevention
             builder.Services.AddScoped<IEventParticipationRepository, EventParticipationRepository>();
             builder.Services.AddScoped<INotificationService, NotificationService>();
             builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+            builder.Services.AddScoped<IReportService, ReportService>();
+            builder.Services.AddScoped<IReportRepository, ReportRepository>();
 
             builder.Services.AddScoped<VNPayHelper>();
             // Swagger

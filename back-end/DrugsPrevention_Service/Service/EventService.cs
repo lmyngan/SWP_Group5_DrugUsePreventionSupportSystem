@@ -3,7 +3,7 @@ using DrugsPrevention_Data.DTO.Event;
 using DrugsPrevention_Data.Repositories.Irepositories;
 using DrugsPrevention_Service.Service.Iservice;
 
-namespace DrugsPrevention_Data.Services.Implementations
+namespace DrugsPrevention_Data.Service.Implementations
 {
     public class EventService : IEventService
     {
