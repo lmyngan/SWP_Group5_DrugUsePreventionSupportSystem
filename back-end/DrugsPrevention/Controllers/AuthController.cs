@@ -12,12 +12,10 @@ namespace DrugsPrevention_API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-        private readonly IGoogleAuthService _googleService;
 
-        public AuthController(IAuthService authService, IGoogleAuthService googleService)
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
-            _googleService = googleService;
         }
 
         [HttpPost("register")]
