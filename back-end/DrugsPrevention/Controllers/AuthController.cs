@@ -12,10 +12,12 @@ namespace DrugsPrevention_API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IGoogleAuthService _googleService;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IGoogleAuthService googleService)
         {
             _authService = authService;
+            _googleService = googleService;
         }
 
         [HttpPost("register")]
@@ -26,32 +28,24 @@ namespace DrugsPrevention_API.Controllers
             {
                 return BadRequest(new { message = "Tên tài khoản đã tồn tại hoặc vai trò không hợp lệ!" });
             }
-
             return Ok(new { message = "Đăng ký thành công!" });
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDTO request)
+        [HttpPost("login-google")]
+        public async Task<IActionResult> LoginWithGoogle([FromBody] ExternalLoginRequestDTO request)
         {
-            var token = await _authService.LoginAsync(request.Accountname, request.Password);
-
+            var token = await _authService.LoginWithGoogleAsync(request.IdToken);
             if (token == null)
-                return Unauthorized(new { message = "Sai tên đăng nhập hoặc mật khẩu." });
+                return Unauthorized(new { message = "Đăng nhập bằng Google thất bại!" });
 
             return Ok(new { Token = token });
         }
+
         [HttpPost("migrate-passwords")]
         public async Task<IActionResult> MigratePasswords()
         {
             await _authService.MigratePlaintextPasswordsToHash();
             return Ok(new { message = "Hash mật khẩu thành công!" });
-        }
-
-        [HttpPost("login-external")]
-        public async Task<IActionResult> LoginWithExternal([FromBody] ExternalLoginRequestDTO request)
-        {
-            var token = await _authService.LoginWithExternalProviderAsync(request.IdToken);
-            return Ok(new { Token = token });
         }
     }
 }
