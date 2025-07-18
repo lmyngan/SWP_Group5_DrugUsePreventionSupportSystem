@@ -277,14 +277,12 @@ export const appointmentId = async (appointmentIdData) => {
     }
 }
 
-// PUT: Update Appointment Status
-export const updateAppointmentStatus = async (scheduleId, status) => {
+// PUT: Update Appointment Status (new API: appointmentId, status)
+export const updateAppointmentStatus = async (appointmentId, status) => {
     try {
-        const url = `${API_BASE_URL}/api/Appointment/${scheduleId}/status?status=${encodeURIComponent(status)}`;
-        const response = await axios.put(url, null, {
+        const response = await axios.put(`${API_BASE_URL}/api/Appointment/${appointmentId}/status`, status, {
             headers: getAuthHeader(),
         });
-        console.log("Response:", response.data);
         return response.data;
     } catch (error) {
         return { error: error.response?.data?.message || error.message };

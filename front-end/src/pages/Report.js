@@ -68,7 +68,7 @@ const Report = () => {
                 </div>
                 <div className="mb-8">
                     <div className="text-lg font-semibold text-gray-700 mb-2">Average Event Rating:</div>
-                    <div className="text-2xl text-blue-500 font-bold">{report.averageEventRating}</div>
+                    <div className="text-2xl text-blue-500 font-bold">{report.averageBlogRating}</div>
                 </div>
                 <div className="mb-8">
                     <div className="text-lg font-semibold text-gray-700 mb-2">Total New Users This Month:</div>
