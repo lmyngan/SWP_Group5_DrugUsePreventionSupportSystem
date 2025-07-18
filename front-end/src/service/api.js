@@ -423,6 +423,18 @@ export const getNotificationsByAccountId = async (accountId) => {
     }
 };
 
+//GET: Data Report
+export const getReportData = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Report/summary`, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+}
+
 // VNPay Payment Functions
 // GET: Create VNPay Payment URL
 export const createVNPayUrl = async (appointmentId) => {
@@ -448,4 +460,3 @@ export const handleVNPayCallback = async (queryParams) => {
         return { error: error.response?.data?.message || error.message };
     }
 };
-

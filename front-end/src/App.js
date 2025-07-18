@@ -96,13 +96,8 @@ const App = () => {
         return <ManageBlog />
       case "manage-account":
         return <Account />
-
-      case "manage-consultant":
-        return <ManageConsultant />
-
       case "report":
         return <Report />
-
 
       default:
         return <HomePage /> // Fallback về trang chủ
