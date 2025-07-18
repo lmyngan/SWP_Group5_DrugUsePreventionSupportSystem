@@ -99,6 +99,18 @@ export const addAccount = async (data) => {
     }
 }
 
+//PUT: Edit Profile Account
+export const editProfileAccount = async (accountId, data) => {
+    try {
+        const response = await axios.put(`${API_BASE_URL}/api/Account/${accountId}/profile`, data, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
 //PUT: Edit Account
 export const editAccount = async (accountId, data) => {
     try {

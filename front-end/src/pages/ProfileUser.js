@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react"
 import { Card, Container, Row, Col } from "react-bootstrap"
-import { getTestScore, getNotificationsByAccountId, markAsReadNotification } from "../service/api"
+import { getTestScore, getNotificationsByAccountId, markAsReadNotification, editProfileAccount } from "../service/api"
 import "../styles/ProfileUser.css"
 
 const ProfileUser = () => {
@@ -15,6 +15,8 @@ const ProfileUser = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const bellRef = useRef(null);
   const dropdownRef = useRef(null);
+  const [editMode, setEditMode] = useState(false);
+  const [editProfile, setEditProfile] = useState({ fullName: '', dateOfBirth: '', gender: '', address: '' });
 
   useEffect(() => {
     if (!showDropdown) return;
@@ -37,6 +39,13 @@ const ProfileUser = () => {
     if (storedUser) {
       const userData = JSON.parse(storedUser)
       setUser(userData)
+
+      setEditProfile({
+        fullName: userData.fullName || '',
+        dateOfBirth: userData.dateOfBirth || '',
+        gender: userData.gender || '',
+        address: userData.address || ''
+      });
 
       if (userData.accountId) {
         fetchTestResults(userData.accountId)
@@ -120,6 +129,45 @@ const ProfileUser = () => {
     localStorage.removeItem("profileImage")
   }
 
+  const handleEditProfile = () => {
+    setEditMode(true);
+  };
+
+  const handleCancelEdit = () => {
+    setEditMode(false);
+    if (user) {
+      setEditProfile({
+        fullName: user.fullName || '',
+        dateOfBirth: user.dateOfBirth || '',
+        gender: user.gender || '',
+        address: user.address || ''
+      });
+    }
+  };
+
+  const handleSaveProfile = async () => {
+    if (!user) return;
+    try {
+      const body = {
+        fullName: editProfile.fullName,
+        dateOfBirth: editProfile.dateOfBirth,
+        gender: editProfile.gender,
+        address: editProfile.address
+      };
+      const res = await editProfileAccount(user.accountId, body);
+      if (!res.error) {
+        const updatedUser = { ...user, ...body };
+        setUser(updatedUser);
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        setEditMode(false);
+      } else {
+        alert(res.error || 'Failed to update profile');
+      }
+    } catch (err) {
+      alert('Failed to update profile');
+    }
+  };
+
   if (!user) {
     return (
       <Container className="mt-5">
@@ -202,22 +250,72 @@ const ProfileUser = () => {
                 )}
               </div>
 
-              <Card.Text>
-                <span className="profile-label">Full Name:</span>
-                <span className="profile-value">{user.fullName}</span>
-              </Card.Text>
-              <Card.Text>
-                <span className="profile-label">Date of Birth:</span>
-                <span className="profile-value">{user.dateOfBirth}</span>
-              </Card.Text>
-              <Card.Text>
-                <span className="profile-label">Gender:</span>
-                <span className="profile-value">{user.gender}</span>
-              </Card.Text>
-              <Card.Text>
-                <span className="profile-label">Address:</span>
-                <span className="profile-value">{user.address}</span>
-              </Card.Text>
+              {editMode ? (
+                <>
+                  <Card.Text>
+                    <span className="profile-label">Full Name:</span>
+                    <input
+                      className="profile-value-input"
+                      value={editProfile.fullName}
+                      onChange={e => setEditProfile(p => ({ ...p, fullName: e.target.value }))}
+                    />
+                  </Card.Text>
+                  <Card.Text>
+                    <span className="profile-label">Date of Birth:</span>
+                    <input
+                      className="profile-value-input"
+                      type="date"
+                      value={editProfile.dateOfBirth ? editProfile.dateOfBirth.slice(0, 10) : ''}
+                      onChange={e => setEditProfile(p => ({ ...p, dateOfBirth: e.target.value }))}
+                    />
+                  </Card.Text>
+                  <Card.Text>
+                    <span className="profile-label">Gender:</span>
+                    <select
+                      className="profile-value-input"
+                      value={editProfile.gender}
+                      onChange={e => setEditProfile(p => ({ ...p, gender: e.target.value }))}
+                    >
+                      <option value="">Select</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </Card.Text>
+                  <Card.Text>
+                    <span className="profile-label">Address:</span>
+                    <input
+                      className="profile-value-input"
+                      value={editProfile.address}
+                      onChange={e => setEditProfile(p => ({ ...p, address: e.target.value }))}
+                    />
+                  </Card.Text>
+                  <div className="flex gap-2 mt-2">
+                    <button className="btn btn-success" onClick={handleSaveProfile} type="button">Save</button>
+                    <button className="btn btn-secondary" onClick={handleCancelEdit} type="button">Cancel</button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Card.Text>
+                    <span className="profile-label">Full Name:</span>
+                    <span className="profile-value">{user.fullName}</span>
+                  </Card.Text>
+                  <Card.Text>
+                    <span className="profile-label">Date of Birth:</span>
+                    <span className="profile-value">{user.dateOfBirth}</span>
+                  </Card.Text>
+                  <Card.Text>
+                    <span className="profile-label">Gender:</span>
+                    <span className="profile-value">{user.gender}</span>
+                  </Card.Text>
+                  <Card.Text>
+                    <span className="profile-label">Address:</span>
+                    <span className="profile-value">{user.address}</span>
+                  </Card.Text>
+                  <button className="btn btn-primary mt-2" onClick={handleEditProfile} type="button">Edit Profile</button>
+                </>
+              )}
 
               {loading && (
                 <Card.Text className="profile-score">
