@@ -27,7 +27,6 @@ const Mentor = () => {
         setScheduleErrors(prev => ({ ...prev, [consultantId]: data.error }));
         setSelectedSchedules(prev => ({ ...prev, [consultantId]: [] }));
       } else {
-        // Handle different data formats
         let schedules = [];
         if (Array.isArray(data)) {
           schedules = data;
@@ -59,7 +58,6 @@ const Mentor = () => {
   };
 
   const formatScheduleDisplay = (schedule) => {
-    // Format date
     let dateStr = "";
     if (schedule.availableDate) {
       const date = new Date(schedule.availableDate);
@@ -79,7 +77,6 @@ const Mentor = () => {
       });
     }
 
-    // Format time
     let timeStr = "";
     if (schedule.startTime && schedule.endTime) {
       timeStr = `${schedule.startTime} - ${schedule.endTime}`;
@@ -113,7 +110,6 @@ const Mentor = () => {
       return;
     }
 
-    // Lấy các trường cần thiết từ schedule
     const payload = {
       accountId: user.accountId,
       consultantId: consultantId,
@@ -188,7 +184,6 @@ const Mentor = () => {
     }
   };
 
-  // Tạo biến availableSchedules cho từng expert trước khi return
   const getAvailableSchedules = (expertId) => {
     return (selectedSchedules[expertId] || []).filter(
       schedule => schedule.status === 'available' || !schedule.status
@@ -222,7 +217,6 @@ const Mentor = () => {
     },
   ];
 
-  // Fetch consultant info khi vừa vào trang
   useEffect(() => {
     experts.forEach(expert => {
       getConsultantInfo(expert.id).then(info => {
@@ -237,7 +231,6 @@ const Mentor = () => {
 
   return (
     <div className="mentor-page">
-      {/* Page Header */}
       <section className="page-header">
         <div className="container">
           <h1>Meet Our Expert Consultants</h1>
@@ -245,7 +238,6 @@ const Mentor = () => {
         </div>
       </section>
 
-      {/* Experts Section */}
       <section className="experts-section">
         <div className="container">
           <div className="experts-grid">
@@ -255,7 +247,6 @@ const Mentor = () => {
                   <img src={expert.image || "/placeholder.svg"} alt={expert.name} />
                 </div>
                 <div className="expert-info">
-                  {/* Hiển thị thông tin consultant lấy từ API */}
                   {consultantInfos[expert.id] && (
                     <div className="expert-details">
                       <div className="detail-item">
@@ -290,14 +281,12 @@ const Mentor = () => {
                     </button>
                   </div>
 
-                  {/* Loading state */}
                   {loadingSchedules[expert.id] && (
                     <div style={{ marginTop: "1rem", textAlign: "center", color: "#666" }}>
                       Loading schedules...
                     </div>
                   )}
 
-                  {/* Error state */}
                   {scheduleErrors[expert.id] && (
                     <div style={{
                       marginTop: "1rem",
@@ -307,11 +296,10 @@ const Mentor = () => {
                       border: "1px solid #f5c6cb",
                       color: "#721c24"
                     }}>
-                      Error: {scheduleErrors[expert.id]}
+                      Error: You do not have permission to view consultation schedule.
                     </div>
                   )}
 
-                  {/* Hiển thị lịch nếu đã lấy */}
                   {selectedSchedules[expert.id] && Array.isArray(selectedSchedules[expert.id]) && selectedSchedules[expert.id].length > 0 && (
                     <div style={{ marginTop: "1rem" }}>
                       <label><strong>Available Schedules ({getAvailableSchedules(expert.id).length}):</strong></label>

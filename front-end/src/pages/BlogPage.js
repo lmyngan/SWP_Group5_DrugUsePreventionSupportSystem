@@ -21,6 +21,9 @@ const BlogPage = ({ navigateTo }) => {
     event_id: "",
     categories: 1,
   })
+  const [showRateModal, setShowRateModal] = useState(false);
+  const [rateBlogId, setRateBlogId] = useState(null);
+  const [selectedRate, setSelectedRate] = useState(0);
 
   const blogCategories = [
     { id: "all", name: "All Stories" },
@@ -33,8 +36,10 @@ const BlogPage = ({ navigateTo }) => {
     const params = new URLSearchParams(location.search);
     const eventId = params.get("event");
     if (eventId) {
-      setShowCreateForm(true);
+      setShowCreateForm(false);
       setNewBlog((prev) => ({ ...prev, event_id: eventId }));
+    } else {
+      setShowCreateForm(false);
     }
     // Fetch current user
     const storedUser = localStorage.getItem("user");
@@ -108,6 +113,15 @@ const BlogPage = ({ navigateTo }) => {
     // Simulate like update - ideally this would also be an API call
     setBlogs(blogs.map((blog) => (blog.blog_id === blogId ? { ...blog, likes: blog.likes + 1 } : blog)))
   }
+
+  // Dummy API call for rate (bạn có thể thay bằng API thực tế)
+  const handleRateBlog = async (blogId, rate) => {
+    // TODO: Call API to rate blog
+    setBlogs(blogs.map((blog) => (blog.blog_id === blogId ? { ...blog, rate } : blog)));
+    setShowRateModal(false);
+    setSelectedRate(0);
+    setRateBlogId(null);
+  };
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -408,18 +422,32 @@ const BlogPage = ({ navigateTo }) => {
                   <p className="blog-content">{blog.content}</p>
 
                   <div className="blog-actions">
-                    <button className="action-btn like-btn" onClick={() => handleLikeBlog(blog.blog_id)}>
-                      <span className="action-icon">👍</span>
-                      <span>{blog.likes}</span>
+                    <button className="action-btn rate-btn" onClick={() => { setShowRateModal(true); setRateBlogId(blog.blog_id); }}>
+                      <span className="action-icon">⭐</span>
+                      <span>Rate</span>
                     </button>
-                    <button className="action-btn comment-btn">
-                      <span className="action-icon">💬</span>
-                      <span>{blog.comments}</span>
-                    </button>
-                    <button className="action-btn share-btn">
-                      <span className="action-icon">📤</span>
-                      <span>Share</span>
-                    </button>
+                    {showRateModal && rateBlogId === blog.blog_id && (
+                      <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-white/30">
+                        <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-xs flex flex-col items-center">
+                          <h3 className="text-lg font-semibold mb-4">Rate this blog</h3>
+                          <div className="flex gap-2 mb-4">
+                            {[1, 2, 3, 4, 5].map(star => (
+                              <button
+                                key={star}
+                                className={`text-2xl ${selectedRate >= star ? 'text-yellow-400' : 'text-gray-400'}`}
+                                onClick={() => setSelectedRate(star)}
+                              >
+                                ★
+                              </button>
+                            ))}
+                          </div>
+                          <div className="flex gap-2">
+                            <button className="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600" onClick={() => handleRateBlog(blog.blog_id, selectedRate)} disabled={selectedRate === 0}>Submit</button>
+                            <button className="px-4 py-2 rounded bg-gray-300 text-gray-700 hover:bg-gray-400" onClick={() => { setShowRateModal(false); setSelectedRate(0); setRateBlogId(null); }}>Cancel</button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </article>
               ))}
