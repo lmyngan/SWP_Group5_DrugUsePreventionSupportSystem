@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import "../styles/BlogPage.css"
-import Footer from "../components/Footer" // Import the new Footer component
+
 import { blogData, addBlog } from "../service/api";
 import { useLocation } from "react-router-dom";
 
@@ -440,7 +440,7 @@ const BlogPage = ({ navigateTo }) => {
         </div>
       </section>
 
-      <Footer navigateTo={navigateTo} />
+      
     </div>
   )
 }

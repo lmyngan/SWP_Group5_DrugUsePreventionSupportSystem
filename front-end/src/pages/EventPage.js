@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/EventPage.css";
-import Footer from "../components/Footer";
+
 import { eventData, joinEvent } from "../service/api";
 
 const EventPage = ({ navigateTo }) => {
@@ -42,7 +42,6 @@ const EventPage = ({ navigateTo }) => {
 
     console.log("[DEBUG] user object:", user);
     console.log("[DEBUG] eventId:", eventId);
-
     const accountId = user.accountId !== undefined ? user.accountId : user.account_id;
     if (accountId === undefined) {
       alert("User object missing accountId/account_id. Please re-login.");
@@ -210,7 +209,7 @@ const EventPage = ({ navigateTo }) => {
         </div>
       </section>
 
-      <Footer  featuredEvents={featuredEvents} navigateTo={navigateTo} />
+     
     </div>
   )
 }
