@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getConsultantInfo } from "../service/api";
+import { getConsultantInfo, editConsultant } from "../service/api";
 import "../styles/Consultant.css";
 
 const Consultant = () => {
@@ -81,18 +81,33 @@ const Consultant = () => {
     setNewCert("");
   };
 
-  const handleSave = () => {
-    setProfile(editData);
-    setEditMode(false);
-    setNewCert("");
-    // TODO: Call API to update information here
+  const handleSave = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const consultantId = user?.consultantId || 1;
+      const response = await editConsultant(consultantId, editData);
+      if (response && !response.error) {
+        setProfile(editData);
+        setEditMode(false);
+        setNewCert("");
+        alert("Consultant information updated successfully!");
+      } else {
+        setError(response.error || "Failed to update consultant information");
+      }
+    } catch (err) {
+      setError("Failed to update consultant information");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const c = editData;
 
   return (
     <div className="consultant-container">
-       <h2 className="bg-blue-500 px-2 py-2 rounded-lg text-white text-2xl font-bold mb-4">Consultant Information</h2>
+      <h2 className="bg-blue-500 px-2 py-2 rounded-lg text-white text-2xl font-bold mb-4">Consultant Information</h2>
       <div className="info-field">
         <span className="info-label">Full Name:</span>
         {editMode ? (
@@ -168,7 +183,7 @@ const Consultant = () => {
           </ul>
           {editMode && (
             <div className="add-cert-field">
-              <input type="text" value={newCert} onChange={(e) => setNewCert(e.target.value)} placeholder="Add new certificate" className="form-input"/>
+              <input type="text" value={newCert} onChange={(e) => setNewCert(e.target.value)} placeholder="Add new certificate" className="form-input" />
               <button type="button" onClick={handleAddCert} className="add-cert-btn">
                 Add
               </button>
@@ -176,11 +191,11 @@ const Consultant = () => {
           )}
         </div>
       </div>
-      
+
       <div className="info-field">
         <span className="info-label">Consultation Price:</span>
         {editMode ? (
-          <input type="number" name="price" value={c.price} onChange={handleChange} className="form-input" min={0}/>
+          <input type="number" name="price" value={c.price} onChange={handleChange} className="form-input" min={0} />
         ) : (
           <span className="info-value price-display">{c.price} USD / session</span>
         )}
