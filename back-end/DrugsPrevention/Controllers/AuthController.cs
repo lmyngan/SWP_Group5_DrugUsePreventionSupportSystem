@@ -29,13 +29,11 @@ namespace DrugsPrevention_API.Controllers
             return Ok(new { message = "Đăng ký thành công!" });
         }
 
-        [HttpPost("login-google")]
-        public async Task<IActionResult> LoginWithGoogle([FromBody] ExternalLoginRequestDTO request)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO request)
         {
-            var token = await _authService.LoginWithGoogleAsync(request.IdToken);
-            if (token == null)
-                return Unauthorized(new { message = "Đăng nhập bằng Google thất bại!" });
-
+            var token = await _authService.LoginAsync(request.Accountname, request.Password);
+            if (token == null) return Unauthorized(new { message = "Sai tên đăng nhập hoặc mật khẩu." });
             return Ok(new { Token = token });
         }
 
@@ -44,6 +42,15 @@ namespace DrugsPrevention_API.Controllers
         {
             await _authService.MigratePlaintextPasswordsToHash();
             return Ok(new { message = "Hash mật khẩu thành công!" });
+        }
+        [HttpPost("login-google")]
+        public async Task<IActionResult> LoginWithGoogle([FromBody] ExternalLoginRequestDTO request)
+        {
+            var token = await _authService.LoginWithGoogleAsync(request.IdToken);
+            if (token == null)
+                return Unauthorized(new { message = "Đăng nhập bằng Google thất bại!" });
+
+            return Ok(new { Token = token });
         }
     }
 }
