@@ -1,8 +1,34 @@
 import "../styles/HomePage.css"
+import { useState, useEffect } from "react";
 
 const HomePage = ({ navigateTo }) => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  useEffect(() => {
+    const msg = localStorage.getItem('loginMessage');
+    if (msg) {
+      setModalMessage(msg);
+      setModalOpen(true);
+      localStorage.removeItem('loginMessage');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (modalOpen) {
+      const timer = setTimeout(() => setModalOpen(false), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [modalOpen]);
+
   return (
     <div className="homepage">
+      {modalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20 animate-fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-xs flex flex-col items-center border-2 border-green-400 animate-fade-in">
+            <div className="mb-2 text-center text-green-600 font-semibold text-lg">{modalMessage}</div>
+          </div>
+        </div>
+      )}
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-content">
@@ -72,16 +98,16 @@ const HomePage = ({ navigateTo }) => {
               <h3>Smart Search</h3>
               <p>Search content categorized by age groups: students, university students, parents, teachers</p>
             </div>
-          
+
             <div
-  className="feature-card"
-  style={{ cursor: "pointer" }}
-  onClick={() => navigateTo && navigateTo("calendar")}
->
-  <div className="feature-icon">📅</div>
-  <h3>Schedule Consultations</h3>
-  <p>Book online appointments with professional counselors</p>
-</div>
+              className="feature-card"
+              style={{ cursor: "pointer" }}
+              onClick={() => navigateTo && navigateTo("calendar")}
+            >
+              <div className="feature-icon">📅</div>
+              <h3>Schedule Consultations</h3>
+              <p>Book online appointments with professional counselors</p>
+            </div>
             <div className="feature-card">
               <div className="feature-icon">👨‍⚕️</div>
               <h3>Specialist Management</h3>

@@ -77,10 +77,8 @@ const BookAppointment = () => {
                 return "text-green-600";
             case "cancelled":
                 return "text-red-600";
-            case "pending":
-                return "text-yellow-600";
             default:
-                return "text-gray-600";
+                return "text-yellow-600";
         }
     };
 

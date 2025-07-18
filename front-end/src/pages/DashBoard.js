@@ -6,11 +6,29 @@ import { useState, useEffect } from "react";
 const DashBoard = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [user, setUser] = useState(null);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
 
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
         if (storedUser) setUser(JSON.parse(storedUser));
     }, []);
+
+    useEffect(() => {
+        const msg = localStorage.getItem('loginMessage');
+        if (msg) {
+            setModalMessage(msg);
+            setModalOpen(true);
+            localStorage.removeItem('loginMessage');
+        }
+    }, []);
+
+    useEffect(() => {
+        if (modalOpen) {
+            const timer = setTimeout(() => setModalOpen(false), 1000);
+            return () => clearTimeout(timer);
+        }
+    }, [modalOpen]);
 
     const data = [
         { name: 'Mon', visits: 120 },
@@ -185,6 +203,13 @@ const DashBoard = () => {
                     </div>
                 </div>
             </div>
+            {modalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20">
+                    <div className="bg-white rounded-lg shadow-lg p-4 w-full max-w-xs flex flex-col items-center border border-blue-200 animate-fade-in">
+                        <div className="mb-4 text-center text-green-500">{modalMessage}</div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
