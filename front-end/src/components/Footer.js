@@ -24,22 +24,23 @@ const Footer = () => {
             <h3>PARTNERS & COOPERATION</h3>
             <ul className="footer-links">
               <li>
-                <a href="/">Ministry of Health</a>
+                <a href="https://www.ladliusa.org/initiatives/mental-health-for-drug-prevention?gad_source=1&gad_campaignid=22693788626&gbraid=0AAAAA9r06PnDkzMkBm-VU1KSYKKXPsZCi&gclid=CjwKCAjw4efDBhATEiwAaDBpblx8iluhr-HAlTCn7ib8eVc8o6qbZJRsba3ErHJxNS_97923KGK0vhoCs8AQAvD_BwE">
+                Mental Health for Drug Prevention</a>
               </li>
               <li>
-                <a href="/">Ministry of Education and Training</a>
+                <a href="https://moet.gov.vn/Pages/home.aspx">Ministry of Education and Training</a>
               </li>
               <li>
-                <a href="/">Social Evils Prevention Center</a>
+                <a href="https://www.vietnam.vn/en/hieu-qua-cac-giai-phap-phong-ngua-toi-pham-te-nan-xa-hoi">Social Evils Prevention Center</a>
               </li>
               <li>
-                <a href="/">Vietnam Red Cross Society</a>
+                <a href="https://baohiemxahoi.gov.vn/tintuc/Pages/Phong-chong-va-cai-nghien-ma-tuy.aspx?CateID=114&ItemID=8371">Bao Hiem Xa Hoi</a>
               </li>
               <li>
-                <a href="/">Medical and Pharmaceutical Universities</a>
+                <a href="https://bocongan.gov.vn/tin-tuc-su-kien/chi-dao-dieu-hanh/thang-hanh-dong-phong-chong-ma-tuy-2025-chung-mot-quyet-tam---vi-cong-dong-khong-ma-tuy-d24-t45322.html">Cong Thong Tin Dien Tu Bo Cong An</a>
               </li>
               <li>
-                <a href="/">World Health Organization (WHO)</a>
+                <a href="https://www.who.int/">World Health Organization (WHO)</a>
               </li>
             </ul>
           </div>
