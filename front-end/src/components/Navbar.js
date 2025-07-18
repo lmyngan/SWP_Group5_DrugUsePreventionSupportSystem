@@ -90,12 +90,10 @@ const Navbar = ({ navigateTo, currentPage }) => {
           </li>
         </ul>
 
-        {/* Right Section */}
         <div className="right-section">
-          {/* Search Box */}
+
           <input type="text" className="search-box" placeholder="Search..." />
 
-          {/* Auth Section */}
           <div className="auth-section">
             {isLoggedIn ? (
               <div className="user-menu">
@@ -106,9 +104,6 @@ const Navbar = ({ navigateTo, currentPage }) => {
                 <div className="user-dropdown">
                   <button className="dropdown-item" onClick={() => handleNavigation("profile")}>
                     Profile
-                  </button>
-                  <button className="dropdown-item" onClick={() => handleNavigation("addpost")}>
-                    Write Post
                   </button>
                   <button className="dropdown-item" onClick={handleLogout}>
                     Logout

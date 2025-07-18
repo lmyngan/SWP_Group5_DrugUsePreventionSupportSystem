@@ -30,38 +30,38 @@ const EventPage = ({ navigateTo }) => {
   const filteredEvents = selectedType === "all" ? events : events.filter((event) => event.type === selectedType)
 
   const handleJoinEvent = async (eventId) => {
-    if (!user) {
-      alert("Please login to join events");
-      return
-    }
-
-    console.log("[DEBUG] user object:", user);
-    console.log("[DEBUG] eventId:", eventId);
-
-    const accountId = user.accountId !== undefined ? user.accountId : user.account_id;
-    if (accountId === undefined) {
-      alert("User object missing accountId/account_id. Please re-login.");
-      return;
-    }
-
-    try {
-      const response = await joinEvent({
-        accountId: accountId,
-        eventId: eventId,
-        status: "joined",
-        feedback: "Looking forward to it."
-      });
-
-      if (!response.error) {
-        alert("Successfully joined the event!")
-      } else {
-        alert(`Failed to join event: ${response.error}`)
-      }
-    } catch (error) {
-      console.error("Error joining event:", error)
-      alert("An error occurred while joining the event.")
-    }
+  if (!user) {
+    alert("Please login to join events");
+    return;
   }
+
+  const accountId = user.accountId !== undefined ? user.accountId : user.account_id;
+  if (accountId === undefined) {
+    alert("User object missing accountId/account_id. Please re-login.");
+    return;
+  }
+
+  try {
+    // Gọi API lưu người tham gia
+    const response = await joinEvent({
+      accountId: accountId,
+      eventId: eventId,
+      status: "joined",
+      feedback: "Looking forward to it."
+    });
+
+    if (!response.error) {
+      alert("Successfully joined the event!");
+      // Nếu muốn cập nhật lại danh sách người tham gia, gọi lại fetchEvents() hoặc cập nhật state events tại đây
+      // await fetchEvents();
+    } else {
+      alert(`Failed to join event: ${response.error}`);
+    }
+  } catch (error) {
+    console.error("Error joining event:", error);
+    alert("An error occurred while joining the event.");
+  }
+};
 
   const handleShareExperience = (eventId) => {
     navigate(`/blogs?event=${eventId}`);
@@ -123,46 +123,7 @@ const EventPage = ({ navigateTo }) => {
         </div>
       </section>
 
-      {/* Event Categories Section */}
-      <section className="overview-section">
-        <div className="container">
-          <h2>Event Categories</h2>
-          <div className="overview-grid">
-            <div className="overview-card">
-              <div className="overview-icon">🎯</div>
-              <h3>Awareness Events</h3>
-              <p>Community outreach programs to raise awareness about drug prevention and healthy living.</p>
-              <button className="overview-link" onClick={() => setSelectedType("Awareness")}>
-                View Events
-              </button>
-            </div>
-            <div className="overview-card">
-              <div className="overview-icon">📚</div>
-              <h3>Educational Workshops</h3>
-              <p>Interactive learning sessions for youth, parents, and professionals about prevention strategies.</p>
-              <button className="overview-link" onClick={() => setSelectedType("Education")}>
-                Join Workshops
-              </button>
-            </div>
-            <div className="overview-card">
-              <div className="overview-icon">🤝</div>
-              <h3>Support Groups</h3>
-              <p>Safe spaces for individuals and families to share experiences and receive mutual support.</p>
-              <button className="overview-link" onClick={() => setSelectedType("Support")}>
-                Find Support
-              </button>
-            </div>
-            <div className="overview-card">
-              <div className="overview-icon">✍️</div>
-              <h3>Share Stories</h3>
-              <p>Share your journey and experiences to inspire and help others in the community.</p>
-              <button className="overview-link" onClick={() => navigateTo && navigateTo("blogs")}>
-                Read Stories
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+     
 
       {/* Event Filter Section */}
       <section className="filter-section">

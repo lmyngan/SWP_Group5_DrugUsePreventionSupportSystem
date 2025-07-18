@@ -108,6 +108,12 @@ const Consultant = () => {
   return (
     <div className="consultant-container">
       <h2 className="bg-blue-500 px-2 py-2 rounded-lg text-white text-2xl font-bold mb-4">Consultant Information</h2>
+
+      <div className="info-field">
+        <span className="info-label">Account Name:</span>
+        <span className="info-value">{c.accountname}</span>
+      </div>
+
       <div className="info-field">
         <span className="info-label">Full Name:</span>
         {editMode ? (
@@ -115,11 +121,6 @@ const Consultant = () => {
         ) : (
           <span className="info-value">{c.fullName}</span>
         )}
-      </div>
-
-      <div className="info-field">
-        <span className="info-label">Account Name:</span>
-        <span className="info-value">{c.accountname}</span>
       </div>
 
       <div className="info-field">
@@ -137,7 +138,6 @@ const Consultant = () => {
           <select name="gender" value={c.gender} onChange={handleChange} className="form-input">
             <option value="Male">Male</option>
             <option value="Female">Female</option>
-            <option value="Other">Other</option>
           </select>
         ) : (
           <span className="info-value">{c.gender}</span>
