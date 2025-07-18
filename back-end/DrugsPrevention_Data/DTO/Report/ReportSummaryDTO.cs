@@ -10,7 +10,6 @@ namespace DrugsPrevention_Data.DTO.Report
     {
         public decimal TotalConsultingRevenue { get; set; }
         public int TotalEventFeedbackCount { get; set; }
-        public double AverageEventRating { get; set; }
         public int TotalNewUsersThisMonth { get; set; }
         public int TotalAppointmentsCompleted { get; set; }
     }
