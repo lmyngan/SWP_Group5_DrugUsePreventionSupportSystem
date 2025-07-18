@@ -31,7 +31,7 @@ const Report = () => {
             ["", ""],
             ["Total Consulting Revenue:", `$${report.totalConsultingRevenue}`],
             ["Total Event Feedback Count:", `${report.totalEventFeedbackCount}`],
-            ["Average Event Rating:", `${report.averageEventRating}`],
+            ["Average Event Rating:", `${Number(report.averageBlogRating).toFixed(2)}`],
             ["Total New Users This Month:", `${report.totalNewUsersThisMonth}`],
             ["Total Appointments Completed:", `${report.totalAppointmentsCompleted}`],
         ];
@@ -68,7 +68,7 @@ const Report = () => {
                 </div>
                 <div className="mb-8">
                     <div className="text-lg font-semibold text-gray-700 mb-2">Average Event Rating:</div>
-                    <div className="text-2xl text-blue-500 font-bold">{report.averageBlogRating}</div>
+                    <div className="text-2xl text-blue-500 font-bold">{Number(report.averageBlogRating).toFixed(2)}</div>
                 </div>
                 <div className="mb-8">
                     <div className="text-lg font-semibold text-gray-700 mb-2">Total New Users This Month:</div>

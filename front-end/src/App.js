@@ -15,7 +15,6 @@ import Mentor from "./pages/Mentor"
 import Event from "./pages/EventPage"
 import Login from "./pages/LoginPage"
 import Register from "./pages/RegisterPage"
-import ForgotPassword from "./pages/ForgotPassword"
 import ProfileUser from "./pages/ProfileUser"
 import Survey from "./pages/Survey"
 import DashBoard from "./pages/DashBoard"
@@ -29,6 +28,7 @@ import Report from "./pages/Report"
 import CalendarPage from "./pages/CalendarPage"
 
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import ManageSchedule from "./pages/ManageSchedule"
 
 
 
@@ -83,8 +83,6 @@ const App = () => {
         return <Login />
       case "register":
         return <Register />
-      case "forgot-password":
-        return <ForgotPassword />
       case "calendar":
         return <CalendarPage />
       case "profile":
@@ -93,6 +91,8 @@ const App = () => {
         return <ManageConsultant />
       case "manage-bookappointment":
         return <BookAppointment />
+      case "manage-schedule":
+        return <ManageSchedule />
       case "manage-event":
         return <ManageEvent />
       case "manage-blog":
