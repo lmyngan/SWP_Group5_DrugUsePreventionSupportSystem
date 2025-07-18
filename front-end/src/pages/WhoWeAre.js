@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, Users, GraduationCap, Heart, ArrowRight, Mail, Shield, FileText, Home } from 'lucide-react';
+import { CheckCircle, Users, GraduationCap, Heart, ArrowRight } from 'lucide-react';
 import '../styles/WhoWeAre.css';
 import Footer from "../components/Footer"
 
@@ -280,7 +280,7 @@ const WhoWeAre = () => {
         </section>
       </main>
 
-     <Footer />
+      <Footer />
     </div>
   );
 };

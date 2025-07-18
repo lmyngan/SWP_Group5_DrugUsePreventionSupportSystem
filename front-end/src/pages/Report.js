@@ -56,12 +56,6 @@ const Report = () => {
 
     return (
         <div className="container mx-auto p-6">
-            <button
-                className="mb-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                onClick={handleExportExcel}
-            >
-                Export to Excel
-            </button>
             <div className="bg-white rounded-lg shadow-lg p-8">
                 <h2 className="bg-blue-500 px-2 py-2 rounded-lg text-white text-2xl font-bold mb-4">Report Management</h2>
                 <div className="mb-8">
@@ -84,7 +78,13 @@ const Report = () => {
                     <div className="text-lg font-semibold text-gray-700 mb-2">Total Appointments Completed:</div>
                     <div className="text-2xl text-blue-500 font-bold">{report.totalAppointmentsCompleted} Appointments</div>
                 </div>
-
+                <div className="flex justify-end">
+                    <button
+                        className="mb-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+                        onClick={handleExportExcel}>
+                        Export to Excel
+                    </button>
+                </div>
             </div>
         </div>
     );
