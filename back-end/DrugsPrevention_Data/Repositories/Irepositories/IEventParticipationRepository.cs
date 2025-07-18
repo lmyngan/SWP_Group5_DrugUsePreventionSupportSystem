@@ -11,6 +11,8 @@ namespace DrugsPrevention_Data.Repositories.Irepositories
     public interface IEventParticipationRepository
     {
         Task<EventParticipation> AddParticipationAsync(EventParticipation participation);
+        Task<IEnumerable<EventParticipation>> GetByAccountIdAsync(int accountId);
+        Task<EventParticipation> GetByAccountAndEventAsync(int accountId, int eventId);
         Task SaveChangesAsync();
     }
 }

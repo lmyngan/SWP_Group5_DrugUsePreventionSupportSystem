@@ -10,9 +10,6 @@ namespace DrugsPrevention_Service.Service.Iservice
 {
     public interface IAccountService
     {
-        Task<List<Accounts>> GetAllAccountsAsync();
-        Task<Accounts> GetAccountByIdAsync(int accountId);
-        Task<Accounts> CreateAccountAsync(Accounts account);
         Task<Accounts> UpdateAccountAsync(int accountId, UpdateAccountRequestDTO request);
         Task<AccountResponseDTO> GetUserByIdAsync(int accountId);
         Task<bool> DeleteAccountAsync(int accountId);
