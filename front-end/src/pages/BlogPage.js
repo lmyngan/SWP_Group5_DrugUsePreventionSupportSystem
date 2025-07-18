@@ -36,25 +36,25 @@ const BlogPage = ({ navigateTo }) => {
       setShowCreateForm(true);
       setNewBlog((prev) => ({ ...prev, event_id: eventId }));
     }
-  // Fetch current user
-  const storedUser = localStorage.getItem("user");
-  if (storedUser) setUser(JSON.parse(storedUser));
+    // Fetch current user
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) setUser(JSON.parse(storedUser));
 
-  // Fetch blogs
-  const fetchBlogs = async () => {
-    setLoading(true);
-    const data = await blogData();
-    setBlogs(Array.isArray(data) ? data : []);
-    setLoading(false);
-  };
-  fetchBlogs();
+    // Fetch blogs
+    const fetchBlogs = async () => {
+      setLoading(true);
+      const data = await blogData();
+      setBlogs(Array.isArray(data) ? data : []);
+      setLoading(false);
+    };
+    fetchBlogs();
 
-  // Fetch events (nếu cần)
-  fetch("/api/events")
-    .then((res) => res.json())
-    .then((data) => setEvents(data))
-    .catch((error) => console.error("Failed to fetch events for blog page:", error));
-}, [location.search]);
+    // Fetch events (nếu cần)
+    fetch("/api/events")
+      .then((res) => res.json())
+      .then((data) => setEvents(data))
+      .catch((error) => console.error("Failed to fetch events for blog page:", error));
+  }, [location.search]);
 
   const filteredBlogs = blogs.filter((blog) => {
     const categoryMatch = selectedCategory === "all" || blog.categories === selectedCategory
@@ -63,42 +63,42 @@ const BlogPage = ({ navigateTo }) => {
   })
 
   const handleCreateBlog = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!user) {
-    alert("Please login to share your experience");
-    return;
-  }
-
-  if (!newBlog.title || !newBlog.content || !newBlog.event_id) {
-    alert("Please fill in all required fields");
-    return;
-  }
-
-  try {
-    const response = await addBlog({
-      authorId: user.account_id,
-      categories: Number.parseInt(newBlog.categories),
-      title: newBlog.title,
-      content: newBlog.content,
-      event_id: Number.parseInt(newBlog.event_id),
-    });
-
-    if (!response.error) {
-      // Lấy lại danh sách blogs mới nhất
-      const data = await blogData();
-      setBlogs(Array.isArray(data) ? data : []);
-      setNewBlog({ title: "", content: "", event_id: "", categories: 1 });
-      setShowCreateForm(false);
-      alert("Blog shared successfully!");
-    } else {
-      alert(`Failed to share experience: ${response.error}`);
+    if (!user) {
+      alert("Please login to share your experience");
+      return;
     }
-  } catch (error) {
-    console.error("Error creating blog:", error);
-    alert("An error occurred while sharing your experience.");
-  }
-};
+
+    if (!newBlog.title || !newBlog.content || !newBlog.event_id) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    try {
+      const response = await addBlog({
+        authorId: user.account_id,
+        categories: Number.parseInt(newBlog.categories),
+        title: newBlog.title,
+        content: newBlog.content,
+        event_id: Number.parseInt(newBlog.event_id),
+      });
+
+      if (!response.error) {
+        // Lấy lại danh sách blogs mới nhất
+        const data = await blogData();
+        setBlogs(Array.isArray(data) ? data : []);
+        setNewBlog({ title: "", content: "", event_id: "", categories: 1 });
+        setShowCreateForm(false);
+        alert("Blog shared successfully!");
+      } else {
+        alert(`Failed to share experience: ${response.error}`);
+      }
+    } catch (error) {
+      console.error("Error creating blog:", error);
+      alert("An error occurred while sharing your experience.");
+    }
+  };
 
   const handleLikeBlog = (blogId) => {
     if (!user) {
@@ -179,23 +179,23 @@ const BlogPage = ({ navigateTo }) => {
       <section className="hero-section">
         <div className="hero-content">
           <div className="hero-left">
-          <h1>Share Your Recovery Journey</h1>
-          <p>
-            Your story matters. Share your experiences, inspire others, and build connections within our supportive
-            community of recovery and prevention.
-          </p>
-          <div className="hero-buttons">
-            <button
-              className="btn-primary"
-              onClick={() => (user ? setShowCreateForm(true) : alert("Please login to share your experience"))}
-            >
-              Share Your Story
-            </button>
-            <button className="btn-secondary" onClick={() => document.getElementById("blogs-section").scrollIntoView()}>
-              Read Experiences
-            </button>
+            <h1>Share Your Recovery Journey</h1>
+            <p>
+              Your story matters. Share your experiences, inspire others, and build connections within our supportive
+              community of recovery and prevention.
+            </p>
+            <div className="hero-buttons">
+              <button
+                className="btn-primary"
+                onClick={() => (user ? setShowCreateForm(true) : alert("Please login to share your experience"))}
+              >
+                Share Your Story
+              </button>
+              <button className="btn-secondary" onClick={() => document.getElementById("blogs-section").scrollIntoView()}>
+                Read Experiences
+              </button>
 
-          </div>
+            </div>
           </div>
         </div>
         <div className="hero-image">
@@ -380,7 +380,7 @@ const BlogPage = ({ navigateTo }) => {
                   <div className="blog-header">
                     <div className="blog-meta">
                       <span className={`blog-category ${getCategoryColor(blog.categories)}`}>{blog.category_name}</span>
-                      <span className="blog-date">{formatDate(blog.created_at)}</span>
+                      <span className="blog-date">{formatDate(blog.createdAt)}</span>
                     </div>
                     <div className="blog-rating">
                       {blog.rate > 0 && (

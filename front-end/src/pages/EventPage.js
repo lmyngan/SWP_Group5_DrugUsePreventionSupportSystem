@@ -1,23 +1,20 @@
-"use client"
-
-import { useState, useEffect } from "react"
-import "../styles/EventPage.css"
-import Footer from "../components/Footer" // Import the new Footer component
-import { eventData, addEvent, editEvent, deleteEvent } from "../service/api";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "../styles/EventPage.css";
+import Footer from "../components/Footer";
+import { eventData, joinEvent } from "../service/api";
 
 const EventPage = ({ navigateTo }) => {
   const navigate = useNavigate();
-  const [events, setEvents] = useState([])
-  const [user, setUser] = useState(null) // State for current user
-  const [selectedType, setSelectedType] = useState("all")
-  const [loading, setLoading] = useState(true)
+  const [events, setEvents] = useState([]);
+  const [user, setUser] = useState(null);
+  const [selectedType, setSelectedType] = useState("all");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Lấy user từ localStorage (nếu cần)
     const storedUser = localStorage.getItem("user");
     if (storedUser) setUser(JSON.parse(storedUser));
 
-    // Lấy danh sách sự kiện từ API
     const fetchEvents = async () => {
       setLoading(true);
       const data = await eventData();
@@ -34,16 +31,13 @@ const EventPage = ({ navigateTo }) => {
 
   const handleJoinEvent = async (eventId) => {
     if (!user) {
-      alert("Please login to join events")
-      // navigateTo('login'); // Example: redirect to login page
+      alert("Please login to join events");
       return
     }
 
-    // Debug log
     console.log("[DEBUG] user object:", user);
     console.log("[DEBUG] eventId:", eventId);
 
-    // Try both possible accountId fields
     const accountId = user.accountId !== undefined ? user.accountId : user.account_id;
     if (accountId === undefined) {
       alert("User object missing accountId/account_id. Please re-login.");
@@ -85,13 +79,13 @@ const EventPage = ({ navigateTo }) => {
   const getTypeColor = (type) => {
     switch (type) {
       case "Awareness":
-        return "type-awareness"
+        return "type-awareness";
       case "Education":
-        return "type-education"
+        return "type-education";
       case "Support":
-        return "type-support"
+        return "type-support";
       default:
-        return "type-default"
+        return "type-default";
     }
   }
 
