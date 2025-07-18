@@ -268,7 +268,7 @@ const EventPage = ({ navigateTo }) => {
             <button className="btn-primary" onClick={() => setSelectedType("all")}>
               View All Events
             </button>
-            <button className="btn-outline" onClick={() => navigateTo && navigateTo("blogs")}>
+            <button className="btn-outline" onClick={() => navigate("blogs")}>
               Share Your Story
             </button>
           </div>

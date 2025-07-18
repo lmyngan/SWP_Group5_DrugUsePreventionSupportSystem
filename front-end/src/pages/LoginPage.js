@@ -19,7 +19,6 @@ const LoginPage = () => {
 
       if (response?.token) {
         localStorage.setItem('token', response.token);
-        const decoded = jwtDecode(response.token);
         const user = await getUserById(response.accountId);
         localStorage.setItem('user', JSON.stringify(user));
 
