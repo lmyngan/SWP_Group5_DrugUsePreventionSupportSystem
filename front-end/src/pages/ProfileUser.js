@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react"
 import { Card, Container, Row, Col } from "react-bootstrap"
-import { getTestScore, getNotificationsByAccountId, markNotificationAsRead } from "../service/api"
+import { getTestScore, getNotificationsByAccountId, markAsReadNotification } from "../service/api"
 import "../styles/ProfileUser.css"
 
 const ProfileUser = () => {
@@ -16,7 +16,6 @@ const ProfileUser = () => {
   const bellRef = useRef(null);
   const dropdownRef = useRef(null);
 
-  // Đóng dropdown khi click ra ngoài
   useEffect(() => {
     if (!showDropdown) return;
     function handleClickOutside(event) {
@@ -39,14 +38,12 @@ const ProfileUser = () => {
       const userData = JSON.parse(storedUser)
       setUser(userData)
 
-      // Fetch test results if user has accountId
       if (userData.accountId) {
         fetchTestResults(userData.accountId)
         fetchNotifications(userData.accountId)
       }
     }
 
-    // Load saved profile image
     const savedImage = localStorage.getItem("profileImage")
     if (savedImage) {
       setProfileImage(savedImage)
@@ -62,10 +59,8 @@ const ProfileUser = () => {
       if (response.error) {
         setError(response.error)
       } else {
-        // Get the latest test result score
         const results = Array.isArray(response) ? response : [response]
         if (results.length > 0) {
-          // Get the most recent result (assuming results are ordered by date)
           const latestResult = results[0]
           setTestScore(latestResult.score)
         }
@@ -93,12 +88,16 @@ const ProfileUser = () => {
   };
 
   const handleNotificationClick = async (notificationId) => {
-    await markNotificationAsRead(notificationId);
-    setNotifications((prev) =>
-      prev.map((n) =>
-        n.notificationId === notificationId ? { ...n, isRead: true, status: "read" } : n
-      )
-    );
+    try {
+      await markAsReadNotification(notificationId);
+      setNotifications((prev) =>
+        prev.map((n) =>
+          n.notificationId === notificationId ? { ...n, isRead: true, status: "Read" } : n
+        )
+      );
+    } catch (error) {
+      // handle error if needed
+    }
   };
 
   const handleImageUpload = (event) => {
@@ -133,11 +132,9 @@ const ProfileUser = () => {
     <Container className="profile-container">
       <Row className="justify-content-center">
         <Col xs={12} md={10} lg={8}>
-          {/* Profile Card */}
           <Card className="profile-card">
             <div className="profile-header">User Profile</div>
             <Card.Body className="profile-body">
-              {/* Profile Image Upload Section */}
               <div className="profile-image-section">
                 <div className="profile-avatar">
                   {profileImage ? (
@@ -165,7 +162,6 @@ const ProfileUser = () => {
                 </div>
               </div>
 
-              {/* Notification Section */}
               <div style={{ position: 'absolute', top: 18, right: 24, zIndex: 10 }}>
                 <button
                   className="notification-btn"
@@ -175,9 +171,9 @@ const ProfileUser = () => {
                   ref={bellRef}
                 >
                   <span role="img" aria-label="notification">🔔</span>
-                  {notifications.filter(n => !n.isRead).length > 0 && (
+                  {notifications.filter(n => !n.isRead && n.status !== 'Read').length > 0 && (
                     <span className="notification-badge">
-                      {notifications.filter(n => !n.isRead).length}
+                      {notifications.filter(n => !n.isRead && n.status !== 'Read').length}
                     </span>
                   )}
                 </button>
@@ -192,9 +188,9 @@ const ProfileUser = () => {
                         {notifications.map((n, idx) => (
                           <li
                             key={n.notificationId || idx}
-                            className={`notification-item${n.isRead ? " read" : ""}`}
-                            style={{ width: '100%', maxWidth: 400, justifyContent: 'center', cursor: n.isRead ? 'default' : 'pointer' }}
-                            onClick={() => !n.isRead && handleNotificationClick(n.notificationId)}
+                            className={`notification-item${n.isRead || n.status === 'Read' ? " read" : ""}`}
+                            style={{ width: '100%', maxWidth: 400, justifyContent: 'center', cursor: (n.isRead || n.status === 'Read') ? 'default' : 'pointer' }}
+                            onClick={() => (!n.isRead && n.status !== 'Read') && handleNotificationClick(n.notificationId)}
                           >
                             <span className="notification-icon" role="img" aria-label="notification">🔔</span>
                             <span className="notification-message" style={{ textAlign: 'center', width: '100%' }}>{n.message}</span>
@@ -223,7 +219,6 @@ const ProfileUser = () => {
                 <span className="profile-value">{user.address}</span>
               </Card.Text>
 
-              {/* Test Score Section */}
               {loading && (
                 <Card.Text className="profile-score">
                   <span className="profile-label">Survey Total Score:</span>
