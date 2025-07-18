@@ -9,7 +9,7 @@ using DrugsPrevention_Data.Repositories.Irepositories;
 using DrugsPrevention_Service.Service.Iservice;
 using System.Threading.Tasks;
 
-namespace DrugsPrevention_Service.Service.Implementations
+namespace DrugsPrevention_Service.Service
 {
     public class EventParticipationService : IEventParticipationService
     {

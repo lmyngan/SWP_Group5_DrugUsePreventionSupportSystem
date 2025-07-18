@@ -1,6 +1,5 @@
 ﻿using DrugsPrevention_Data.DTO.Report;
 using DrugsPrevention_Data.Repositories.Irepositories;
-using DrugsPrevention_Data.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;

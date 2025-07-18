@@ -3,7 +3,7 @@ using DrugsPrevention_Data.Repositories.Irepositories;
 using DrugsPrevention_Service.Service.Iservice;
 using System.Threading.Tasks;
 
-namespace DrugsPrevention_Service.Services
+namespace DrugsPrevention_Service.Service
 {
     public class ReportService : IReportService
     {
