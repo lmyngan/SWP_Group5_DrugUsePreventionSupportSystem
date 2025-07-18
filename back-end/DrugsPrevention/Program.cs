@@ -43,7 +43,7 @@ namespace DrugsPrevention
                     });
             });
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            // 🔥 AUTHENTICATION – Đặt chỗ này nè
+            // 🔥 AUTHENTICATION
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
