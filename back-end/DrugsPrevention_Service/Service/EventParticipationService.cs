@@ -33,5 +33,22 @@ namespace DrugsPrevention_Service.Service.Implementations
             await _repo.AddParticipationAsync(participation);
             return true;
         }
+
+        public async Task<IEnumerable<EventParticipation>> GetByAccountIdAsync(int accountId)
+        {
+            return await _repo.GetByAccountIdAsync(accountId);
+        }
+
+        public async Task<bool> UpdateParticipationAsync(UpdateEventParticipationDTO dto)
+        {
+            var participation = await _repo.GetByAccountAndEventAsync(dto.AccountId, dto.EventId);
+            if (participation == null) return false;
+
+            participation.Status = dto.Status;
+            participation.Feedback = dto.Feedback;
+
+            await _repo.SaveChangesAsync();
+            return true;
+        }
     }
 }

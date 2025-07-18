@@ -3,9 +3,11 @@
 import { useState, useEffect } from "react"
 import "../styles/EventPage.css"
 import Footer from "../components/Footer" // Import the new Footer component
-import { eventData, addEvent, editEvent, deleteEvent } from "../service/api";
+import { eventData} from "../service/api";
+import { useNavigate } from "react-router-dom";
 
 const EventPage = ({ navigateTo }) => {
+  const navigate = useNavigate();
   const [events, setEvents] = useState([])
   const [user, setUser] = useState(null) // State for current user
   const [selectedType, setSelectedType] = useState("all")
@@ -65,11 +67,9 @@ const EventPage = ({ navigateTo }) => {
     }
   }
 
-  const handleShareExperience = (eventId) => {
-    if (navigateTo) {
-      navigateTo(`blogs?event=${eventId}`)
-    }
-  }
+const handleShareExperience = (eventId) => {
+  navigate(`/blogs?event=${eventId}`);
+};
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -123,7 +123,7 @@ const EventPage = ({ navigateTo }) => {
           </div>
         </div>
         <div className="hero-image">
-          <img src="/images/event-blogs.png" alt="Community Events" />
+          <img src="/images/event.jpg" alt="Community Events" />
         </div>
       </section>
 

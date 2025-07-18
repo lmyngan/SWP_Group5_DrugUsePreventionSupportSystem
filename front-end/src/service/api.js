@@ -327,6 +327,8 @@ export const deleteEvent = async (eventId) => {
     }
 }
 
+
+
 //GET: Blog
 export const blogData = async () => {
     try {
