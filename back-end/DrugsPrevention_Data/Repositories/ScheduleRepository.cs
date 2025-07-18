@@ -1,10 +1,7 @@
 ﻿using DrugsPrevention_Data.Data;
 using DrugsPrevention_Data.Repositories.Irepositories;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DrugsPrevention_Data.Repositories
@@ -12,17 +9,27 @@ namespace DrugsPrevention_Data.Repositories
     public class ScheduleRepository : IScheduleRepository
     {
         private readonly DrugsPrevention_DBContext _context;
+
         public ScheduleRepository(DrugsPrevention_DBContext context)
         {
             _context = context;
         }
 
         public async Task<IEnumerable<Schedule>> GetAllAsync()
-            => await _context.Schedules.Include(s => s.Consultant).ToListAsync();
+        {
+            return await _context.Schedules
+                .Include(s => s.Consultant)
+                    .ThenInclude(c => c.Account)
+                .ToListAsync();
+        }
 
         public async Task<Schedule?> GetByIdAsync(int id)
-            => await _context.Schedules.Include(s => s.Consultant)
-                                       .FirstOrDefaultAsync(s => s.ScheduleId == id);
+        {
+            return await _context.Schedules
+                .Include(s => s.Consultant)
+                    .ThenInclude(c => c.Account)
+                .FirstOrDefaultAsync(s => s.ScheduleId == id);
+        }
 
         public async Task AddAsync(Schedule schedule)
         {
@@ -43,6 +50,15 @@ namespace DrugsPrevention_Data.Repositories
         }
 
         public async Task<Consultant?> GetConsultantByAccountNameAsync(string accountName)
-            => await _context.Consultants.FirstOrDefaultAsync(c => c.Account.Accountname == accountName);
+        {
+            return await _context.Consultants
+                .Include(c => c.Account)
+                .FirstOrDefaultAsync(c => c.Account.Accountname == accountName);
+        }
+
+        public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }
