@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import "../styles/EventPage.css"
 import Footer from "../components/Footer" // Import the new Footer component
-import { eventData, addEvent, editEvent, deleteEvent } from "../service/api";
+import { eventData, joinEvent } from "../service/api";
 
 const EventPage = ({ navigateTo }) => {
   const [events, setEvents] = useState([])
@@ -11,7 +11,7 @@ const EventPage = ({ navigateTo }) => {
   const [selectedType, setSelectedType] = useState("all")
   const [loading, setLoading] = useState(true)
 
-   useEffect(() => {
+  useEffect(() => {
     // Lấy user từ localStorage (nếu cần)
     const storedUser = localStorage.getItem("user");
     if (storedUser) setUser(JSON.parse(storedUser));
@@ -38,26 +38,29 @@ const EventPage = ({ navigateTo }) => {
       return
     }
 
-    try {
-      const response = await fetch("/api/events/participate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          account_id: user.account_id,
-          event_id: eventId,
-          status: "joined",
-          feedback: "Looking forward to it.", // Default feedback
-        }),
-      })
+    // Debug log
+    console.log("[DEBUG] user object:", user);
+    console.log("[DEBUG] eventId:", eventId);
 
-      if (response.ok) {
+    // Try both possible accountId fields
+    const accountId = user.accountId !== undefined ? user.accountId : user.account_id;
+    if (accountId === undefined) {
+      alert("User object missing accountId/account_id. Please re-login.");
+      return;
+    }
+
+    try {
+      const response = await joinEvent({
+        accountId: accountId,
+        eventId: eventId,
+        status: "joined",
+        feedback: "Looking forward to it."
+      });
+
+      if (!response.error) {
         alert("Successfully joined the event!")
-        // Optionally update UI to show user has joined
       } else {
-        const errorData = await response.json()
-        alert(`Failed to join event: ${errorData.error}`)
+        alert(`Failed to join event: ${response.error}`)
       }
     } catch (error) {
       console.error("Error joining event:", error)
@@ -217,10 +220,10 @@ const EventPage = ({ navigateTo }) => {
                     </div>
                   </div>
                   <div className="event-actions">
-                    <button className="btn-primary event-btn" onClick={() => handleJoinEvent(event.event_id)}>
+                    <button className="btn-primary event-btn" onClick={() => handleJoinEvent(event.eventId)}>
                       Join Event
                     </button>
-                    <button className="btn-outline event-btn" onClick={() => handleShareExperience(event.event_id)}>
+                    <button className="btn-outline event-btn" onClick={() => handleShareExperience(event.eventId)}>
                       Share Experience
                     </button>
                   </div>
