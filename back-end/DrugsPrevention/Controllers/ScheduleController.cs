@@ -34,10 +34,10 @@ namespace DrugsPrevention_API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] ScheduleDTO dto)
+        public async Task<IActionResult> Create([FromBody] BaseScheduleDTO dto)
         {
-            if (string.IsNullOrWhiteSpace(dto.AccountName))
-                return BadRequest(new { message = "Thiếu accountName để xác định consultant" });
+            if (dto.ConsultantId <= 0)
+                return BadRequest(new { message = "Thiếu hoặc sai ConsultantId" });
 
             var success = await _service.CreateAsync(dto);
             if (!success)
@@ -47,10 +47,10 @@ namespace DrugsPrevention_API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] ScheduleDTO dto)
+        public async Task<IActionResult> Update(int id, [FromBody] BaseScheduleDTO dto)
         {
             if (dto.ScheduleId != id)
-                return BadRequest(new { message = "Lỗi: ScheduleId trong route và body không khớp" });
+                return BadRequest(new { message = "ScheduleId trong route và body không khớp" });
 
             var success = await _service.UpdateAsync(dto);
             if (!success)
