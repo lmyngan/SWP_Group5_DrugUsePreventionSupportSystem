@@ -1,5 +1,6 @@
 ﻿using DrugsPrevention_Data.Data;
 using DrugsPrevention_Data.DTO.Notification;
+using DrugsPrevention_Data.Repositories;
 using DrugsPrevention_Data.Repositories.Irepositories;
 using DrugsPrevention_Service.Service.Iservice;
 using System;
@@ -54,6 +55,10 @@ namespace DrugsPrevention_Service.Service
                 CreatedAt = n.CreatedAt,
                 Status = n.Status
             }).ToList();
+        }
+        public async Task<bool> MarkAsReadAsync(int notificationId)
+        {
+            return await _repository.MarkAsReadAsync(notificationId);
         }
     }
 }
