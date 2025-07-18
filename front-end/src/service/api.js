@@ -189,12 +189,24 @@ export const getTestScore = async (accountId) => {
     }
 }
 
-//GET; ConsultantId
+//GET: ConsultantId
 export const getConsultantInfo = async (consultantId) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/api/Consultant/${consultantId}`, {
             headers: getAuthHeader(),
         });
+        return response.data;
+    } catch (error) {
+        return { error: error.response?.data?.message || error.message };
+    }
+}
+
+//PUT: Edit Consultant
+export const editConsultant = async (consultantId, data) => {
+    try {
+        const response = await axios.put(`${API_BASE_URL}/api/Consultant/${consultantId}`, data, {
+            headers: getAuthHeader(),
+        })
         return response.data;
     } catch (error) {
         return { error: error.response?.data?.message || error.message };
@@ -327,7 +339,17 @@ export const deleteEvent = async (eventId) => {
     }
 }
 
-
+//POST: Event Participation
+export const joinEvent = async (data) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/EventParticipation`, data, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
 
 //GET: Blog
 export const blogData = async () => {

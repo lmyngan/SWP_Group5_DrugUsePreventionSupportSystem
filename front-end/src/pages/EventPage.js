@@ -1,24 +1,20 @@
-"use client"
-
-import { useState, useEffect } from "react"
-import "../styles/EventPage.css"
-import Footer from "../components/Footer" // Import the new Footer component
-import { eventData} from "../service/api";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "../styles/EventPage.css";
+import Footer from "../components/Footer";
+import { eventData, joinEvent } from "../service/api";
 
 const EventPage = ({ navigateTo }) => {
   const navigate = useNavigate();
-  const [events, setEvents] = useState([])
-  const [user, setUser] = useState(null) // State for current user
-  const [selectedType, setSelectedType] = useState("all")
-  const [loading, setLoading] = useState(true)
+  const [events, setEvents] = useState([]);
+  const [user, setUser] = useState(null);
+  const [selectedType, setSelectedType] = useState("all");
+  const [loading, setLoading] = useState(true);
 
-   useEffect(() => {
-    // Lấy user từ localStorage (nếu cần)
+  useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) setUser(JSON.parse(storedUser));
 
-    // Lấy danh sách sự kiện từ API
     const fetchEvents = async () => {
       setLoading(true);
       const data = await eventData();
@@ -35,31 +31,31 @@ const EventPage = ({ navigateTo }) => {
 
   const handleJoinEvent = async (eventId) => {
     if (!user) {
-      alert("Please login to join events")
-      // navigateTo('login'); // Example: redirect to login page
+      alert("Please login to join events");
       return
     }
 
-    try {
-      const response = await fetch("/api/events/participate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          account_id: user.account_id,
-          event_id: eventId,
-          status: "joined",
-          feedback: "Looking forward to it.", // Default feedback
-        }),
-      })
+    console.log("[DEBUG] user object:", user);
+    console.log("[DEBUG] eventId:", eventId);
 
-      if (response.ok) {
+    const accountId = user.accountId !== undefined ? user.accountId : user.account_id;
+    if (accountId === undefined) {
+      alert("User object missing accountId/account_id. Please re-login.");
+      return;
+    }
+
+    try {
+      const response = await joinEvent({
+        accountId: accountId,
+        eventId: eventId,
+        status: "joined",
+        feedback: "Looking forward to it."
+      });
+
+      if (!response.error) {
         alert("Successfully joined the event!")
-        // Optionally update UI to show user has joined
       } else {
-        const errorData = await response.json()
-        alert(`Failed to join event: ${errorData.error}`)
+        alert(`Failed to join event: ${response.error}`)
       }
     } catch (error) {
       console.error("Error joining event:", error)
@@ -67,9 +63,9 @@ const EventPage = ({ navigateTo }) => {
     }
   }
 
-const handleShareExperience = (eventId) => {
-  navigate(`/blogs?event=${eventId}`);
-};
+  const handleShareExperience = (eventId) => {
+    navigate(`/blogs?event=${eventId}`);
+  };
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -83,13 +79,13 @@ const handleShareExperience = (eventId) => {
   const getTypeColor = (type) => {
     switch (type) {
       case "Awareness":
-        return "type-awareness"
+        return "type-awareness";
       case "Education":
-        return "type-education"
+        return "type-education";
       case "Support":
-        return "type-support"
+        return "type-support";
       default:
-        return "type-default"
+        return "type-default";
     }
   }
 
@@ -217,10 +213,10 @@ const handleShareExperience = (eventId) => {
                     </div>
                   </div>
                   <div className="event-actions">
-                    <button className="btn-primary event-btn" onClick={() => handleJoinEvent(event.event_id)}>
+                    <button className="btn-primary event-btn" onClick={() => handleJoinEvent(event.eventId)}>
                       Join Event
                     </button>
-                    <button className="btn-outline event-btn" onClick={() => handleShareExperience(event.event_id)}>
+                    <button className="btn-outline event-btn" onClick={() => handleShareExperience(event.eventId)}>
                       Share Experience
                     </button>
                   </div>
@@ -272,7 +268,7 @@ const handleShareExperience = (eventId) => {
             <button className="btn-primary" onClick={() => setSelectedType("all")}>
               View All Events
             </button>
-            <button className="btn-outline" onClick={() => navigateTo && navigateTo("blogs")}>
+            <button className="btn-outline" onClick={() => navigate("blogs")}>
               Share Your Story
             </button>
           </div>

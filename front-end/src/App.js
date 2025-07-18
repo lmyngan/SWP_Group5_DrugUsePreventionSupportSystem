@@ -16,7 +16,6 @@ import Event from "./pages/EventPage"
 import Login from "./pages/LoginPage"
 import Register from "./pages/RegisterPage"
 import ProfileUser from "./pages/ProfileUser"
-import AddPost from "./pages/AddPost"
 import Survey from "./pages/Survey"
 import DashBoard from "./pages/DashBoard"
 import BookAppointment from "./pages/BookAppointment"
@@ -87,8 +86,6 @@ const App = () => {
         return <CalendarPage />
       case "profile":
         return <ProfileUser />
-      case "addpost":
-        return <AddPost />
       case "manage-consultant":
         return <ManageConsultant />
       case "manage-bookappointment":
