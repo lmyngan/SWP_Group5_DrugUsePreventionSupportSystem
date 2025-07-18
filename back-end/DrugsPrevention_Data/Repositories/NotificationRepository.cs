@@ -31,6 +31,16 @@ namespace DrugsPrevention_Data.Repositories
                 .OrderByDescending(n => n.CreatedAt)
                 .ToListAsync();
         }
+        public async Task<bool> MarkAsReadAsync(int notificationId)
+        {
+            var notification = await _context.Notifications.FindAsync(notificationId);
+            if (notification == null)
+                return false;
+
+            notification.Status = "Read";
+            await _context.SaveChangesAsync();
+            return true;
+        }
 
         public async Task SaveChangesAsync()
         {
