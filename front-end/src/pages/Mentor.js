@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getConsultantSchedules, bookAppointment, createVNPayUrl, handleVNPayCallback, getConsultantInfo } from "../service/api";
+import { getConsultantSchedules, bookAppointment, createVNPayUrl, handleVNPayCallback, getConsultantInfo, addNotification } from "../service/api";
 import "../styles/MentorPage.css";
 import Footer from "../components/Footer";
 
@@ -125,12 +125,23 @@ const Mentor = () => {
     const response = await bookAppointment(payload);
     if (response && response.appointmentId) {
       setCurrentAppointmentId(response.appointmentId);
-      // Loại bỏ schedule vừa đặt khỏi danh sách
+
+      const notificationData = {
+        accountId: user.accountId,
+        message: `Your appointment with consultant ${consultantId} has been successfully booked. Appointment ID: ${response.appointmentId}. Please complete the payment to confirm your booking.`
+      };
+
+      try {
+        await addNotification(notificationData);
+      } catch (error) {
+        console.error('Failed to send notification:', error);
+      }
+
       setSelectedSchedules(prev => ({
         ...prev,
         [consultantId]: (prev[consultantId] || []).filter(s => (s.id || s.scheduleId) !== (schedule.id || schedule.scheduleId))
       }));
-      // Gọi API lấy VNPay URL
+
       const vnpayRes = await createVNPayUrl(response.appointmentId);
       if (vnpayRes && vnpayRes.paymentUrl) {
         setQrUrl(vnpayRes.paymentUrl);
@@ -169,6 +180,7 @@ const Mentor = () => {
   // Hàm giả lập xác nhận đã thanh toán (gọi handleVNPayCallback)
   const handleConfirmPayment = async (consultantId) => {
     if (!currentAppointmentId) return;
+
     // Giả lập callback, thực tế cần truyền params đúng từ VNPay
     const callbackRes = await handleVNPayCallback({ appointmentId: currentAppointmentId });
     if (callbackRes && callbackRes.message && callbackRes.message.includes('thành công')) {
