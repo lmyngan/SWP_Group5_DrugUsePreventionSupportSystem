@@ -1,6 +1,7 @@
 // src/pages/RegisterPage.js
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FaChevronDown } from 'react-icons/fa';
 import { registerUser } from '../service/api';
 import '../styles/RegisterPage.css';
 
@@ -15,12 +16,21 @@ const RegisterPage = () => {
     gender: 'Male'
   });
   const [error, setError] = useState('');
+  const [showGenderDropdown, setShowGenderDropdown] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  const handleGenderSelect = (gender) => {
+    setFormData({
+      ...formData,
+      gender: gender
+    });
+    setShowGenderDropdown(false);
   };
 
   const handleSubmit = async (e) => {
@@ -149,15 +159,32 @@ const RegisterPage = () => {
           </div>
 
           <div className="input-box">
-            <select
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-              required
-            >
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
+            <label htmlFor="title">Gender: </label>
+            <div className="custom-select">
+              <div
+                className="select-header"
+                onClick={() => setShowGenderDropdown(!showGenderDropdown)}
+              >
+                <span>{formData.gender}</span>
+                <FaChevronDown className={`select-arrow ${showGenderDropdown ? 'rotated' : ''}`} />
+              </div>
+              {showGenderDropdown && (
+                <div className="select-options">
+                  <div
+                    className={`select-option ${formData.gender === 'Male' ? 'selected' : ''}`}
+                    onClick={() => handleGenderSelect('Male')}
+                  >
+                    Male
+                  </div>
+                  <div
+                    className={`select-option ${formData.gender === 'Female' ? 'selected' : ''}`}
+                    onClick={() => handleGenderSelect('Female')}
+                  >
+                    Female
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           <button type="submit" className='btn'>Register</button>

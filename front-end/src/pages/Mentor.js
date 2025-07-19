@@ -128,7 +128,7 @@ const Mentor = () => {
 
       const notificationData = {
         accountId: user.accountId,
-        message: `Your appointment with consultant ${consultantId} has been successfully booked. Appointment ID: ${response.appointmentId}. Please complete the payment to confirm your booking.`
+        message: `Your appointment with consultant ${consultantId} has been successfully booked.`
       };
 
       try {

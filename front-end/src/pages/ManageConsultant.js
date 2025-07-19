@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getConsultantInfo, editConsultant } from "../service/api";
+import { getConsultantInfo, editConsultant, addNotification } from "../service/api";
 import "../styles/Consultant.css";
 
 const Consultant = () => {
@@ -9,6 +9,12 @@ const Consultant = () => {
   const [newCert, setNewCert] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showMessageModal, setShowMessageModal] = useState(false);
+  const [messageData, setMessageData] = useState({
+    accountId: "",
+    message: ""
+  });
+  const [messageLoading, setMessageLoading] = useState(false);
 
   useEffect(() => {
     const fetchConsultantInfo = async () => {
@@ -101,6 +107,43 @@ const Consultant = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSendMessage = async () => {
+    if (!messageData.accountId || !messageData.message.trim()) {
+      alert("Please fill in both Account ID and Message");
+      return;
+    }
+
+    setMessageLoading(true);
+    try {
+      const response = await addNotification({
+        accountId: parseInt(messageData.accountId),
+        message: messageData.message.trim()
+      });
+
+      if (response && !response.error) {
+        alert("Message sent successfully!");
+        setShowMessageModal(false);
+        setMessageData({ accountId: "", message: "" });
+      } else {
+        alert(response.error || "Failed to send message");
+      }
+    } catch (err) {
+      alert("Failed to send message");
+    } finally {
+      setMessageLoading(false);
+    }
+  };
+
+  const handleOpenMessageModal = () => {
+    setShowMessageModal(true);
+    setMessageData({ accountId: "", message: "" });
+  };
+
+  const handleCloseMessageModal = () => {
+    setShowMessageModal(false);
+    setMessageData({ accountId: "", message: "" });
   };
 
   const c = editData;
@@ -208,9 +251,58 @@ const Consultant = () => {
             <button onClick={handleCancel} className="cancel-btn">Cancel</button>
           </>
         ) : (
-          <button onClick={handleEdit} className="edit-btn">Edit Profile</button>
+          <>
+            <button onClick={handleEdit} className="edit-btn">Edit Profile</button>
+            <button onClick={handleOpenMessageModal} className="message-btn">Send Message</button>
+          </>
         )}
       </div>
+
+      {/* Message Modal */}
+      {showMessageModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3 className="modal-title">Send Message to User</h3>
+            <div className="modal-body">
+              <div className="form-group">
+                <label htmlFor="accountId" className="form-label">Account ID:</label>
+                <input
+                  type="number"
+                  id="accountId"
+                  value={messageData.accountId}
+                  onChange={(e) => setMessageData({ ...messageData, accountId: e.target.value })}
+                  className="form-input"
+                  placeholder="Enter user's Account ID"
+                  min="1"
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="message" className="form-label">Message:</label>
+                <textarea
+                  id="message"
+                  value={messageData.message}
+                  onChange={(e) => setMessageData({ ...messageData, message: e.target.value })}
+                  className="form-textarea"
+                  placeholder="Enter your message here..."
+                  rows="4"
+                />
+              </div>
+            </div>
+            <div className="modal-actions">
+              <button
+                onClick={handleSendMessage}
+                disabled={messageLoading}
+                className="send-message-btn"
+              >
+                {messageLoading ? "Sending..." : "Send Message"}
+              </button>
+              <button onClick={handleCloseMessageModal} className="cancel-btn">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

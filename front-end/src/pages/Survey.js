@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Form, Button, Modal } from 'react-bootstrap';
 import { getTestQuestion } from '../service/api';
 import { submitTestScore } from '../service/api';
+import { addNotification } from '../service/api';
 
 const Survey = () => {
     const [questions, setQuestions] = useState([]);
@@ -95,6 +96,28 @@ const Survey = () => {
         });
 
         localStorage.setItem("totalScore", totalScore);
+
+        if (user && user.accountId) {
+            let notificationMessage = "";
+
+            if (riskLevel === "moderate") {
+                notificationMessage = `Based on your survey result (Score: ${totalScore}, Risk Level: ${riskLevel}), we recommend you to join our events for support and guidance.`;
+            } else if (riskLevel === "high") {
+                notificationMessage = `Based on your survey result (Score: ${totalScore}, Risk Level: ${riskLevel}), we strongly recommend you to book an appointment with our consultant for professional help.`;
+            } else {
+                notificationMessage = `Your survey result shows a low risk level (Score: ${totalScore}). Keep up the good work and stay healthy!`;
+            }
+
+            try {
+                await addNotification({
+                    accountId: user.accountId,
+                    message: notificationMessage
+                });
+                console.log('Survey result notification sent successfully');
+            } catch (error) {
+                console.error('Failed to send survey notification:', error);
+            }
+        }
     };
 
     const handleClose = () => setShowModal(false);

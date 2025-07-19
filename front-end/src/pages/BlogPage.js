@@ -199,12 +199,6 @@ const BlogPage = ({ navigateTo }) => {
               community of recovery and prevention.
             </p>
             <div className="hero-buttons">
-              <button
-                className="btn-primary"
-                onClick={() => (user ? setShowCreateForm(true) : alert("Please login to share your experience"))}
-              >
-                Share Your Story
-              </button>
               <button className="btn-secondary" onClick={() => document.getElementById("blogs-section").scrollIntoView()}>
                 Read Experiences
               </button>
@@ -217,7 +211,7 @@ const BlogPage = ({ navigateTo }) => {
         </div>
       </section>
 
-      
+
 
       {/* Filter Section */}
       <section className="filter-section">
@@ -331,12 +325,6 @@ const BlogPage = ({ navigateTo }) => {
         <div className="container">
           <div className="section-header">
             <h2>Community Experiences</h2>
-            <button
-              className="btn-primary"
-              onClick={() => (user ? setShowCreateForm(true) : alert("Please login to share your experience"))}
-            >
-              Share Your Story
-            </button>
           </div>
           {filteredBlogs.length === 0 ? (
             <div className="no-blogs">
@@ -417,7 +405,7 @@ const BlogPage = ({ navigateTo }) => {
         </div>
       </section>
 
-     
+
       {/* Call to Action Section */}
       <section className="cta-section">
         <div className="container">
@@ -440,7 +428,7 @@ const BlogPage = ({ navigateTo }) => {
         </div>
       </section>
 
-      
+
     </div>
   )
 }

@@ -5,6 +5,16 @@ import { Card, Container, Row, Col } from "react-bootstrap"
 import { getTestScore, getNotificationsByAccountId, markAsReadNotification, editProfileAccount } from "../service/api"
 import "../styles/ProfileUser.css"
 
+const formatDateVN = (dateString) => {
+  if (!dateString) return '';
+  const d = new Date(dateString);
+  if (isNaN(d)) return '';
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const year = d.getFullYear();
+  return `${day}/${month}/${year}`;
+};
+
 const ProfileUser = () => {
   const [user, setUser] = useState(null)
   const [testScore, setTestScore] = useState(null)
@@ -314,7 +324,7 @@ const ProfileUser = () => {
                   </Card.Text>
                   <Card.Text>
                     <span className="profile-label">Date of Birth:</span>
-                    <span className="profile-value">{user.dateOfBirth}</span>
+                    <span className="profile-value">{formatDateVN(user.dateOfBirth)}</span>
                   </Card.Text>
                   <Card.Text>
                     <span className="profile-label">Gender:</span>
