@@ -31,6 +31,7 @@ import CalendarPage from "./pages/CalendarPage"
 
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import ManageSchedule from "./pages/ManageSchedule"
+import NotFound from "./pages/NotFound"
 
 
 
@@ -115,14 +116,16 @@ const App = () => {
         return <Account />
       case "report":
         return <Report />
+      case "not-found":
+        return <NotFound navigateTo={navigateTo} />
 
       default:
-        return <HomePage /> // Fallback về trang chủ
+        return <NotFound /> // Redirect to 404 page for non-existent routes
     }
   }
 
   return (
-    
+
     <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
       <div className="app">
         {/*Member Navbar*/}
@@ -141,7 +144,7 @@ const App = () => {
         <Footer featuredEvents={featuredEvents} navigateTo={navigateTo} />
       </div>
     </GoogleOAuthProvider>
-    
+
   )
 }
 

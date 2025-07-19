@@ -96,14 +96,6 @@ const LoginPage = () => {
             </svg>
           </div>
 
-          <div className='social-login'>
-            <GoogleLogin
-              clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-              onSuccess={handleGoogleLoginSuccess}
-              onError={() => alert("Google login failed.")}
-            />
-          </div>
-
           <div className="forgot-password">
             <label><input type="checkbox" /> Remember Me</label>
             <Link to="/forgot-password">Forgot Password?</Link>
