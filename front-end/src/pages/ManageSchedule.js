@@ -147,25 +147,25 @@ const ManageSchedule = () => {
                         <thead>
                             <tr>
                                 <th className="bg-gray-200 py-2 px-4 border">ID</th>
-                                <th className="bg-gray-200 py-2 px-4 border">Account Name</th>
-                                <th className="bg-gray-200 py-2 px-4 border">Available Date</th>
-                                <th className="bg-gray-200 py-2 px-4 border">Time</th>
+                                <th className="bg-gray-200 py-2 border">Consultant ID</th>
+                                <th className="bg-gray-200 py-2 border">Available Date</th>
+                                <th className="bg-gray-200 py-2 border">Time</th>
                                 <th className="bg-gray-200 py-2 px-4 border">Slot</th>
-                                <th className="bg-gray-200 py-2 px-4 border">Actions</th>
+                                <th className="bg-gray-200 py-2 border">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {schedules.map((schedule, idx) => (
                                 <tr key={schedule.scheduleId || idx}>
-                                    <td className="py-2 px-4 border">{schedule.scheduleId}</td>
-                                    <td className="py-2 px-4 border">{schedule.accountName}</td>
-                                    <td className="py-2 px-4 border">{formatDateVN(schedule.availableDate)}</td>
-                                    <td className="py-2 px-4 border">{`${schedule.startTime} - ${schedule.endTime}`}</td>
-                                    <td className="py-2 px-4 border">{schedule.slot}</td>
-                                    <td className="py-2 px-4 border">
-                                        <div className="flex items-center gap-2">
-                                            <button className="bg-yellow-500 text-white px-6 py-3 rounded text-xs" onClick={() => handleEdit(schedule)}><FaEdit /></button>
-                                            <button className="bg-red-500 text-white px-6 py-3 rounded text-xs" onClick={() => handleDelete(schedule.scheduleId)}><MdDelete /></button>
+                                    <td className="py-2 px-4 border text-center">{schedule.scheduleId}</td>
+                                    <td className="py-2 border text-center">{schedule.consultantId}</td>
+                                    <td className="py-2 border text-center">{formatDateVN(schedule.availableDate)}</td>
+                                    <td className="py-2 border text-center">{`${schedule.startTime} - ${schedule.endTime}`}</td>
+                                    <td className="py-2 px-4 border text-center">{schedule.slot}</td>
+                                    <td className="py-2 border text-center">
+                                        <div className="flex items-center justify-center gap-2">
+                                            <button className="bg-yellow-500 text-white px-6 py-3 rounded text-xs hover:bg-yellow-600 transition-colors" onClick={() => handleEdit(schedule)}><FaEdit /></button>
+                                            <button className="bg-red-500 text-white px-6 py-3 rounded text-xs hover:bg-red-600 transition-colors" onClick={() => handleDelete(schedule.scheduleId)}><MdDelete /></button>
                                         </div>
                                     </td>
                                 </tr>
