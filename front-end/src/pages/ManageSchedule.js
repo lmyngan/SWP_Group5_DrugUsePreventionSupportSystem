@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete, MdCancel } from "react-icons/md";
 import { IoMdAddCircle } from "react-icons/io";
-import { getScheduleData, addSchedule, deleteSchedule } from '../service/api';
+import { getScheduleData, addSchedule, deleteSchedule, editSchedule } from '../service/api';
 
 // Format date dd/MM/yyyy
 const formatDateVN = (dateString) => {
@@ -20,12 +20,12 @@ const ManageSchedule = () => {
     const [showAdd, setShowAdd] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [newSchedule, setNewSchedule] = useState({
-        accountName: '',
+        consultantId: 0,
+        scheduleId: 0,
         availableDate: new Date().toISOString().slice(0, 10),
         startTime: '',
         endTime: '',
         slot: 1,
-        status: '',
     });
     const [editId, setEditId] = useState(null);
     const [editSchedule, setEditSchedule] = useState({});
@@ -44,6 +44,19 @@ const ManageSchedule = () => {
 
     // Add
     const handleAddSchedule = async () => {
+        console.log('Adding schedule with data:', newSchedule);
+
+        // Validate required fields
+        if (!newSchedule.consultantId || newSchedule.consultantId === 0) {
+            alert('Please enter a valid Consultant ID');
+            return;
+        }
+
+        if (!newSchedule.startTime || !newSchedule.endTime) {
+            alert('Please enter both start time and end time');
+            return;
+        }
+
         const res = await addSchedule(newSchedule);
         if (!res.error) {
             const data = await getScheduleData();
@@ -52,15 +65,16 @@ const ManageSchedule = () => {
             else setSchedules([]);
             setShowAdd(false);
             setNewSchedule({
-                accountName: '',
+                consultantId: 0,
+                scheduleId: 0,
                 availableDate: new Date().toISOString().slice(0, 10),
                 startTime: '',
                 endTime: '',
                 slot: 1,
-                status: '',
             });
         } else {
-            alert(res.error || 'Failed to add schedule');
+            console.error('Add schedule failed:', res.error);
+            alert(`Failed to add schedule: ${res.error}`);
         }
     };
 
@@ -71,10 +85,17 @@ const ManageSchedule = () => {
         setShowEditModal(true);
     };
     const handleSaveEdit = async () => {
-        // TODO: Call API to update schedule nếu có
-        setSchedules(prev => prev.map(s => s.scheduleId === editId ? { ...editSchedule, scheduleId: editId } : s));
-        setEditId(null);
-        setShowEditModal(false);
+        const res = await editSchedule(editId, editSchedule);
+        if (!res.error) {
+            const data = await getScheduleData();
+            if (Array.isArray(data)) setSchedules(data);
+            else if (Array.isArray(data.data)) setSchedules(data.data);
+            else setSchedules([]);
+            setEditId(null);
+            setShowEditModal(false);
+        } else {
+            alert(res.error || 'Failed to update schedule');
+        }
     };
     const handleCancelEdit = () => {
         setEditId(null);
@@ -87,6 +108,13 @@ const ManageSchedule = () => {
         setShowDeleteModal(true);
     };
     const confirmDelete = async () => {
+        console.log('Confirming delete for schedule ID:', deleteId);
+
+        if (!deleteId) {
+            alert('No schedule ID provided for deletion');
+            return;
+        }
+
         const res = await deleteSchedule(deleteId);
         if (!res.error) {
             const data = await getScheduleData();
@@ -96,7 +124,8 @@ const ManageSchedule = () => {
             setShowDeleteModal(false);
             setDeleteId(null);
         } else {
-            alert(res.error || 'Failed to delete schedule');
+            console.error('Delete schedule failed:', res.error);
+            alert(`Failed to delete schedule: ${res.error}`);
         }
     };
     const cancelDelete = () => {
@@ -128,12 +157,11 @@ const ManageSchedule = () => {
                                 </button>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
-                                <input className="border p-2" placeholder="Account Name" value={newSchedule.accountName} onChange={e => setNewSchedule(a => ({ ...a, accountName: e.target.value }))} />
+                                <input className="border p-2" type="number" placeholder="Consultant ID" value={newSchedule.consultantId} onChange={e => setNewSchedule(a => ({ ...a, consultantId: parseInt(e.target.value) || 0 }))} />
                                 <input className="border p-2" type="date" value={newSchedule.availableDate} onChange={e => setNewSchedule(a => ({ ...a, availableDate: e.target.value }))} />
                                 <input className="border p-2" placeholder="Start Time (hh:mm:ss)" value={newSchedule.startTime} onChange={e => setNewSchedule(a => ({ ...a, startTime: e.target.value }))} />
                                 <input className="border p-2" placeholder="End Time (hh:mm:ss)" value={newSchedule.endTime} onChange={e => setNewSchedule(a => ({ ...a, endTime: e.target.value }))} />
-                                <input className="border p-2" type="number" min={1} placeholder="Slot" value={newSchedule.slot} onChange={e => setNewSchedule(a => ({ ...a, slot: e.target.value }))} />
-                                <input className="border p-2" placeholder="Status" value={newSchedule.status} onChange={e => setNewSchedule(a => ({ ...a, status: e.target.value }))} />
+                                <input className="border p-2" type="number" min={1} placeholder="Slot" value={newSchedule.slot} onChange={e => setNewSchedule(a => ({ ...a, slot: parseInt(e.target.value) || 0 }))} />
                             </div>
                             <div className="flex justify-end mt-6 gap-2">
                                 <button className="px-6 py-3 bg-gray-300 text-gray-700 rounded hover:bg-gray-400" onClick={() => setShowAdd(false)}><MdCancel /></button>
@@ -182,12 +210,12 @@ const ManageSchedule = () => {
                             <button className="text-gray-500 hover:text-gray-700 text-2xl" onClick={handleCancelEdit}><MdCancel /></button>
                         </div>
                         <div className="grid grid-cols-2 gap-4">
-                            <input className="border p-2" placeholder="Account Name" value={editSchedule.accountName || ''} onChange={e => setEditSchedule(ev => ({ ...ev, accountName: e.target.value }))} />
+                            <input className="border p-2" type="number" placeholder="Consultant ID" value={editSchedule.consultantId || 0} onChange={e => setEditSchedule(ev => ({ ...ev, consultantId: parseInt(e.target.value) || 0 }))} />
+                            <input className="border p-2" type="number" placeholder="Account ID" value={editSchedule.accountId || 0} onChange={e => setEditSchedule(ev => ({ ...ev, accountId: parseInt(e.target.value) || 0 }))} />
                             <input className="border p-2" type="date" value={editSchedule.availableDate ? editSchedule.availableDate.slice(0, 10) : ''} onChange={e => setEditSchedule(ev => ({ ...ev, availableDate: e.target.value }))} />
                             <input className="border p-2" placeholder="Start Time (hh:mm:ss)" value={editSchedule.startTime || ''} onChange={e => setEditSchedule(ev => ({ ...ev, startTime: e.target.value }))} />
                             <input className="border p-2" placeholder="End Time (hh:mm:ss)" value={editSchedule.endTime || ''} onChange={e => setEditSchedule(ev => ({ ...ev, endTime: e.target.value }))} />
-                            <input className="border p-2" type="number" min={1} placeholder="Slot" value={editSchedule.slot || 1} onChange={e => setEditSchedule(ev => ({ ...ev, slot: e.target.value }))} />
-                            <input className="border p-2" placeholder="Status" value={editSchedule.status || ''} onChange={e => setEditSchedule(ev => ({ ...ev, status: e.target.value }))} />
+                            <input className="border p-2" type="number" min={1} placeholder="Slot" value={editSchedule.slot || 1} onChange={e => setEditSchedule(ev => ({ ...ev, slot: parseInt(e.target.value) || 0 }))} />
                         </div>
                         <div className="flex justify-end mt-6 gap-2">
                             <button className="px-6 py-3 bg-gray-300 text-gray-700 rounded hover:bg-gray-400" onClick={handleCancelEdit}><MdCancel /></button>

@@ -316,7 +316,48 @@ export const getScheduleData = async () => {
 //POST: Add Schedule
 export const addSchedule = async (data) => {
     try {
-        const response = await axios.post(`${API_BASE_URL}/api/schedule`, data, {
+        // Convert date format to ISO string if it's not already
+        let availableDate = data.availableDate;
+        if (availableDate && !availableDate.includes('T')) {
+            availableDate = new Date(availableDate).toISOString();
+        }
+
+        const scheduleData = {
+            consultantId: parseInt(data.consultantId) || 0,
+            accountId: 0, // Add default accountId if backend requires it
+            scheduleId: parseInt(data.scheduleId) || 0,
+            availableDate: availableDate || new Date().toISOString(),
+            startTime: data.startTime || "",
+            endTime: data.endTime || "",
+            slot: parseInt(data.slot) || 0
+        };
+
+        console.log('Sending schedule data:', scheduleData);
+
+        const response = await axios.post(`${API_BASE_URL}/api/schedule`, scheduleData, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Add schedule error:', error.response?.data || error.message);
+        return { error: error.response?.data?.message || error.message };
+    }
+}
+
+//PUT: Edit Schedule
+export const editSchedule = async (scheduleId, data) => {
+    try {
+        const scheduleData = {
+            consultantId: data.consultantId || 0,
+            accountId: data.accountId || 0,
+            scheduleId: scheduleId,
+            availableDate: data.availableDate || new Date().toISOString(),
+            startTime: data.startTime || "",
+            endTime: data.endTime || "",
+            slot: data.slot || 0
+        };
+
+        const response = await axios.put(`${API_BASE_URL}/api/schedule/${scheduleId}`, scheduleData, {
             headers: getAuthHeader(),
         });
         return response.data;
@@ -325,15 +366,28 @@ export const addSchedule = async (data) => {
     }
 }
 
-//PUT: Delete schedule
+//DELETE: Delete schedule
 export const deleteSchedule = async (scheduleId) => {
     try {
-        const response = await axios.delete(`${API_BASE_URL}/api/schedule/${scheduleId},${scheduleId}`, {
-            headers: getAuthHeader(),
-        });
+        console.log('Deleting schedule with ID:', scheduleId);
+
+        // Try different URL formats for delete
+        let response;
+        try {
+            response = await axios.delete(`${API_BASE_URL}/api/schedule/${scheduleId}`, {
+                headers: getAuthHeader(),
+            });
+        } catch (firstError) {
+            console.log('First delete attempt failed, trying alternative format...');
+            // Try alternative format if first fails
+            response = await axios.delete(`${API_BASE_URL}/api/schedule?id=${scheduleId}`, {
+                headers: getAuthHeader(),
+            });
+        }
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        console.error('Delete schedule error:', error.response?.data || error.message);
+        return { error: error.response?.data?.message || error.message };
     }
 }
 
