@@ -28,7 +28,7 @@ namespace DrugsPrevention_Service.Service
                 EndTime = s.EndTime,
                 Slot = s.Slot,
                 ConsultantId = s.ConsultantId,
-                AccountId = s.Consultant?.AccountId ?? 0
+                AccountId = s.Consultant?.Account?.AccountId ?? 0,
             });
         }
 
@@ -45,7 +45,7 @@ namespace DrugsPrevention_Service.Service
                 EndTime = s.EndTime,
                 Slot = s.Slot,
                 ConsultantId = s.ConsultantId,
-                AccountId = s.Consultant?.AccountId ?? 0
+                AccountId = s.Consultant?.Account?.AccountId ?? 0,
             };
         }
 

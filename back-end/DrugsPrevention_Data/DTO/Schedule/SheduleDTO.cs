@@ -8,7 +8,7 @@ namespace DrugsPrevention_Data.DTO.Schedule
 {
     public class ScheduleDTO
     {
-        public string? AccountName { get; set; }
+        public string? FullName { get; set; }
         public int AccountId { get; set; }
         public int ScheduleId { get; set; }
         public DateTime AvailableDate { get; set; }

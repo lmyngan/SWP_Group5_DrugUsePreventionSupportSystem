@@ -40,5 +40,39 @@ namespace DrugsPrevention_Data.Repositories.Implementations
 
             return report;
         }
+        public async Task<UserReportDTO> GetTopUserByEventParticipationAsync()
+        {
+            return await _context.EventParticipations
+                .GroupBy(e => e.AccountId)
+                .OrderByDescending(g => g.Count())
+                .Select(g => new UserReportDTO
+                {
+                    AccountId = g.Key,
+                    FullName = g.First().Account.FullName,
+                    ParticipationCount = g.Count()
+                })
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<UserReportDTO>> GetUsersOfMostPopularEventAsync()
+        {
+            var topEventId = await _context.EventParticipations
+                .GroupBy(e => e.EventId)
+                .OrderByDescending(g => g.Count())
+                .Select(g => g.Key)
+                .FirstOrDefaultAsync();
+
+            return await _context.EventParticipations
+                .Where(e => e.EventId == topEventId)
+                .Select(e => new UserReportDTO
+                {
+                    AccountId = e.AccountId,
+                    FullName = e.Account.FullName,
+                    ParticipationCount = _context.EventParticipations.Count(x => x.AccountId == e.AccountId)
+                })
+                .Distinct()
+                .ToListAsync();
+        }
+
     }
 }
