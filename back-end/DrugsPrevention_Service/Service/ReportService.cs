@@ -18,5 +18,14 @@ namespace DrugsPrevention_Service.Service
         {
             return await _reportRepository.GetReportSummaryAsync();
         }
+        public async Task<UserReportDTO> GetTopUserByEventParticipationAsync()
+        {
+            return await _reportRepository.GetTopUserByEventParticipationAsync();
+        }
+
+        public async Task<List<UserReportDTO>> GetUsersOfMostPopularEventAsync()
+        {
+            return await _reportRepository.GetUsersOfMostPopularEventAsync();
+        }
     }
 }

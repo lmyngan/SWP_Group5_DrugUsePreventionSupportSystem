@@ -85,15 +85,19 @@ namespace DrugsPrevention_Service.Service
         {
             var schedules = await _context.Schedules
                 .Where(s => s.ConsultantId == consultantId)
+                .Include(s => s.Appointments)
+                    .ThenInclude(a => a.Account) // Include luôn Account để lấy thông tin
                 .Select(s => new ScheduleDTO
                 {
-                    AccountName = s.Appointments.FirstOrDefault() != null ? s.Appointments.First().Account.Accountname : null,
                     ScheduleId = s.ScheduleId,
                     AvailableDate = s.AvailableDate,
                     StartTime = s.StartTime,
                     EndTime = s.EndTime,
-                    Status = s.Appointments.FirstOrDefault() != null ? s.Appointments.First().Status : null,
-                    Slot = s.Slot
+                    Slot = s.Slot,
+                    // Chọn appointment đầu tiên có account hợp lệ (nếu có)
+                    FullName = s.Appointments.OrderBy(a => a.StartTime).FirstOrDefault().Account.FullName,
+                    AccountId = s.Appointments.OrderBy(a => a.StartTime).FirstOrDefault().AccountId,
+                    Status = s.Appointments.OrderBy(a => a.StartTime).FirstOrDefault().Status
                 })
                 .ToListAsync();
 
