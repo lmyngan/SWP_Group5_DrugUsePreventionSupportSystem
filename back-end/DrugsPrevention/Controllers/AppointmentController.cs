@@ -90,7 +90,6 @@ namespace DrugsPrevention_API.Controllers
         }
 
         [AuthorizeByRole(1, 2, 3)]
-        [HttpPut("{id}/status")]
         [HttpPut("schedule/{scheduleId}/status")]
         public async Task<IActionResult> UpdateStatusBySchedule(int scheduleId, [FromQuery] string status)
         {
