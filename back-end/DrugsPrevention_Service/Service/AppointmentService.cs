@@ -186,9 +186,11 @@ namespace DrugsPrevention_Service.Service
             await _repo.SaveChangesAsync();
             return true;
         }
-        public async Task<AppointmentResponseDTO> UpdateAppointmentStatusAsync(int id, string status)
+        public async Task<AppointmentResponseDTO> UpdateAppointmentStatusByScheduleIdAsync(int scheduleId, string status)
         {
-            var appointment = await _repo.GetByIdAsync(id);
+            var appointment = await _context.Appointments
+                .FirstOrDefaultAsync(a => a.ScheduleId == scheduleId);
+
             if (appointment == null) return null;
 
             appointment.Status = status;
@@ -197,6 +199,7 @@ namespace DrugsPrevention_Service.Service
 
             return await GetAppointmentByIdAsync(appointment.AppointmentId);
         }
+
         // Tạo URL thanh toán VNPay cho Appointment
         public async Task<string> CreateVNPayPaymentUrlAsync(int appointmentId, string ipAddress)
         {
