@@ -2,6 +2,7 @@
 using DrugsPrevention_Data.Repositories.Irepositories;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,7 +29,8 @@ namespace DrugsPrevention_Data.Repositories.Implementations
                     .CountAsync(e => !string.IsNullOrEmpty(e.Feedback)),
 
                 TotalNewUsersThisMonth = await _context.Accounts
-                    .CountAsync(a => a.CreatedAt.Month == DateTime.Now.Month && a.CreatedAt.Year == DateTime.Now.Year),
+                    .CountAsync(a => a.CreatedAt.Month == DateTime.Now.Month &&
+                                     a.CreatedAt.Year == DateTime.Now.Year),
 
                 TotalAppointmentsCompleted = await _context.Appointments
                     .CountAsync(a => a.Status == "Completed"),
@@ -43,36 +45,39 @@ namespace DrugsPrevention_Data.Repositories.Implementations
         public async Task<UserReportDTO> GetTopUserByEventParticipationAsync()
         {
             return await _context.EventParticipations
-                .GroupBy(e => e.AccountId)
-                .OrderByDescending(g => g.Count())
+                .GroupBy(e => new { e.AccountId, e.Account.FullName })
                 .Select(g => new UserReportDTO
                 {
-                    AccountId = g.Key,
-                    FullName = g.First().Account.FullName,
+                    AccountId = g.Key.AccountId,
+                    FullName = g.Key.FullName,
                     ParticipationCount = g.Count()
                 })
+                .OrderByDescending(x => x.ParticipationCount)
                 .FirstOrDefaultAsync();
         }
 
         public async Task<List<UserReportDTO>> GetUsersOfMostPopularEventAsync()
         {
-            var topEventId = await _context.EventParticipations
+            var topEvent = await _context.EventParticipations
                 .GroupBy(e => e.EventId)
                 .OrderByDescending(g => g.Count())
-                .Select(g => g.Key)
+                .Select(g => new { EventId = g.Key, Count = g.Count() })
                 .FirstOrDefaultAsync();
 
-            return await _context.EventParticipations
-                .Where(e => e.EventId == topEventId)
-                .Select(e => new UserReportDTO
-                {
-                    AccountId = e.AccountId,
-                    FullName = e.Account.FullName,
-                    ParticipationCount = _context.EventParticipations.Count(x => x.AccountId == e.AccountId)
-                })
-                .Distinct()
-                .ToListAsync();
-        }
+            if (topEvent == null) return new List<UserReportDTO>();
 
+            var result = await _context.EventParticipations
+                .Where(e => e.EventId == topEvent.EventId)
+                .GroupBy(e => new { e.AccountId, e.Account.FullName })
+                .Select(g => new UserReportDTO
+                {
+                    AccountId = g.Key.AccountId,
+                    FullName = g.Key.FullName,
+                    ParticipationCount = g.Count()
+                })
+                .ToListAsync();
+
+            return result;
+        }
     }
 }

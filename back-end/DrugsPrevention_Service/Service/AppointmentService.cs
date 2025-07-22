@@ -81,28 +81,35 @@ namespace DrugsPrevention_Service.Service
 
             throw new Exception("No available time slot");
         }
-        public async Task<List<ScheduleDTO>> GetSchedulesByConsultantIdAsync(int consultantId)
+        public async Task<IEnumerable<ScheduleDTO>> GetSchedulesByConsultantIdAsync(int consultantId)
         {
             var schedules = await _context.Schedules
-                .Where(s => s.ConsultantId == consultantId)
                 .Include(s => s.Appointments)
-                    .ThenInclude(a => a.Account) // Include luôn Account để lấy thông tin
-                .Select(s => new ScheduleDTO
-                {
-                    ScheduleId = s.ScheduleId,
-                    AvailableDate = s.AvailableDate,
-                    StartTime = s.StartTime,
-                    EndTime = s.EndTime,
-                    Slot = s.Slot,
-                    // Chọn appointment đầu tiên có account hợp lệ (nếu có)
-                    FullName = s.Appointments.OrderBy(a => a.StartTime).FirstOrDefault().Account.FullName,
-                    AccountId = s.Appointments.OrderBy(a => a.StartTime).FirstOrDefault().AccountId,
-                    Status = s.Appointments.OrderBy(a => a.StartTime).FirstOrDefault().Status
-                })
-                .ToListAsync();
+                    .ThenInclude(a => a.Account)
+                .Where(s => s.ConsultantId == consultantId)
+                .ToListAsync(); // EF truy vấn xong tại đây
 
-            return schedules;
+            var scheduleDtos = schedules
+                .Select(s =>
+                {
+                    var firstAppointment = s.Appointments.OrderBy(a => a.StartTime).FirstOrDefault();
+                    return new ScheduleDTO
+                    {
+                        ScheduleId = s.ScheduleId,
+                        AvailableDate = s.AvailableDate,
+                        StartTime = s.StartTime,
+                        EndTime = s.EndTime,
+                        Slot = s.Slot,
+                        FullName = firstAppointment?.Account?.FullName ?? string.Empty,
+                        AccountId = firstAppointment?.AccountId ?? 0,
+                        Status = firstAppointment?.Status ?? "unbooked"
+                    };
+                })
+                .ToList();
+
+            return scheduleDtos;
         }
+
         public async Task<List<AppointmentResponseDTO>> GetAllAppointmentsAsync()
         {
             var appointments = await _repo.GetAllAsync();
