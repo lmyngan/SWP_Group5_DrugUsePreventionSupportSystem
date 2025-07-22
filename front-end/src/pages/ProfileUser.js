@@ -27,6 +27,9 @@ const ProfileUser = () => {
   const dropdownRef = useRef(null);
   const [editMode, setEditMode] = useState(false);
   const [editProfile, setEditProfile] = useState({ fullName: '', dateOfBirth: '', gender: '', address: '' });
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalFadeOut, setModalFadeOut] = useState(false);
 
   useEffect(() => {
     if (!showDropdown) return;
@@ -170,6 +173,11 @@ const ProfileUser = () => {
         setUser(updatedUser);
         localStorage.setItem('user', JSON.stringify(updatedUser));
         setEditMode(false);
+        setModalMessage("Edit profile success!");
+        setShowModal(true);
+        setModalFadeOut(false);
+        setTimeout(() => setModalFadeOut(true), 800);
+        setTimeout(() => setShowModal(false), 1000);
       } else {
         alert(res.error || 'Failed to update profile');
       }
@@ -188,6 +196,13 @@ const ProfileUser = () => {
 
   return (
     <Container className="profile-container">
+      {showModal && (
+        <div className={`modal-overlay${modalFadeOut ? ' fade-out' : ''}`}>
+          <div className="modal-content-custom">
+            <div className="mb-4">{modalMessage}</div>
+          </div>
+        </div>
+      )}
       <Row className="justify-content-center">
         <Col xs={12} md={10} lg={8}>
           <Card className="profile-card">

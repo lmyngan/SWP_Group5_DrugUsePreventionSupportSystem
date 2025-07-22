@@ -240,15 +240,9 @@ export const getConsultantSchedules = async (consultantId) => {
 // POST: Book Appointment
 export const bookAppointment = async (appointmentData) => {
     try {
-        console.log("API: Sending request to book appointment");
-        console.log("API: Headers:", getAuthHeader());
-        console.log("API: Data:", appointmentData);
-
         const response = await axios.post(`${API_BASE_URL}/api/Appointment/book`, appointmentData, {
             headers: getAuthHeader(),
         });
-
-        console.log("API: Response received:", response.data);
         return response.data;
     } catch (error) {
         console.error("API: Booking error details:", {
@@ -262,17 +256,6 @@ export const bookAppointment = async (appointmentData) => {
                 headers: error.config?.headers
             }
         });
-
-        if (error.response?.status === 403) {
-            return { error: "Access denied. You may not have permission to book appointments or your session has expired. Please login again." };
-        }
-
-        if (error.response?.status === 400) {
-            const errorMessage = error.response?.data?.message || "Invalid request data";
-            console.error("400 Bad Request Details:", error.response?.data);
-            return { error: `Bad Request: ${errorMessage}. Please check your input data.` };
-        }
-
         return { error: error.response?.data?.message || error.message };
     }
 };
@@ -289,10 +272,10 @@ export const appointmentId = async (appointmentIdData) => {
     }
 }
 
-// PUT: Update Appointment Status (new API: appointmentId, status)
-export const updateAppointmentStatus = async (appointmentId, status) => {
+// PUT: Update Appointment Status
+export const updateAppointmentStatus = async (scheduleId, status) => {
     try {
-        const response = await axios.put(`${API_BASE_URL}/api/Appointment/${appointmentId}/status`, status, {
+        const response = await axios.put(`${API_BASE_URL}/api/Appointment/schedule/${scheduleId}/status?status=${encodeURIComponent(status)}`, null, {
             headers: getAuthHeader(),
         });
         return response.data;
@@ -369,25 +352,12 @@ export const editSchedule = async (scheduleId, data) => {
 //DELETE: Delete schedule
 export const deleteSchedule = async (scheduleId) => {
     try {
-        console.log('Deleting schedule with ID:', scheduleId);
-
-        // Try different URL formats for delete
-        let response;
-        try {
-            response = await axios.delete(`${API_BASE_URL}/api/schedule/${scheduleId}`, {
-                headers: getAuthHeader(),
-            });
-        } catch (firstError) {
-            console.log('First delete attempt failed, trying alternative format...');
-            // Try alternative format if first fails
-            response = await axios.delete(`${API_BASE_URL}/api/schedule?id=${scheduleId}`, {
-                headers: getAuthHeader(),
-            });
-        }
+        const response = await axios.delete(`${API_BASE_URL}/api/schedule/${scheduleId}`, {
+            headers: getAuthHeader(),
+        })
         return response.data;
     } catch (error) {
-        console.error('Delete schedule error:', error.response?.data || error.message);
-        return { error: error.response?.data?.message || error.message };
+        return { error: error.message };
     }
 }
 

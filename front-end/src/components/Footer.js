@@ -25,7 +25,7 @@ const Footer = ({ featuredEvents, navigateTo }) => {
             <ul className="footer-links">
               <li>
                 <a href="https://www.ladliusa.org/initiatives/mental-health-for-drug-prevention?gad_source=1&gad_campaignid=22693788626&gbraid=0AAAAA9r06PnDkzMkBm-VU1KSYKKXPsZCi&gclid=CjwKCAjw4efDBhATEiwAaDBpblx8iluhr-HAlTCn7ib8eVc8o6qbZJRsba3ErHJxNS_97923KGK0vhoCs8AQAvD_BwE">
-                Mental Health for Drug Prevention</a>
+                  Mental Health for Drug Prevention</a>
               </li>
               <li>
                 <a href="https://moet.gov.vn/Pages/home.aspx">Ministry of Education and Training</a>

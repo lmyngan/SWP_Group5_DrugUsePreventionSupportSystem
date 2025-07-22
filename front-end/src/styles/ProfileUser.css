@@ -253,6 +253,12 @@ body {
   align-items: center;
   justify-content: center;
   animation: fadeIn 0.2s;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+.modal-overlay.fade-out {
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
 @keyframes fadeIn {

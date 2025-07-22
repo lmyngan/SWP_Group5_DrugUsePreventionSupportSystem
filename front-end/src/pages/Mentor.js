@@ -86,7 +86,7 @@ const Mentor = () => {
       timeStr = schedule.startTime;
     }
 
-    return `${dateStr} ${timeStr}`.trim();
+    return `${timeStr}, ${dateStr}`.trim();
   };
 
   const handleBookConsultant = async (expert) => {
