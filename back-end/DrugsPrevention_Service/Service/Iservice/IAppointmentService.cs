@@ -11,7 +11,7 @@ namespace DrugsPrevention_Service.Service.Iservice
     public interface IAppointmentService
     {
         Task<AppointmentResponseDTO> BookAppointmentAsync(AppointmentCreateDTO dto);
-        Task<List<ScheduleDTO>> GetSchedulesByConsultantIdAsync(int consultantId);
+        Task<IEnumerable<ScheduleDTO>> GetSchedulesByConsultantIdAsync(int consultantId);
         Task<List<AppointmentResponseDTO>> GetAllAppointmentsAsync();
         Task<AppointmentResponseDTO> GetAppointmentByIdAsync(int id);
         Task<AppointmentResponseDTO> CreateAppointmentAsync(AppointmentCreateDTO request);
