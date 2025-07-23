@@ -163,6 +163,10 @@ namespace DrugsPrevention_Data.Migrations
                         .HasColumnType("float")
                         .HasColumnName("rate");
 
+                    b.Property<int>("RatingCount")
+                        .HasColumnType("int")
+                        .HasColumnName("rating_count");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
