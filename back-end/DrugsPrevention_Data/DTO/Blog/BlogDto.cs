@@ -14,9 +14,9 @@ namespace DrugsPrevention_Data.DTO.Blog
         public string Title { get; set; }
         public string Content { get; set; }
         public float Rate { get; set; }
+        public int RatingCount { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        // Thông tin người tạo
         public string AuthorAccountname { get; set; }
         public string AuthorFullName { get; set; }
     }

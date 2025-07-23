@@ -70,5 +70,11 @@ namespace DrugsPrevention_API.Controllers
             await _blogService.DeleteAsync(id);
             return Ok(new { message = "Xoá blog thành công." });
         }
+        [HttpPost("rate")]
+        public async Task<IActionResult> RateBlog([FromBody] RateBlogDto dto)
+        {
+            await _blogService.RateBlogAsync(dto.BlogId, dto.Rating);
+            return Ok(new { message = "Rated successfully" });
+        }
     }
 }

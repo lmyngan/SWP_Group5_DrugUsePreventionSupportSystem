@@ -95,6 +95,16 @@ namespace DrugsPrevention_Service.Service
             _blogRepository.Delete(blog);
             await _blogRepository.SaveAsync();
         }
-    }
+        public async Task RateBlogAsync(int blogId, float newRating)
+        {
+            var blog = await _blogRepository.GetByIdAsync(blogId);
+            if (blog == null) return;
 
+            blog.Rate = ((float)blog.Rate * blog.RatingCount + newRating) / (blog.RatingCount + 1);
+            blog.RatingCount++;
+
+            _blogRepository.Update(blog);
+            await _blogRepository.SaveAsync();
+        }
+    }
 }
