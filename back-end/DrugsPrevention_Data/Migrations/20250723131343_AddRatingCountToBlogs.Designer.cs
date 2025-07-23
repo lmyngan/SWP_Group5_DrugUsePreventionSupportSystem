@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DrugsPrevention_Data.Migrations
 {
     [DbContext(typeof(DrugsPrevention_DBContext))]
-    [Migration("20250715143049_InitiateCreate")]
-    partial class InitiateCreate
+    [Migration("20250723131343_AddRatingCountToBlogs")]
+    partial class AddRatingCountToBlogs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -165,6 +165,10 @@ namespace DrugsPrevention_Data.Migrations
                     b.Property<double>("Rate")
                         .HasColumnType("float")
                         .HasColumnName("rate");
+
+                    b.Property<int>("RatingCount")
+                        .HasColumnType("int")
+                        .HasColumnName("rating_count");
 
                     b.Property<string>("Title")
                         .IsRequired()
