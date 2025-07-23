@@ -196,14 +196,34 @@ const Mentor = () => {
   };
 
   const getAvailableSchedules = (expertId) => {
-    return (selectedSchedules[expertId] || []).filter(
-      schedule => schedule.status === 'unbooked'
-    );
+    return (selectedSchedules[expertId] || [])
+      .filter(schedule => schedule.status === 'unbooked')
+      .sort((a, b) => {
+
+        const dateA = new Date(a.availableDate || a.dateTime || 0);
+        const dateB = new Date(b.availableDate || b.dateTime || 0);
+        if (dateA.getTime() !== dateB.getTime()) {
+          return dateA - dateB;
+        }
+
+        const parseTime = t => {
+          if (!t) return 0;
+          if (typeof t === 'string') {
+            const [h, m, s] = t.split(":").map(Number);
+            return h * 3600 + m * 60 + (s || 0);
+          }
+
+          if (typeof t === 'object' && t.hours !== undefined) {
+            return t.hours * 3600 + t.minutes * 60 + (t.seconds || 0);
+          }
+          return 0;
+        };
+        return parseTime(a.startTime) - parseTime(b.startTime);
+      });
   };
 
   const [experts, setExperts] = useState([]);
 
-  // mapping ảnh theo id
   const imageMap = {
     1: "/images/consultant1.webp",
     2: "/images/consultant2.jpg",
@@ -221,7 +241,7 @@ const Mentor = () => {
         setExperts(mapped);
       }
     });
-  }, []);
+  });
 
   return (
     <div className="mentor-page">

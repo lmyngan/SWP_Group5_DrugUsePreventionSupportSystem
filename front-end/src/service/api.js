@@ -489,7 +489,7 @@ export const addNotification = async (data) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.response?.data?.message || error.message };
+        return { error: error.message };
     }
 };
 
@@ -501,7 +501,7 @@ export const getNotificationsByAccountId = async (accountId) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.response?.data?.message || error.message };
+        return { error: error.message };
     }
 };
 
@@ -513,7 +513,7 @@ export const markAsReadNotification = async (notificationId) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.response?.data?.message || error.message };
+        return { error: error.message };
     }
 }
 
@@ -525,7 +525,31 @@ export const getReportData = async () => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.response?.data?.message || error.message };
+        return { error: error.message };
+    }
+}
+
+//GET: Top user join event
+export const getTopUser = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Report/top-user-event-participation`, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
+//GET: Details of top event participants
+export const getTopEventDetail = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Report/top-user-event-participation`, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
     }
 }
 
