@@ -35,11 +35,13 @@ namespace DrugsPrevention_Data.Repositories.Implementations
                 TotalAppointmentsCompleted = await _context.Appointments
                     .CountAsync(a => a.Status == "Completed"),
 
-                AverageBlogRating = await _context.Blogs
-                    .Where(b => b.Rate > 0)
-                    .AverageAsync(b => (double?)b.Rate) ?? 0
+                AverageBlogRating = Math.Round(
+            await _context.Blogs
+                .Where(b => b.Rate > 0)
+                .AverageAsync(b => (double?)b.Rate) ?? 0,
+                1
+                )
             };
-
             return report;
         }
         public async Task<UserReportDTO> GetTopUserByEventParticipationAsync()
