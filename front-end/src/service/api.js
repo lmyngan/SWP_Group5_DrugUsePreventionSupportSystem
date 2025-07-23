@@ -481,6 +481,18 @@ export const deleteBlog = async (blogId) => {
     }
 }
 
+//POST: Rate Blog
+export const getRateBlog = async (data) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/Blog/rate`, data, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
 //POST: Notification
 export const addNotification = async (data) => {
     try {

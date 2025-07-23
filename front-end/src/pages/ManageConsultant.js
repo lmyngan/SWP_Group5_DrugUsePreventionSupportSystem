@@ -20,10 +20,11 @@ const Consultant = () => {
     const fetchConsultantInfo = async () => {
       try {
         setLoading(true);
-        const user = JSON.parse(localStorage.getItem("user"));
-        const consultantId = user?.consultantId || 1;
 
-        const response = await getConsultantInfo(consultantId);
+        const user = JSON.parse(localStorage.getItem("user"));
+        const userConsultantId = user.consultantId;
+
+        const response = await getConsultantInfo(userConsultantId);
         if (response.error) {
           setError(response.error);
         } else {
@@ -92,8 +93,8 @@ const Consultant = () => {
     setError(null);
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-      const consultantId = user?.consultantId || 1;
-      const response = await editConsultant(consultantId, editData);
+      const userConsultantId = user.consultantId;
+      const response = await editConsultant(userConsultantId, editData);
       if (response && !response.error) {
         setProfile(editData);
         setEditMode(false);

@@ -227,7 +227,7 @@ const Mentor = () => {
   const imageMap = {
     1: "/images/consultant1.webp",
     2: "/images/consultant2.jpg",
-    3: "/images/consultant3.jpg",
+    3: "/images/consultant4.jpg",
   };
 
   useEffect(() => {

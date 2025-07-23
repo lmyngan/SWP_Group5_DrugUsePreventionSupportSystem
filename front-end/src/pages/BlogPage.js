@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import "../styles/BlogPage.css"
 
-import { blogData, addBlog } from "../service/api";
+import { blogData, addBlog, getRateBlog } from "../service/api";
 import { useLocation } from "react-router-dom";
 
 const BlogPage = ({ navigateTo }) => {
@@ -114,13 +114,22 @@ const BlogPage = ({ navigateTo }) => {
     setBlogs(blogs.map((blog) => (blog.blog_id === blogId ? { ...blog, likes: blog.likes + 1 } : blog)))
   }
 
-  // Dummy API call for rate (bạn có thể thay bằng API thực tế)
+  // Gọi API thực tế để rate blog
   const handleRateBlog = async (blogId, rate) => {
-    // TODO: Call API to rate blog
-    setBlogs(blogs.map((blog) => (blog.blog_id === blogId ? { ...blog, rate } : blog)));
-    setShowRateModal(false);
-    setSelectedRate(0);
-    setRateBlogId(null);
+    try {
+      const response = await getRateBlog({ blogId, rating: rate });
+      if (!response.error) {
+        setBlogs(blogs.map((blog) => (blog.blog_id === blogId ? { ...blog, rate } : blog)));
+        setShowRateModal(false);
+        setSelectedRate(0);
+        setRateBlogId(null);
+        alert("Thank you for rating!");
+      } else {
+        alert("Failed to rate blog: " + response.error);
+      }
+    } catch (err) {
+      alert("An error occurred while rating the blog.");
+    }
   };
 
   const formatDate = (dateString) => {
