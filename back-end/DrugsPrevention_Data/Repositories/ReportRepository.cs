@@ -44,17 +44,34 @@ namespace DrugsPrevention_Data.Repositories.Implementations
         }
         public async Task<UserReportDTO> GetTopUserByEventParticipationAsync()
         {
-            return await _context.EventParticipations
-                .GroupBy(e => new { e.AccountId, e.Account.FullName })
-                .Select(g => new UserReportDTO
+            var topUserGroup = await _context.EventParticipations
+                .GroupBy(e => e.AccountId)
+                .Select(g => new
                 {
-                    AccountId = g.Key.AccountId,
-                    FullName = g.Key.FullName,
-                    ParticipationCount = g.Count()
+                    AccountId = g.Key,
+                    Count = g.Count()
                 })
-                .OrderByDescending(x => x.ParticipationCount)
+                .OrderByDescending(g => g.Count)
                 .FirstOrDefaultAsync();
+
+            if (topUserGroup == null)
+                return null;
+
+            var account = await _context.Accounts
+                .Where(a => a.AccountId == topUserGroup.AccountId)
+                .Select(a => new UserReportDTO
+                {
+                    AccountId = a.AccountId,
+                    FullName = a.FullName,
+                    Gender = a.Gender,
+                    CreatedAt = a.CreatedAt,
+                    ParticipationCount = topUserGroup.Count
+                })
+                .FirstOrDefaultAsync();
+
+            return account;
         }
+
 
         public async Task<List<UserReportDTO>> GetUsersOfMostPopularEventAsync()
         {
@@ -79,5 +96,44 @@ namespace DrugsPrevention_Data.Repositories.Implementations
 
             return result;
         }
+        public async Task<PopularEventReportDTO> GetMostPopularEventWithUsersAsync()
+        {
+            var topEventGroup = await _context.EventParticipations
+                .GroupBy(e => e.EventId)
+                .OrderByDescending(g => g.Count())
+                .Select(g => new {
+                    EventId = g.Key,
+                    Count = g.Count()
+                })
+                .FirstOrDefaultAsync();
+
+            if (topEventGroup == null)
+                return null;
+
+            var eventInfo = await _context.Events
+                .Where(e => e.EventId == topEventGroup.EventId)
+                .Select(e => new { e.EventId, e.Name })
+                .FirstOrDefaultAsync();
+
+            var users = await _context.EventParticipations
+                .Where(e => e.EventId == topEventGroup.EventId)
+                .GroupBy(e => new { e.AccountId, e.Account.FullName })
+                .Select(g => new UserReportDTO
+                {
+                    AccountId = g.Key.AccountId,
+                    FullName = g.Key.FullName,
+                    ParticipationCount = g.Count()
+                })
+                .ToListAsync();
+
+            return new PopularEventReportDTO
+            {
+                EventId = eventInfo?.EventId ?? 0,
+                EventName = eventInfo?.Name ?? "Unknown",
+                TotalParticipants = topEventGroup.Count,
+                Users = users
+            };
+        }
+
     }
 }
