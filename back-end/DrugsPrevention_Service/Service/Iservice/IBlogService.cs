@@ -14,5 +14,6 @@ namespace DrugsPrevention_Service.Service.Iservice
         Task AddAsync(CreateBlogDto dto);
         Task UpdateAsync(UpdateBlogDto dto);
         Task DeleteAsync(int id);
+        Task RateBlogAsync(int blogId, float newRating);
     }
 }
