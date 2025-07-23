@@ -90,6 +90,8 @@ namespace DrugsPrevention_Data.Repositories.Implementations
                 {
                     AccountId = g.Key.AccountId,
                     FullName = g.Key.FullName,
+                    Gender = g.Select(x => x.Account.Gender).FirstOrDefault(),
+                    CreatedAt = g.Select(x => x.Account.CreatedAt).FirstOrDefault(),
                     ParticipationCount = g.Count()
                 })
                 .ToListAsync();
@@ -122,6 +124,8 @@ namespace DrugsPrevention_Data.Repositories.Implementations
                 {
                     AccountId = g.Key.AccountId,
                     FullName = g.Key.FullName,
+                    Gender = g.Select(x => x.Account.Gender).FirstOrDefault(),
+                    CreatedAt = g.Select(x => x.Account.CreatedAt).FirstOrDefault(),
                     ParticipationCount = g.Count()
                 })
                 .ToListAsync();
