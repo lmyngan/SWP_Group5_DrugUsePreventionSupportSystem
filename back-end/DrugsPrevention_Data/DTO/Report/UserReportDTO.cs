@@ -10,6 +10,9 @@ namespace DrugsPrevention_Data.DTO.Report
     {
         public int AccountId { get; set; }
         public string FullName { get; set; }
+        public string Gender { get; set; }      
+        public DateTime CreatedAt { get; set; }  
         public int ParticipationCount { get; set; }
     }
+
 }

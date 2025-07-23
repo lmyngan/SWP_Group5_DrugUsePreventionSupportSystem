@@ -36,5 +36,11 @@ namespace DrugsPrevention_API.Controllers
             var result = await _reportService.GetUsersOfMostPopularEventAsync();
             return Ok(result);
         }
+        [HttpGet("most-popular-event-detail")]
+        public async Task<IActionResult> GetMostPopularEventDetail()
+        {
+            var result = await _reportService.GetMostPopularEventWithUsersAsync();
+            return Ok(result);
+        }
     }
 }
