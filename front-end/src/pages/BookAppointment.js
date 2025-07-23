@@ -177,7 +177,7 @@ const BookAppointment = () => {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {appointments
-                            .filter((a) => a.status && a.status.trim() !== "")
+                            .filter((a) => a.status && a.status.trim() !== "unbooked")
                             .map((a) => {
                                 const statusColor =
                                     a.status === "completed"
@@ -192,15 +192,14 @@ const BookAppointment = () => {
                                         key={a.scheduleId}
                                         className="bg-white border rounded-lg shadow p-6 flex flex-col justify-between"
                                     >
+                                        <div className="mb-1 text-lg font-bold">
+                                            {a.fullName}
+                                        </div>
 
                                         <div className={`mb-2 border-none px-3 py-1 font-semibold ${statusColor} rounded-xl w-1/2 text-left`}>
                                             {a.status}
                                         </div>
                                         <hr className="my-2" />
-
-                                        <div className="mb-1">
-                                            {a.accountName}
-                                        </div>
 
                                         <div className="mb-1">
                                             <strong>Date:</strong> {a.availableDate ? a.availableDate.split("T")[0] : ""}

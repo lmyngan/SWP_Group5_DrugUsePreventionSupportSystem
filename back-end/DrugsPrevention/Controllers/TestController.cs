@@ -30,7 +30,7 @@ namespace DrugsPrevention_API.Controllers
             return Ok(new { resultId });
         }
 
-        [AuthorizeByRole(1, 2, 3, 4)]
+        
         [HttpGet("{testId}")]
         public async Task<IActionResult> GetTestById(int testId)
         {
@@ -56,7 +56,7 @@ namespace DrugsPrevention_API.Controllers
             return Ok(result);
         }
 
-        [AuthorizeByRole(1, 2, 3, 4)]
+        
         [HttpGet("{testId}/questions")]
         public async Task<IActionResult> GetTestQuestions(int testId, [FromQuery] int? resultId = null)
         {
