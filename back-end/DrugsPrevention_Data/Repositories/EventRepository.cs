@@ -46,5 +46,12 @@ namespace DrugsPrevention_Data.Repositories.Implementations
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<IEnumerable<Event>> SearchEventsByNameAsync(string name)
+        {
+            return await _context.Events
+                .Include(e => e.Creator)
+                .Where(e => EF.Functions.Like(e.Name.ToLower(), $"%{name.ToLower()}%"))
+                .ToListAsync();
+        }
     }
 }

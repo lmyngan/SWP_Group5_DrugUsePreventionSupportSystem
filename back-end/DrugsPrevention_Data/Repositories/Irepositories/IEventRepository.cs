@@ -15,5 +15,6 @@ namespace DrugsPrevention_Data.Repositories.Irepositories
         Task<Event> AddEventAsync(Event ev);
         Task<Event> UpdateEventAsync(Event ev);
         Task<bool> DeleteEventAsync(int id);
+        Task<IEnumerable<Event>> SearchEventsByNameAsync(string name);
     }
 }

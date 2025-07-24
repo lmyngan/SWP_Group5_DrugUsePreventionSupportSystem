@@ -60,5 +60,16 @@ namespace DrugsPrevention_API.Controllers
             if (!deleted) return NotFound();
             return NoContent();
         }
+
+        [AuthorizeByRole(1, 2, 3, 4)]
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchEvents([FromQuery] string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return BadRequest("Missing event name to search.");
+
+            var results = await _eventService.SearchEventsByNameAsync(name);
+            return Ok(results);
+        }
     }
 }
