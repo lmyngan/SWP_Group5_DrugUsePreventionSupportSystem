@@ -308,44 +308,52 @@ const Mentor = () => {
                     </div>
                   )}
 
-                  {selectedSchedules[expert.consultantId] && Array.isArray(selectedSchedules[expert.consultantId]) && selectedSchedules[expert.consultantId].length > 0 && (
-                    <div style={{ marginTop: "1rem" }}>
-                      <label><strong>Available Schedules ({getAvailableSchedules(expert.consultantId).length}):</strong></label>
-                      <select
-                        value={selectedScheduleId[expert.consultantId] || ""}
-                        onChange={e => handleSelectChange(expert.consultantId, e.target.value)}
-                        style={{ width: "100%", marginTop: "0.5rem", padding: "0.5rem" }}
-                      >
-                        <option value="">-- Select schedule --</option>
-                        {getAvailableSchedules(expert.consultantId).map((schedule, idx) => (
-                          <option key={schedule.consultantId || schedule.scheduleId || idx} value={schedule.id || schedule.scheduleId || idx}>
-                            {formatScheduleDisplay(schedule)}
-                          </option>
-                        ))}
-                      </select>
-                      <button
-                        className="contact-btn"
-                        style={{ marginTop: "1rem", width: "100%" }}
-                        onClick={() => handleBookConsultant(expert)}
-                      >
-                        Book Consultant
-                      </button>
-                    </div>
-                  )}
+                  {selectedSchedules[expert.consultantId] &&
+                    Array.isArray(selectedSchedules[expert.consultantId]) &&
+                    selectedSchedules[expert.consultantId].length > 0 &&
+                    getAvailableSchedules(expert.consultantId).length > 0 && (
+                      <div style={{ marginTop: "1rem" }}>
+                        <label><strong>Available Schedules ({getAvailableSchedules(expert.consultantId).length}):</strong></label>
+                        <select
+                          value={selectedScheduleId[expert.consultantId] || ""}
+                          onChange={e => handleSelectChange(expert.consultantId, e.target.value)}
+                          style={{ width: "100%", marginTop: "0.5rem", padding: "0.5rem" }}
+                        >
+                          <option value="">-- Select schedule --</option>
+                          {getAvailableSchedules(expert.consultantId).map((schedule, idx) => (
+                            <option key={schedule.consultantId || schedule.scheduleId || idx} value={schedule.id || schedule.scheduleId || idx}>
+                              {formatScheduleDisplay(schedule)}
+                            </option>
+                          ))}
+                        </select>
+                        <button
+                          className="contact-btn"
+                          style={{ marginTop: "1rem", width: "100%" }}
+                          onClick={() => handleBookConsultant(expert)}
+                        >
+                          Book Consultant
+                        </button>
+                      </div>
+                    )}
 
                   {/* No schedules available */}
-                  {selectedSchedules[expert.id] && Array.isArray(selectedSchedules[expert.id]) && selectedSchedules[expert.id].length === 0 && !loadingSchedules[expert.id] && !scheduleErrors[expert.id] && (
-                    <div style={{
-                      marginTop: "1rem",
-                      padding: "0.5rem",
-                      borderRadius: "4px",
-                      backgroundColor: "#fff3cd",
-                      border: "1px solid #ffeaa7",
-                      color: "#856404"
-                    }}>
-                      No schedules available for this consultant.
-                    </div>
-                  )}
+                  {selectedSchedules[expert.consultantId] &&
+                    Array.isArray(selectedSchedules[expert.consultantId]) &&
+                    selectedSchedules[expert.consultantId].length > 0 &&
+                    getAvailableSchedules(expert.consultantId).length === 0 &&
+                    !loadingSchedules[expert.consultantId] &&
+                    !scheduleErrors[expert.consultantId] && (
+                      <div style={{
+                        marginTop: "1rem",
+                        padding: "0.5rem",
+                        borderRadius: "4px",
+                        backgroundColor: "#fff3cd",
+                        border: "1px solid #ffeaa7",
+                        color: "#856404"
+                      }}>
+                        No schedules available for this consultant.
+                      </div>
+                    )}
                   {/* Thông báo booking */}
                   {bookingMessages[expert.id] && (
                     <div style={{

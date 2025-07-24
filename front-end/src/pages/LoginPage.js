@@ -1,7 +1,6 @@
 // src/pages/LoginPage.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
 import { FaUser, FaLock } from 'react-icons/fa';
 import '../styles/LoginPage.css';
 import { loginUser, getUserById, loginWithGoogle } from '../service/api';
