@@ -4,6 +4,7 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { IoMdAddCircle } from "react-icons/io";
 import { MdCancel } from "react-icons/md";
+import * as Yup from 'yup';
 
 // Format date theo dd/MM/yyyy
 const formatDateVN = (dateString) => {
@@ -22,6 +23,14 @@ const formatType = (type) => {
     return type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
 };
 
+const eventSchema = Yup.object().shape({
+  eventName: Yup.string().required('Event name is required'),
+  description: Yup.string().required('Description is required'),
+  location: Yup.string().required('Location is required'),
+  startDate: Yup.string().required('Start date is required'),
+  endDate: Yup.string().required('End date is required'),
+});
+
 const ManageEvent = () => {
     const [events, setEvents] = useState([]);
     const [showAdd, setShowAdd] = useState(false);
@@ -38,6 +47,7 @@ const ManageEvent = () => {
     const [editEvent, setEditEvent] = useState({});
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
+    const [addError, setAddError] = useState('');
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -51,31 +61,33 @@ const ManageEvent = () => {
 
     // Add
     const handleAddEvent = async () => {
-        const user = JSON.parse(localStorage.getItem("user"));
-        const createdBy = user?.accountId || 0;
-        const body = {
-            name: newEvent.name,
-            description: newEvent.description,
-            date: new Date(newEvent.date).toISOString(),
-            location: newEvent.location,
-            createdBy,
-            type: newEvent.type
-        };
-        await addEvent(body);
-        // Refetch events
-        const data = await eventData();
-        if (Array.isArray(data)) setEvents(data);
-        else if (Array.isArray(data.events)) setEvents(data.events);
-        else setEvents([]);
-        setShowAdd(false);
-        setNewEvent({
-            name: "",
-            description: "",
-            date: new Date().toISOString().slice(0, 10),
-            location: "",
-            type: "",
-            creatorFullName: "",
-        });
+        setAddError('');
+        try {
+            await eventSchema.validate(newEvent, { abortEarly: false });
+            // Nếu hợp lệ, gọi API thêm event
+            await addEvent({
+                ...newEvent,
+                startDate: new Date(newEvent.startDate).toISOString(),
+                endDate: new Date(newEvent.endDate).toISOString(),
+            });
+            // Refetch events
+            const data = await eventData();
+            setEvents(Array.isArray(data) ? data : []);
+            setShowAdd(false);
+            setNewEvent({
+                eventName: '',
+                description: '',
+                location: '',
+                startDate: '',
+                endDate: '',
+            });
+        } catch (err) {
+            if (err.inner && err.inner.length > 0) {
+                setAddError(err.inner.map(e => e.message).join(', '));
+            } else {
+                setAddError(err.message);
+            }
+        }
     };
 
     // Edit
@@ -153,6 +165,10 @@ const ManageEvent = () => {
                                     <MdCancel />
                                 </button>
                             </div>
+                            {/* Hiển thị lỗi validate */}
+                            {addError && (
+                                <div className="text-red-500 mb-2">{addError}</div>
+                            )}
                             <div className="grid grid-cols-2 gap-4">
                                 <input className="border p-2" placeholder="Event Name" value={newEvent.name} onChange={e => setNewEvent(a => ({ ...a, name: e.target.value }))} />
                                 <input className="border p-2" placeholder="Description" value={newEvent.description} onChange={e => setNewEvent(a => ({ ...a, description: e.target.value }))} />

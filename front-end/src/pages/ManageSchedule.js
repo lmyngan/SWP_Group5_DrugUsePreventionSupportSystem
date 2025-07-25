@@ -3,6 +3,7 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete, MdCancel } from "react-icons/md";
 import { IoMdAddCircle } from "react-icons/io";
 import { getScheduleData, addSchedule, deleteSchedule, editSchedule } from '../service/api';
+import * as Yup from 'yup';
 
 // Format date dd/MM/yyyy
 const formatDateVN = (dateString) => {
@@ -14,6 +15,14 @@ const formatDateVN = (dateString) => {
     const year = d.getFullYear();
     return `${day}/${month}/${year}`;
 };
+
+const scheduleSchema = Yup.object().shape({
+  consultantId: Yup.number().min(1, 'Consultant ID is required').required('Consultant ID is required'),
+  availableDate: Yup.string().required('Available date is required'),
+  startTime: Yup.string().required('Start time is required'),
+  endTime: Yup.string().required('End time is required'),
+  slot: Yup.number().min(1, 'Slot must be at least 1').required('Slot is required'),
+});
 
 const ManageSchedule = () => {
     const [schedules, setSchedules] = useState([]);
@@ -28,9 +37,11 @@ const ManageSchedule = () => {
         slot: 1,
     });
     const [editId, setEditId] = useState(null);
-    const [editSchedule, setEditSchedule] = useState({});
+    const [editScheduleData, setEditScheduleData] = useState({});
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
+    const [addError, setAddError] = useState('');
+    const [editError, setEditError] = useState('');
 
     useEffect(() => {
         const fetchSchedules = async () => {
@@ -44,6 +55,17 @@ const ManageSchedule = () => {
 
     // Add
     const handleAddSchedule = async () => {
+        setAddError('');
+        try {
+            await scheduleSchema.validate(newSchedule, { abortEarly: false });
+        } catch (err) {
+            if (err.inner && err.inner.length > 0) {
+                setAddError(err.inner.map(e => e.message).join(', '));
+            } else {
+                setAddError(err.message);
+            }
+            return;
+        }
         console.log('Adding schedule with data:', newSchedule);
 
         // Validate required fields
@@ -81,11 +103,22 @@ const ManageSchedule = () => {
     // Edit (giữ nguyên logic, chỉ cập nhật trường nếu cần)
     const handleEdit = (schedule) => {
         setEditId(schedule.scheduleId);
-        setEditSchedule({ ...schedule });
+        setEditScheduleData({ ...schedule });
         setShowEditModal(true);
     };
     const handleSaveEdit = async () => {
-        const res = await editSchedule(editId, editSchedule);
+        setEditError('');
+        try {
+            await scheduleSchema.validate(editScheduleData, { abortEarly: false });
+        } catch (err) {
+            if (err.inner && err.inner.length > 0) {
+                setEditError(err.inner.map(e => e.message).join(', '));
+            } else {
+                setEditError(err.message);
+            }
+            return;
+        }
+        const res = await editSchedule(editId, editScheduleData);
         if (!res.error) {
             const data = await getScheduleData();
             if (Array.isArray(data)) setSchedules(data);
@@ -157,12 +190,28 @@ const ManageSchedule = () => {
                                 </button>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
-                                <input className="border p-2" type="number" placeholder="Consultant ID" value={newSchedule.consultantId} onChange={e => setNewSchedule(a => ({ ...a, consultantId: parseInt(e.target.value) || 0 }))} />
-                                <input className="border p-2" type="date" value={newSchedule.availableDate} onChange={e => setNewSchedule(a => ({ ...a, availableDate: e.target.value }))} />
-                                <input className="border p-2" placeholder="Start Time (hh:mm:ss)" value={newSchedule.startTime} onChange={e => setNewSchedule(a => ({ ...a, startTime: e.target.value }))} />
-                                <input className="border p-2" placeholder="End Time (hh:mm:ss)" value={newSchedule.endTime} onChange={e => setNewSchedule(a => ({ ...a, endTime: e.target.value }))} />
-                                <input className="border p-2" type="number" min={1} placeholder="Slot" value={newSchedule.slot} onChange={e => setNewSchedule(a => ({ ...a, slot: parseInt(e.target.value) || 0 }))} />
+                                <div className="flex flex-col">
+                                    <label className="mb-1 text-sm font-medium">Consultant ID</label>
+                                    <input className="border p-2" type="number" placeholder="Consultant ID" value={newSchedule.consultantId} onChange={e => setNewSchedule(a => ({ ...a, consultantId: parseInt(e.target.value) || 0 }))} />
+                                </div>
+                                <div className="flex flex-col">
+                                    <label className="mb-1 text-sm font-medium">Available Date</label>
+                                    <input className="border p-2" type="date" value={newSchedule.availableDate} onChange={e => setNewSchedule(a => ({ ...a, availableDate: e.target.value }))} />
+                                </div>
+                                <div className="flex flex-col">
+                                    <label className="mb-1 text-sm font-medium">Start Time</label>
+                                    <input className="border p-2" placeholder="Start Time (hh:mm:ss)" value={newSchedule.startTime} onChange={e => setNewSchedule(a => ({ ...a, startTime: e.target.value }))} />
+                                </div>
+                                <div className="flex flex-col">
+                                    <label className="mb-1 text-sm font-medium">End Time</label>
+                                    <input className="border p-2" placeholder="End Time (hh:mm:ss)" value={newSchedule.endTime} onChange={e => setNewSchedule(a => ({ ...a, endTime: e.target.value }))} />
+                                </div>
+                                <div className="flex flex-col">
+                                    <label className="mb-1 text-sm font-medium">Slot</label>
+                                    <input className="border p-2" type="number" min={1} placeholder="Slot" value={newSchedule.slot} onChange={e => setNewSchedule(a => ({ ...a, slot: parseInt(e.target.value) || 0 }))} />
+                                </div>
                             </div>
+                            {addError && <div className="text-red-500 mt-2 text-sm">{addError}</div>}
                             <div className="flex justify-end mt-6 gap-2">
                                 <button className="px-6 py-3 bg-gray-300 text-gray-700 rounded hover:bg-gray-400" onClick={() => setShowAdd(false)}><MdCancel /></button>
                                 <button className="px-6 py-3 bg-green-600 text-white rounded hover:bg-green-700" onClick={handleAddSchedule}>Add</button>
@@ -210,13 +259,32 @@ const ManageSchedule = () => {
                             <button className="text-gray-500 hover:text-gray-700 text-2xl" onClick={handleCancelEdit}><MdCancel /></button>
                         </div>
                         <div className="grid grid-cols-2 gap-4">
-                            <input className="border p-2" type="number" placeholder="Consultant ID" value={editSchedule.consultantId || 0} onChange={e => setEditSchedule(ev => ({ ...ev, consultantId: parseInt(e.target.value) || 0 }))} />
-                            <input className="border p-2" type="number" placeholder="Account ID" value={editSchedule.accountId || 0} onChange={e => setEditSchedule(ev => ({ ...ev, accountId: parseInt(e.target.value) || 0 }))} />
-                            <input className="border p-2" type="date" value={editSchedule.availableDate ? editSchedule.availableDate.slice(0, 10) : ''} onChange={e => setEditSchedule(ev => ({ ...ev, availableDate: e.target.value }))} />
-                            <input className="border p-2" placeholder="Start Time (hh:mm:ss)" value={editSchedule.startTime || ''} onChange={e => setEditSchedule(ev => ({ ...ev, startTime: e.target.value }))} />
-                            <input className="border p-2" placeholder="End Time (hh:mm:ss)" value={editSchedule.endTime || ''} onChange={e => setEditSchedule(ev => ({ ...ev, endTime: e.target.value }))} />
-                            <input className="border p-2" type="number" min={1} placeholder="Slot" value={editSchedule.slot || 1} onChange={e => setEditSchedule(ev => ({ ...ev, slot: parseInt(e.target.value) || 0 }))} />
+                            <div className="flex flex-col">
+                                <label className="mb-1 text-sm font-medium">Consultant ID</label>
+                                <input className="border p-2" type="number" placeholder="Consultant ID" value={editScheduleData.consultantId || 0} onChange={e => setEditScheduleData(ev => ({ ...ev, consultantId: parseInt(e.target.value) || 0 }))} />
+                            </div>
+                            <div className="flex flex-col">
+                                <label className="mb-1 text-sm font-medium">Account ID</label>
+                                <input className="border p-2" type="number" placeholder="Account ID" value={editScheduleData.accountId || 0} onChange={e => setEditScheduleData(ev => ({ ...ev, accountId: parseInt(e.target.value) || 0 }))} />
+                            </div>
+                            <div className="flex flex-col">
+                                <label className="mb-1 text-sm font-medium">Available Date</label>
+                                <input className="border p-2" type="date" value={editScheduleData.availableDate ? editScheduleData.availableDate.slice(0, 10) : ''} onChange={e => setEditScheduleData(ev => ({ ...ev, availableDate: e.target.value }))} />
+                            </div>
+                            <div className="flex flex-col">
+                                <label className="mb-1 text-sm font-medium">Start Time</label>
+                                <input className="border p-2" placeholder="Start Time (hh:mm:ss)" value={editScheduleData.startTime || ''} onChange={e => setEditScheduleData(ev => ({ ...ev, startTime: e.target.value }))} />
+                            </div>
+                            <div className="flex flex-col">
+                                <label className="mb-1 text-sm font-medium">End Time</label>
+                                <input className="border p-2" placeholder="End Time (hh:mm:ss)" value={editScheduleData.endTime || ''} onChange={e => setEditScheduleData(ev => ({ ...ev, endTime: e.target.value }))} />
+                            </div>
+                            <div className="flex flex-col">
+                                <label className="mb-1 text-sm font-medium">Slot</label>
+                                <input className="border p-2" type="number" min={1} placeholder="Slot" value={editScheduleData.slot || 1} onChange={e => setEditScheduleData(ev => ({ ...ev, slot: parseInt(e.target.value) || 0 }))} />
+                            </div>
                         </div>
+                        {editError && <div className="text-red-500 mt-2 text-sm">{editError}</div>}
                         <div className="flex justify-end mt-6 gap-2">
                             <button className="px-6 py-3 bg-gray-300 text-gray-700 rounded hover:bg-gray-400" onClick={handleCancelEdit}><MdCancel /></button>
                             <button className="px-6 py-3 bg-green-600 text-white rounded hover:bg-green-700" onClick={handleSaveEdit}>Save</button>
