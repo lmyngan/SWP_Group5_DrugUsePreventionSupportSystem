@@ -24,11 +24,11 @@ const formatType = (type) => {
 };
 
 const eventSchema = Yup.object().shape({
-    eventName: Yup.string().required('Event name is required'),
+    name: Yup.string().required('Event name is required'),
     description: Yup.string().required('Description is required'),
     location: Yup.string().required('Location is required'),
-    startDate: Yup.string().required('Start date is required'),
-    endDate: Yup.string().required('End date is required'),
+    date: Yup.string().required('Date is required'),
+    type: Yup.string().required('Type is required'),
 });
 
 const ManageEvent = () => {
@@ -178,19 +178,15 @@ const ManageEvent = () => {
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <input className="border p-2 w-full" placeholder="Event Name" value={newEvent.name} onChange={e => setNewEvent(a => ({ ...a, name: e.target.value }))} />
-                                    {addFieldErrors.eventName && <div className="text-red-500 text-xs mt-1">{addFieldErrors.eventName}</div>}
+                                    {addFieldErrors.name && <div className="text-red-500 text-xs mt-1">{addFieldErrors.name}</div>}
                                 </div>
                                 <div>
                                     <input className="border p-2 w-full" placeholder="Description" value={newEvent.description} onChange={e => setNewEvent(a => ({ ...a, description: e.target.value }))} />
                                     {addFieldErrors.description && <div className="text-red-500 text-xs mt-1">{addFieldErrors.description}</div>}
                                 </div>
-                                <div>
-                                    <input className="border p-2 w-full" type="date" value={newEvent.startDate} onChange={e => setNewEvent(a => ({ ...a, startDate: e.target.value }))} />
-                                    {addFieldErrors.startDate && <div className="text-red-500 text-xs mt-1">{addFieldErrors.startDate}</div>}
-                                </div>
-                                <div>
-                                    <input className="border p-2 w-full" type="date" value={newEvent.endDate} onChange={e => setNewEvent(a => ({ ...a, endDate: e.target.value }))} />
-                                    {addFieldErrors.endDate && <div className="text-red-500 text-xs mt-1">{addFieldErrors.endDate}</div>}
+                                <div className="col-span-2">
+                                    <input className="border p-2 w-full" type="date" value={newEvent.date} onChange={e => setNewEvent(a => ({ ...a, date: e.target.value }))} />
+                                    {addFieldErrors.date && <div className="text-red-500 text-xs mt-1">{addFieldErrors.date}</div>}
                                 </div>
                                 <div className="col-span-2">
                                     <input className="border p-2 w-full" placeholder="Location" value={newEvent.location} onChange={e => setNewEvent(a => ({ ...a, location: e.target.value }))} />
@@ -202,6 +198,7 @@ const ManageEvent = () => {
                                         <option value="Education">Education</option>
                                         <option value="Support">Support</option>
                                     </select>
+                                    {addFieldErrors.type && <div className="text-red-500 text-xs mt-1">{addFieldErrors.type}</div>}
                                 </div>
                             </div>
                             <div className="flex justify-end mt-6 gap-2">
