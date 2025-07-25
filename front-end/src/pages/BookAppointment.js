@@ -222,22 +222,22 @@ const BookAppointment = () => {
                                             <button
                                                 className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
                                                 onClick={() => handleUpdateStatus(a.scheduleId, "completed", a)}
-                                                disabled={a.status === "completed" || updatingId === (a.scheduleId)}
+                                                disabled={a.status === "completed" || a.status === "cancelled" || updatingId === (a.scheduleId)}
                                             >
-                                                {updatingId === (a.scheduleId) ? "Updating..." : "Đồng ý"}
+                                                {updatingId === (a.scheduleId) ? "Updating..." : "Accept"}
                                             </button>
                                             <button
                                                 className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded disabled:opacity-50"
                                                 onClick={() => handleUpdateStatus(a.scheduleId, "cancelled", a)}
-                                                disabled={a.status === "cancelled" || updatingId === (a.scheduleId)}
+                                                disabled={a.status === "cancelled" || a.status === "completed" || updatingId === (a.scheduleId)}
                                             >
-                                                {updatingId === (a.scheduleId) ? "Updating..." : "Hủy"}
+                                                {updatingId === (a.scheduleId) ? "Updating..." : "Cancel"}
                                             </button>
                                             <button
                                                 className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
                                                 onClick={handleSendMessage}
                                             >
-                                                Gửi tin nhắn
+                                                Send Message
                                             </button>
                                         </div>
                                     </div>

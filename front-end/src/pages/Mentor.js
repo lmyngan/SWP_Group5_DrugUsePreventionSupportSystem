@@ -113,7 +113,9 @@ const Mentor = () => {
       accountId: user.accountId,
       consultantId: consultantId,
       scheduleId: schedule.id || schedule.scheduleId,
-      price: expert.price ? expert.price.replace(/\D/g, "") : "0", // Lấy số từ "$100"
+      price: typeof expert.price === "string"
+        ? expert.price.replace(/\D/g, "")
+        : (typeof expert.price === "number" ? String(expert.price) : "0"),
       startTime: schedule.startTime || schedule.time || schedule.dateTime || "",
       endTime: schedule.endTime || "",
       status: "pending",
@@ -336,7 +338,6 @@ const Mentor = () => {
                       </div>
                     )}
 
-                  {/* No schedules available */}
                   {selectedSchedules[expert.consultantId] &&
                     Array.isArray(selectedSchedules[expert.consultantId]) &&
                     selectedSchedules[expert.consultantId].length > 0 &&
@@ -354,7 +355,7 @@ const Mentor = () => {
                         No schedules available for this consultant.
                       </div>
                     )}
-                  {/* Thông báo booking */}
+
                   {bookingMessages[expert.id] && (
                     <div style={{
                       color: bookingMessages[expert.id].includes("success") ? "green" : "red",

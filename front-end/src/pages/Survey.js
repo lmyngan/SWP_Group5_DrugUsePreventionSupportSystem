@@ -129,12 +129,9 @@ const Survey = () => {
         { range: [30, 30], title: "4. Have you ever used any drug by injection? (NON-MEDICAL USE ONLY)" }
     ];
 
-    // Hàm kiểm tra có phải là câu hỏi đầu tiên của group không
     const isFirstInGroup = (questionId, idx, questions) => {
         for (let group of groupTitles) {
             if (questionId === group.range[0]) {
-                // Nếu là câu hỏi đầu tiên của group
-                // hoặc là câu hỏi đầu tiên trong mảng và nằm trong group
                 return group.title;
             }
         }
@@ -150,7 +147,6 @@ const Survey = () => {
                 ) : (
                     <>
                         {questions.map((q, idx) => {
-                            // Kiểm tra nếu là câu hỏi đầu tiên của group thì hiển thị title
                             const groupTitle = isFirstInGroup(q.questionId, idx, questions);
                             return (
                                 <div key={q.questionId}>
@@ -192,7 +188,35 @@ const Survey = () => {
                 <Button type="submit" className="survey-submit-btn">Submit Survey</Button>
             </Form>
 
-            {/* Modal kết quả survey */}
+            {showModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content-custom">
+                        <h2>Survey Result</h2>
+                        <div>Your total score is: {score}</div>
+                        <div>Risk Level: {getRiskLevel(score)}</div>
+                        {getRiskLevel(score) === "moderate" && (
+                            <div>You should Join Event.</div>
+                        )}
+                        {getRiskLevel(score) === "high" && (
+                            <div>You should Book Appointment with Consultant.</div>
+                        )}
+                        <div style={{ marginTop: 24, display: 'flex', gap: 12, justifyContent: 'center' }}>
+                            <button className="btn btn-secondary" onClick={handleClose}>Close</button>
+                            {getRiskLevel(score) === "moderate" && (
+                                <button className="btn btn-primary" onClick={() => window.location.href = '/event'}>
+                                    Join Event
+                                </button>
+                            )}
+                            {getRiskLevel(score) === "high" && (
+                                <button className="btn btn-primary" onClick={() => window.location.href = '/mentor'}>
+                                    Book Appointment
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {showModal && (
                 <div className="modal-overlay">
                     <div className="modal-content-custom">
