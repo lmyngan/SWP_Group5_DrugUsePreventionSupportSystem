@@ -235,7 +235,7 @@ const BookAppointment = () => {
                                             </button>
                                             <button
                                                 className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-                                                onClick={handleSendMessage}
+                                                onClick={() => { setShowMessageModal(true); setMessageTarget(a); }}
                                             >
                                                 Send Message
                                             </button>

@@ -114,10 +114,14 @@ const BlogPage = ({ navigateTo }) => {
     setBlogs(blogs.map((blog) => (blog.blog_id === blogId ? { ...blog, likes: blog.likes + 1 } : blog)))
   }
 
-  // Gọi API thực tế để rate blog
+
   const handleRateBlog = async (blogId, rate) => {
+    if (!user) {
+      alert("Please login to rate blogs");
+      return;
+    }
     try {
-      const response = await getRateBlog({ blogId, rating: rate });
+      const response = await getRateBlog({ blogId: Number(blogId), rating: Number(rate) });
       if (!response.error) {
         setBlogs(blogs.map((blog) => (blog.blog_id === blogId ? { ...blog, rate } : blog)));
         setShowRateModal(false);
@@ -125,10 +129,18 @@ const BlogPage = ({ navigateTo }) => {
         setRateBlogId(null);
         alert("Thank you for rating!");
       } else {
-        alert("Failed to rate blog: " + response.error);
+        if (response.error.toLowerCase().includes('401') || response.error.toLowerCase().includes('403')) {
+          alert("You must be logged in to rate blogs.");
+        } else {
+          alert("Failed to rate blog: " + response.error);
+        }
       }
     } catch (err) {
-      alert("An error occurred while rating the blog.");
+      if (err?.response?.status === 401 || err?.response?.status === 403) {
+        alert("You must be logged in to rate blogs.");
+      } else {
+        alert("An error occurred while rating the blog.");
+      }
     }
   };
 
