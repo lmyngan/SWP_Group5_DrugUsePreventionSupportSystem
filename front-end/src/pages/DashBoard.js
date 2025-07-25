@@ -1,7 +1,7 @@
 //import { Link } from "react-router-dom";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { useState, useEffect } from "react";
-import { getReportData } from '../service/api';
+import { getReportData, getTopUser, getTopEventDetail } from '../service/api';
 
 
 const DashBoard = () => {
@@ -75,6 +75,8 @@ const DashBoard = () => {
     const [report, setReport] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [topUsers, setTopUsers] = useState([]);
+    const [topEvent, setTopEvent] = useState(null);
 
     useEffect(() => {
         const fetchReport = async () => {
@@ -85,6 +87,16 @@ const DashBoard = () => {
                 setReport(res);
             } else {
                 setError(res.error || 'Failed to fetch report data');
+            }
+            // Fetch top users
+            const topUserRes = await getTopUser();
+            if (topUserRes && !topUserRes.error) {
+                setTopUsers(Array.isArray(topUserRes) ? topUserRes : [topUserRes]);
+            }
+            // Fetch top event detail
+            const topEventRes = await getTopEventDetail();
+            if (topEventRes && !topEventRes.error) {
+                setTopEvent(topEventRes);
             }
             setLoading(false);
         };
@@ -112,6 +124,13 @@ const DashBoard = () => {
             color: "bg-green-100 text-green-800",
             footer: `Event Feedbacks`,
             footerColor: "bg-green-500 text-white",
+        },
+        {
+            value: `${report.totalAppointmentsCompleted ?? 0}`,
+            icon: '',
+            color: "bg-blue-100 text-blue-800",
+            footer: `Total Appointments Completed`,
+            footerColor: "bg-blue-500 text-white",
         },
     ] : [];
 
@@ -158,44 +177,21 @@ const DashBoard = () => {
 
                         {/* Charts Section: User Visits + 2 PieCharts ngang hàng */}
                         <div className="mt-8 flex flex-wrap gap-8 justify-center">
-                            {/* User Visits BarChart */}
+                            {/* Most Popular Event Participants BarChart */}
                             <div className="bg-white rounded shadow p-6 flex-1 min-w-[320px] max-w-[480px]">
-                                <h2 className="text-xl font-semibold mb-4 text-center">User Visits This Week</h2>
+                                <h2 className="text-xl font-semibold mb-4 text-center">Most Popular Event Participants</h2>
                                 <ResponsiveContainer width="100%" height={300}>
-                                    <BarChart data={data}>
+                                    <BarChart data={topEvent?.users || []}>
                                         <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis dataKey="name" />
+                                        <XAxis dataKey="fullName" />
                                         <YAxis />
                                         <Tooltip />
-                                        <Bar dataKey="visits" fill="#2563eb" />
+                                        <Bar dataKey="participationCount" fill="#2563eb" />
                                     </BarChart>
                                 </ResponsiveContainer>
+                                {topEvent && <div className="text-center mt-2 font-semibold">Event: {topEvent.eventName} (Total: {topEvent.totalParticipants})</div>}
                             </div>
 
-                            {/* Event Participation PieChart */}
-                            <div className="bg-white rounded shadow p-6 flex-1 min-w-[320px] max-w-[480px]">
-                                <h2 className="text-xl font-semibold mb-4 text-center">Event Participation</h2>
-                                <ResponsiveContainer width="100%" height={300}>
-                                    <PieChart>
-                                        <Pie
-                                            data={eventParticipationData}
-                                            dataKey="participants"
-                                            nameKey="name"
-                                            cx="50%"
-                                            cy="50%"
-                                            outerRadius={100}
-                                            label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
-                                        >
-                                            {eventParticipationData.map((entry, index) => (
-                                                <Cell key={`cell-event-${index}`} fill={COLORS[index % COLORS.length]} />
-                                            ))}
-                                        </Pie>
-                                        <Tooltip />
-                                    </PieChart>
-                                </ResponsiveContainer>
-                            </div>
-
-                            {/* Consultant Review PieChart */}
                             <div className="bg-white rounded shadow p-6 flex-1 min-w-[320px] max-w-[480px]">
                                 <h2 className="text-xl font-semibold mb-4 text-center">Consultant Interview Ratings</h2>
                                 <ResponsiveContainer width="100%" height={300}>

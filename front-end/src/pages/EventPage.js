@@ -42,30 +42,7 @@ const EventPage = ({ navigateTo }) => {
 
     console.log("[DEBUG] user object:", user);
     console.log("[DEBUG] eventId:", eventId);
-    const accountId = user.accountId !== undefined ? user.accountId : user.account_id;
-    if (accountId === undefined) {
-      alert("User object missing accountId/account_id. Please re-login.");
-      return;
-    }
-
-    try {
-      const response = await joinEvent({
-        accountId: accountId,
-        eventId: eventId,
-        status: "joined",
-        feedback: "Looking forward to it."
-      });
-
-      if (!response.error) {
-        alert("Successfully joined the event!")
-      } else {
-        alert(`Failed to join event: ${response.error}`)
-      }
-    } catch (error) {
-      console.error("Error joining event:", error)
-      alert("An error occurred while joining the event.")
-    }
-  }
+    
 
   const accountId = user.accountId !== undefined ? user.accountId : user.account_id;
   if (accountId === undefined) {
@@ -154,12 +131,9 @@ const EventPage = ({ navigateTo }) => {
           <img src="/images/event.jpg" alt="Community Events" />
         </div>
       </section>
-<<<<<<< HEAD
 
      
 
-=======
->>>>>>> dc3bd5f495d94af7a3464e65e784628b7285b34a
       {/* Event Filter Section */}
       <section className="filter-section">
         <div className="container">
