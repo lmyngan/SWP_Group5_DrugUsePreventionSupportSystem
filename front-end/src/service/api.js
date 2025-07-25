@@ -556,7 +556,7 @@ export const getTopUser = async () => {
 //GET: Details of top event participants
 export const getTopEventDetail = async () => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/api/Report/top-user-event-participation`, {
+        const response = await axios.get(`${API_BASE_URL}/api/Report/most-popular-event-detail`, {
             headers: getAuthHeader(),
         });
         return response.data;

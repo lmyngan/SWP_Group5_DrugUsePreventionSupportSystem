@@ -55,6 +55,7 @@ const Account = () => {
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showAddSuccessModal, setShowAddSuccessModal] = useState(false);
     const [addError, setAddError] = useState('');
+    const [addFieldErrors, setAddFieldErrors] = useState({});
 
     useEffect(() => {
         const fetchAccounts = async () => {
@@ -114,6 +115,7 @@ const Account = () => {
     // Add
     const handleAddAccount = async () => {
         setAddError('');
+        setAddFieldErrors({});
         try {
             await accountSchema.validate(newAccount, { abortEarly: false });
             // Nếu hợp lệ, gọi API thêm account
@@ -144,7 +146,11 @@ const Account = () => {
             setTimeout(() => setShowAddSuccessModal(false), 1000); // Ẩn sau 1 giây
         } catch (err) {
             if (err.inner && err.inner.length > 0) {
-                setAddError(err.inner.map(e => e.message).join(', '));
+                const fieldErrors = {};
+                err.inner.forEach(e => {
+                    fieldErrors[e.path] = e.message;
+                });
+                setAddFieldErrors(fieldErrors);
             } else {
                 setAddError(err.message);
             }
@@ -179,69 +185,104 @@ const Account = () => {
                                 <div className="text-red-500 mb-2">{addError}</div>
                             )}
                             <div className="grid grid-cols-2 gap-4">
-                                <input
-                                    className="border p-2"
-                                    placeholder="Account Name"
-                                    value={newAccount.accountname}
-                                    onChange={(e) =>
-                                        setNewAccount((a) => ({ ...a, accountname: e.target.value }))
-                                    }
-                                />
-                                <input
-                                    className="border p-2"
-                                    placeholder="Password"
-                                    value={newAccount.password}
-                                    onChange={(e) =>
-                                        setNewAccount((a) => ({ ...a, password: e.target.value }))
-                                    }
-                                />
-                                <input
-                                    className="border p-2"
-                                    placeholder="Full Name"
-                                    value={newAccount.fullName}
-                                    onChange={(e) =>
-                                        setNewAccount((a) => ({ ...a, fullName: e.target.value }))
-                                    }
-                                />
-                                <input
-                                    className="border p-2"
-                                    type="date"
-                                    value={newAccount.dateOfBirth}
-                                    onChange={(e) =>
-                                        setNewAccount((a) => ({ ...a, dateOfBirth: e.target.value }))
-                                    }
-                                />
-                                <select
-                                    className="border p-2"
-                                    value={newAccount.gender}
-                                    onChange={(e) =>
-                                        setNewAccount((a) => ({ ...a, gender: e.target.value }))
-                                    }
-                                >
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                </select>
-                                <input
-                                    className="border p-2"
-                                    placeholder="Address"
-                                    value={newAccount.address}
-                                    onChange={(e) =>
-                                        setNewAccount((a) => ({ ...a, address: e.target.value }))
-                                    }
-                                />
-                                <select
-                                    className="border p-2"
-                                    value={newAccount.roleId}
-                                    onChange={(e) =>
-                                        setNewAccount((a) => ({ ...a, roleId: Number(e.target.value) }))
-                                    }
-                                >
-                                    {roleOptions.map((r) => (
-                                        <option key={r.id} value={r.id}>
-                                            {r.name}
-                                        </option>
-                                    ))}
-                                </select>
+                                <div>
+                                    <input
+                                        className="border p-2 w-full"
+                                        placeholder="Account Name"
+                                        value={newAccount.accountname}
+                                        onChange={(e) =>
+                                            setNewAccount((a) => ({ ...a, accountname: e.target.value }))
+                                        }
+                                    />
+                                    {addFieldErrors.accountname && (
+                                        <div className="text-red-500 text-xs mt-1">{addFieldErrors.accountname}</div>
+                                    )}
+                                </div>
+                                <div>
+                                    <input
+                                        className="border p-2 w-full"
+                                        placeholder="Password"
+                                        value={newAccount.password}
+                                        onChange={(e) =>
+                                            setNewAccount((a) => ({ ...a, password: e.target.value }))
+                                        }
+                                    />
+                                    {addFieldErrors.password && (
+                                        <div className="text-red-500 text-xs mt-1">{addFieldErrors.password}</div>
+                                    )}
+                                </div>
+                                <div>
+                                    <input
+                                        className="border p-2 w-full"
+                                        placeholder="Full Name"
+                                        value={newAccount.fullName}
+                                        onChange={(e) =>
+                                            setNewAccount((a) => ({ ...a, fullName: e.target.value }))
+                                        }
+                                    />
+                                    {addFieldErrors.fullName && (
+                                        <div className="text-red-500 text-xs mt-1">{addFieldErrors.fullName}</div>
+                                    )}
+                                </div>
+                                <div>
+                                    <input
+                                        className="border p-2 w-full"
+                                        type="date"
+                                        value={newAccount.dateOfBirth}
+                                        onChange={(e) =>
+                                            setNewAccount((a) => ({ ...a, dateOfBirth: e.target.value }))
+                                        }
+                                    />
+                                    {addFieldErrors.dateOfBirth && (
+                                        <div className="text-red-500 text-xs mt-1">{addFieldErrors.dateOfBirth}</div>
+                                    )}
+                                </div>
+                                <div>
+                                    <select
+                                        className="border p-2 w-full"
+                                        value={newAccount.gender}
+                                        onChange={(e) =>
+                                            setNewAccount((a) => ({ ...a, gender: e.target.value }))
+                                        }
+                                    >
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                    {addFieldErrors.gender && (
+                                        <div className="text-red-500 text-xs mt-1">{addFieldErrors.gender}</div>
+                                    )}
+                                </div>
+                                <div>
+                                    <input
+                                        className="border p-2 w-full"
+                                        placeholder="Address"
+                                        value={newAccount.address}
+                                        onChange={(e) =>
+                                            setNewAccount((a) => ({ ...a, address: e.target.value }))
+                                        }
+                                    />
+                                    {addFieldErrors.address && (
+                                        <div className="text-red-500 text-xs mt-1">{addFieldErrors.address}</div>
+                                    )}
+                                </div>
+                                <div className="col-span-2">
+                                    <select
+                                        className="border p-2 w-full"
+                                        value={newAccount.roleId}
+                                        onChange={(e) =>
+                                            setNewAccount((a) => ({ ...a, roleId: Number(e.target.value) }))
+                                        }
+                                    >
+                                        {roleOptions.map((r) => (
+                                            <option key={r.id} value={r.id}>
+                                                {r.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {addFieldErrors.roleId && (
+                                        <div className="text-red-500 text-xs mt-1">{addFieldErrors.roleId}</div>
+                                    )}
+                                </div>
                             </div>
                             <div className="flex justify-end mt-6 gap-2">
                                 <button

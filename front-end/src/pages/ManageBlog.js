@@ -7,10 +7,10 @@ import { MdCancel } from "react-icons/md";
 import * as Yup from 'yup';
 
 const blogSchema = Yup.object().shape({
-  title: Yup.string().required('Title is required'),
-  content: Yup.string().required('Content is required'),
-  categories: Yup.string().required('Categories is required'),
-  createdAt: Yup.string().required('Created date is required'),
+    title: Yup.string().required('Title is required'),
+    content: Yup.string().required('Content is required'),
+    categories: Yup.string().required('Categories is required'),
+    createdAt: Yup.string().required('Created date is required'),
 });
 
 const ManageBlog = () => {
@@ -29,6 +29,7 @@ const ManageBlog = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
     const [addError, setAddError] = useState('');
+    const [addFieldErrors, setAddFieldErrors] = useState({});
 
     useEffect(() => {
         const fetchBlogs = async () => {
@@ -40,6 +41,7 @@ const ManageBlog = () => {
 
     const handleAddBlog = async () => {
         setAddError('');
+        setAddFieldErrors({});
         try {
             await blogSchema.validate(newBlog, { abortEarly: false });
             const user = JSON.parse(localStorage.getItem("user"));
@@ -67,7 +69,11 @@ const ManageBlog = () => {
             });
         } catch (err) {
             if (err.inner && err.inner.length > 0) {
-                setAddError(err.inner.map(e => e.message).join(', '));
+                const fieldErrors = {};
+                err.inner.forEach(e => {
+                    fieldErrors[e.path] = e.message;
+                });
+                setAddFieldErrors(fieldErrors);
             } else {
                 setAddError(err.message);
             }
@@ -157,14 +163,28 @@ const ManageBlog = () => {
                             </div>
                             {/* Hiển thị lỗi validate */}
                             {addError && (
-                                <div className="text-red-500 mb-2">{addError}</div>
+                                <div className="text-red-500 mt-2">{addError}</div>
                             )}
                             <div className="grid grid-cols-2 gap-4">
-                                <input className="border p-2" placeholder="Title" value={newBlog.title} onChange={e => setNewBlog(a => ({ ...a, title: e.target.value }))} />
-                                <input className="border p-2" placeholder="Content" value={newBlog.content} onChange={e => setNewBlog(a => ({ ...a, content: e.target.value }))} />
-                                <input className="border p-2 bg-gray-100" placeholder="Rate" value={newBlog.rate} disabled />
-                                <input className="border p-2" placeholder="Categories" value={newBlog.categories} onChange={e => setNewBlog(a => ({ ...a, categories: e.target.value }))} />
-                                <input className="border p-2" type="date" value={newBlog.createdAt} onChange={e => setNewBlog(a => ({ ...a, createdAt: e.target.value }))} />
+                                <div>
+                                    <input className="border p-2 w-full" placeholder="Title" value={newBlog.title} onChange={e => setNewBlog(a => ({ ...a, title: e.target.value }))} />
+                                    {addFieldErrors.title && <div className="text-red-500 text-xs mt-1">{addFieldErrors.title}</div>}
+                                </div>
+                                <div>
+                                    <input className="border p-2 w-full" placeholder="Content" value={newBlog.content} onChange={e => setNewBlog(a => ({ ...a, content: e.target.value }))} />
+                                    {addFieldErrors.content && <div className="text-red-500 text-xs mt-1">{addFieldErrors.content}</div>}
+                                </div>
+                                <div>
+                                    <input className="border p-2 w-full bg-gray-100" placeholder="Rate" value={newBlog.rate} disabled />
+                                </div>
+                                <div>
+                                    <input className="border p-2 w-full" placeholder="Categories" value={newBlog.categories} onChange={e => setNewBlog(a => ({ ...a, categories: e.target.value }))} />
+                                    {addFieldErrors.categories && <div className="text-red-500 text-xs mt-1">{addFieldErrors.categories}</div>}
+                                </div>
+                                <div className="col-span-2">
+                                    <input className="border p-2 w-full" type="date" value={newBlog.createdAt} onChange={e => setNewBlog(a => ({ ...a, createdAt: e.target.value }))} />
+                                    {addFieldErrors.createdAt && <div className="text-red-500 text-xs mt-1">{addFieldErrors.createdAt}</div>}
+                                </div>
                             </div>
                             <div className="flex justify-end mt-6 gap-2">
                                 <button className="px-6 py-3 bg-gray-300 text-gray-700 rounded hover:bg-gray-400" onClick={() => setShowAdd(false)}><MdCancel /></button>

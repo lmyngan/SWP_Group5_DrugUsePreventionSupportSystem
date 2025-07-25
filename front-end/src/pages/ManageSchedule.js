@@ -17,11 +17,11 @@ const formatDateVN = (dateString) => {
 };
 
 const scheduleSchema = Yup.object().shape({
-  consultantId: Yup.number().min(1, 'Consultant ID is required').required('Consultant ID is required'),
-  availableDate: Yup.string().required('Available date is required'),
-  startTime: Yup.string().required('Start time is required'),
-  endTime: Yup.string().required('End time is required'),
-  slot: Yup.number().min(1, 'Slot must be at least 1').required('Slot is required'),
+    consultantId: Yup.number().min(1, 'Consultant ID is required').required('Consultant ID is required'),
+    availableDate: Yup.string().required('Available date is required'),
+    startTime: Yup.string().required('Start time is required'),
+    endTime: Yup.string().required('End time is required'),
+    slot: Yup.number().min(1, 'Slot must be at least 1').required('Slot is required'),
 });
 
 const ManageSchedule = () => {
@@ -41,6 +41,7 @@ const ManageSchedule = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
     const [addError, setAddError] = useState('');
+    const [addFieldErrors, setAddFieldErrors] = useState({});
     const [editError, setEditError] = useState('');
 
     useEffect(() => {
@@ -56,11 +57,16 @@ const ManageSchedule = () => {
     // Add
     const handleAddSchedule = async () => {
         setAddError('');
+        setAddFieldErrors({});
         try {
             await scheduleSchema.validate(newSchedule, { abortEarly: false });
         } catch (err) {
             if (err.inner && err.inner.length > 0) {
-                setAddError(err.inner.map(e => e.message).join(', '));
+                const fieldErrors = {};
+                err.inner.forEach(e => {
+                    fieldErrors[e.path] = e.message;
+                });
+                setAddFieldErrors(fieldErrors);
             } else {
                 setAddError(err.message);
             }
@@ -193,22 +199,27 @@ const ManageSchedule = () => {
                                 <div className="flex flex-col">
                                     <label className="mb-1 text-sm font-medium">Consultant ID</label>
                                     <input className="border p-2" type="number" placeholder="Consultant ID" value={newSchedule.consultantId} onChange={e => setNewSchedule(a => ({ ...a, consultantId: parseInt(e.target.value) || 0 }))} />
+                                    {addFieldErrors.consultantId && <div className="text-red-500 text-xs mt-1">{addFieldErrors.consultantId}</div>}
                                 </div>
                                 <div className="flex flex-col">
                                     <label className="mb-1 text-sm font-medium">Available Date</label>
                                     <input className="border p-2" type="date" value={newSchedule.availableDate} onChange={e => setNewSchedule(a => ({ ...a, availableDate: e.target.value }))} />
+                                    {addFieldErrors.availableDate && <div className="text-red-500 text-xs mt-1">{addFieldErrors.availableDate}</div>}
                                 </div>
                                 <div className="flex flex-col">
                                     <label className="mb-1 text-sm font-medium">Start Time</label>
                                     <input className="border p-2" placeholder="Start Time (hh:mm:ss)" value={newSchedule.startTime} onChange={e => setNewSchedule(a => ({ ...a, startTime: e.target.value }))} />
+                                    {addFieldErrors.startTime && <div className="text-red-500 text-xs mt-1">{addFieldErrors.startTime}</div>}
                                 </div>
                                 <div className="flex flex-col">
                                     <label className="mb-1 text-sm font-medium">End Time</label>
                                     <input className="border p-2" placeholder="End Time (hh:mm:ss)" value={newSchedule.endTime} onChange={e => setNewSchedule(a => ({ ...a, endTime: e.target.value }))} />
+                                    {addFieldErrors.endTime && <div className="text-red-500 text-xs mt-1">{addFieldErrors.endTime}</div>}
                                 </div>
                                 <div className="flex flex-col">
                                     <label className="mb-1 text-sm font-medium">Slot</label>
                                     <input className="border p-2" type="number" min={1} placeholder="Slot" value={newSchedule.slot} onChange={e => setNewSchedule(a => ({ ...a, slot: parseInt(e.target.value) || 0 }))} />
+                                    {addFieldErrors.slot && <div className="text-red-500 text-xs mt-1">{addFieldErrors.slot}</div>}
                                 </div>
                             </div>
                             {addError && <div className="text-red-500 mt-2 text-sm">{addError}</div>}
