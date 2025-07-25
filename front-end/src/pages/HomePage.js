@@ -1,90 +1,148 @@
 import "../styles/HomePage.css"
+import Footer from "../components/Footer"
 
-import { useState, useEffect } from "react";
+const HomePage = () => {
+  const features = [
+    {
+      icon: "📋",
+      title: "Risk Assessment Tools",
+      description:
+        "Take ASSIST and CRAFFT assessments to understand your risk level and receive personalized recommendations for next steps.",
+    },
+    {
+      icon: "👨‍⚕️",
+      title: "Expert Mentorship",
+      description:
+        "Connect with certified addiction specialists, counselors, and recovery coaches for professional guidance and support.",
+    },
+    {
+      icon: "🏘️",
+      title: "Community Events",
+      description:
+        "Join workshops, awareness campaigns, and support groups in your area. Participate in community-driven prevention programs.",
+    },
+    {
+      icon: "💬",
+      title: "Knowledge Sharing",
+      description:
+        "Read real recovery stories, expert insights, and practical tips. Share your own experiences to help others on their journey.",
+    },
+    {
+      icon: "📊",
+      title: "Progress Tracking",
+      description:
+        "Monitor your learning progress, track course completions, and manage your appointments with mentors and counselors.",
+    },
+  ]
 
+  const services = [
+    {
+      emoji: "🧑‍🎓",
+      title: "Students & Youth",
+      description: "Learn how to recognize drug risks, resist peer pressure, and make healthy choices for your future.",
+      bgColor: "service-card-blue",
+    },
+    {
+      emoji: "👨‍👩‍👧‍👦",
+      title: "Parents & Families",
+      description:
+        "Get tools to talk with your children about drugs, recognize warning signs, and create a supportive home environment.",
+      bgColor: "service-card-green",
+    },
+    {
+      emoji: "🧑‍🏫",
+      title: "Educators & Counselors",
+      description:
+        "Access curriculum resources, training materials, and tools to implement effective prevention programs in schools.",
+      bgColor: "service-card-purple",
+    },
+    {
+      emoji: "🧑‍⚕️",
+      title: "Healthcare Professionals",
+      description:
+        "Find evidence-based resources, screening tools, and referral networks to support patients and communities.",
+      bgColor: "service-card-red",
+    },
+  ]
 
-const HomePage = ({ navigateTo }) => {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
-  useEffect(() => {
-    const msg = localStorage.getItem('loginMessage');
-    if (msg) {
-      setModalMessage(msg);
-      setModalOpen(true);
-      localStorage.removeItem('loginMessage');
-    }
-  }, []);
-
-  useEffect(() => {
-    if (modalOpen) {
-      const timer = setTimeout(() => setModalOpen(false), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [modalOpen]);
+  const stats = [
+    { number: "15,000+", label: "Community Members" },
+    { number: "25+", label: "Expert Mentors" },
+    { number: "24/7", label: "Support Available" },
+    { number: "100%", label: "Free Access" },
+  ]
 
   return (
     <div className="homepage">
-      {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20 animate-fade-in">
-          <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-xs flex flex-col items-center border-2 border-green-400 animate-fade-in">
-            <div className="mb-2 text-center text-green-600 font-semibold text-lg">{modalMessage}</div>
-          </div>
-        </div>
-      )}
       {/* Hero Section */}
       <section className="hero-section">
-        <div className="hero-content">
-          <h1>Your Journey to Recovery Starts Here</h1>
-          <p>
-            Empowering individuals and families with knowledge, support, and hope in the fight against drug addiction.
-          </p>
-          <div className="hero-buttons">
-            <button className="btn-primary">Get Help Now</button>
-            <button className="btn-secondary">Learn More</button>
+        <div className="container">
+          <div className="hero-content">
+            <div className="hero-text">
+              <h1>Building Stronger Communities Through Drug Prevention</h1>
+              <p>
+                DrugsCare is your comprehensive platform for drug prevention education, professional support, and
+                community connection. Whether you're a student, parent, educator, or healthcare professional, we provide
+                the tools and knowledge you need to make a positive impact in the fight against substance abuse.
+              </p>
+              <div className="hero-buttons">
+                <a href="/freecourse" className="btn-primary">
+                  Start Free Courses
+                </a>
+                <a href="/mentor" className="btn-secondary">
+                  Find a Mentor
+                </a>
+              </div>
+            </div>
+            <div className="hero-image">
+              <img src="/placeholder.svg?height=500&width=600" alt="Community Support" />
+            </div>
           </div>
-        </div>
-        <div className="hero-image">
-          <img src="/images/matuy.webp" alt="Recovery Support" />
         </div>
       </section>
 
-      {/* Quick Overview Section */}
-      <section className="overview-section">
+      {/* Stats Section */}
+      <section className="stats-section">
         <div className="container">
-          <h2>What We Offer</h2>
-          <div className="overview-grid">
-            <div className="overview-card">
-              <div className="overview-icon">👥</div>
-              <h3>Who We Are</h3>
-              <p>Learn about our mission and the people behind DrugsCare.</p>
-              <a href="/whoweare" className="overview-link">
-                Learn More
-              </a>
-            </div>
-            <div className="overview-card">
-              <div className="overview-icon">📋</div>
-              <h3>Assessment Tests</h3>
-              <p>Take ASSIST and CRAFFT surveys to determine risk levels and receive appropriate counseling</p>
-              <a href="/survey" className="overview-link">
-                Start Learning
-              </a>
+          <div className="stats-grid">
+            {stats.map((stat, index) => (
+              <div key={index} className="stat-item">
+                <div className="stat-number">{stat.number}</div>
+                <div className="stat-label">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
+      {/* Why Prevention Matters */}
+      <section className="prevention-section">
+        <div className="container">
+          <div className="prevention-content">
+            <div className="prevention-text">
+              <h2>Why Drug Prevention Education Matters</h2>
+              <p>
+                Substance abuse affects millions of individuals and families worldwide, creating lasting impacts on
+                health, relationships, and communities. Research shows that{" "}
+                <strong>prevention programs can reduce drug use by up to 50%</strong>
+                when implemented effectively with proper education and community support.
+              </p>
+              <p>
+                However, many people don't know where to find reliable information, how to start difficult
+                conversations, or when to seek professional help. Teachers need curriculum resources, parents need
+                communication strategies, and young people need life skills to navigate peer pressure and make healthy
+                choices.
+              </p>
+              <div className="prevention-highlight">
+                <span className="highlight-icon">💡</span>
+                <span>
+                  DrugsCare bridges this gap by providing evidence-based resources, expert guidance, and a supportive
+                  community for everyone committed to prevention.
+                </span>
+              </div>
             </div>
-            <div className="overview-card">
-              <div className="overview-icon">🩺</div>
-              <h3>Expert Mentors</h3>
-              <p>Connect with our professional mentors and specialists.</p>
-              <a href="/mentor" className="overview-link">
-                Meet Experts
-              </a>
-            </div>
-            <div className="overview-card">
-              <div className="overview-icon">✍️</div>
-              <h3>Community Event</h3>
-              <p>Read and share real recovery stories and experiences.</p>
-              <a href="/event" className="overview-link">
-                Read Stories
-              </a>
+            <div className="prevention-image">
+              <img src="/placeholder.svg?height=400&width=500" alt="Prevention Education" />
             </div>
           </div>
         </div>
@@ -93,32 +151,136 @@ const HomePage = ({ navigateTo }) => {
       {/* Features Section */}
       <section className="features-section">
         <div className="container">
-          <h2>Key Features</h2>
+          <div className="section-header">
+            <h2>Comprehensive Prevention Resources</h2>
+            <p>Everything you need for effective drug prevention education and community support</p>
+          </div>
           <div className="features-grid">
-            <div className="feature-card">
-              <div className="feature-icon">🔍</div>
-              <h3>Smart Search</h3>
-              <p>Search content categorized by age groups: students, university students, parents, teachers</p>
-            </div>
+            {features.map((feature, index) => (
+              <div key={index} className="feature-card">
+                <div className="feature-icon">{feature.icon}</div>
+                <h3>{feature.title}</h3>
+                <p>{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            <div
-              className="feature-card"
-              style={{ cursor: "pointer" }}
-              onClick={() => navigateTo && navigateTo("calendar")}
-            >
-              <div className="feature-icon">📅</div>
-              <h3>Schedule Consultations</h3>
-              <p>Book online appointments with professional counselors</p>
+      {/* Who We Serve Section */}
+      <section className="serve-section">
+        <div className="container">
+          <div className="section-header">
+            <h2>Supporting Every Role in Prevention</h2>
+            <p>Tailored resources and support for everyone working to prevent substance abuse in their communities</p>
+          </div>
+          <div className="services-grid">
+            {services.map((service, index) => (
+              <div key={index} className={`service-card ${service.bgColor}`}>
+                <div className="service-emoji">{service.emoji}</div>
+                <h3>{service.title}</h3>
+                <p>{service.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Quick Access Section */}
+      <section className="quick-access-section">
+        <div className="container">
+          <h2>Get Started Today</h2>
+          <div className="quick-access-grid">
+            <div className="access-card">
+              <div className="access-icon">📚</div>
+              <h3>Free Prevention Courses</h3>
+              <p>
+                Access our comprehensive library of drug prevention courses designed for different age groups and roles.
+              </p>
+              <a href="/freecourse" className="access-link">
+                Browse All Courses →
+              </a>
             </div>
-            <div className="feature-card">
-              <div className="feature-icon">👨‍⚕️</div>
-              <h3>Specialist Management</h3>
-              <p>Specialist information management system: qualifications, expertise, work schedules</p>
+            <div className="access-card">
+              <div className="access-icon">👨‍⚕️</div>
+              <h3>Expert Mentors</h3>
+              <p>
+                Connect with certified addiction specialists, counselors, and prevention experts for personalized
+                guidance.
+              </p>
+              <a href="/mentor" className="access-link">
+                Meet Our Experts →
+              </a>
             </div>
-            <div className="feature-card">
-              <div className="feature-icon">📊</div>
-              <h3>Dashboard & Reports</h3>
-              <p>Track progress, program participation history, and detailed reports</p>
+            <div className="access-card">
+              <div className="access-icon">💬</div>
+              <h3>Community Blog</h3>
+              <p>Read inspiring recovery stories, expert insights, and practical prevention tips from our community.</p>
+              <a href="/blog" className="access-link">
+                Read Stories →
+              </a>
+            </div>
+            <div className="access-card">
+              <div className="access-icon">📅</div>
+              <h3>Events & Workshops</h3>
+              <p>Join virtual and in-person events, workshops, and community awareness campaigns near you.</p>
+              <a href="/event" className="access-link">
+                View Upcoming Events →
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonial Section */}
+      <section className="testimonial-section">
+        <div className="container">
+          <h2>Real Impact, Real Stories</h2>
+          <div className="testimonials-grid">
+            <div className="testimonial-card">
+              <div className="testimonial-content">
+                <p>
+                  "The prevention courses helped me have meaningful conversations with my teenage daughter about drugs.
+                  The resources are practical, evidence-based, and easy to understand."
+                </p>
+              </div>
+              <div className="testimonial-author">
+                <div className="author-avatar">👩</div>
+                <div className="author-info">
+                  <div className="author-name">Maria S.</div>
+                  <div className="author-role">Parent & Community Volunteer</div>
+                </div>
+              </div>
+            </div>
+            <div className="testimonial-card">
+              <div className="testimonial-content">
+                <p>
+                  "As a high school counselor, I use DrugsCare's curriculum resources regularly. The materials are
+                  age-appropriate and have significantly improved our prevention programs."
+                </p>
+              </div>
+              <div className="testimonial-author">
+                <div className="author-avatar">👨‍🏫</div>
+                <div className="author-info">
+                  <div className="author-name">David R.</div>
+                  <div className="author-role">School Counselor</div>
+                </div>
+              </div>
+            </div>
+            <div className="testimonial-card">
+              <div className="testimonial-content">
+                <p>
+                  "The mentorship program connected me with an addiction specialist who provided invaluable guidance
+                  during a difficult time. The support made all the difference."
+                </p>
+              </div>
+              <div className="testimonial-author">
+                <div className="author-avatar">👤</div>
+                <div className="author-info">
+                  <div className="author-name">Jennifer L.</div>
+                  <div className="author-role">Healthcare Professional</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -127,15 +289,27 @@ const HomePage = ({ navigateTo }) => {
       {/* Call to Action Section */}
       <section className="cta-section">
         <div className="container">
-          <h2>Ready to Start Your Recovery Journey?</h2>
-          <p>Don't wait another day. Take the first step towards a healthier, drug-free life.</p>
-          <div className="cta-buttons">
-            <button className="btn-primary">Get Support Now</button>
-            <button className="btn-outline">Call Our Hotline</button>
+          <div className="cta-content">
+            <h2>Join the Prevention Movement</h2>
+            <p>
+              Whether you're seeking education, professional development, or community support, DrugsCare provides the
+              resources and connections you need. Together, we can build stronger, healthier communities through
+              effective prevention education.
+            </p>
+            <div className="cta-buttons">
+              <a href="/login" className="btn-primary">
+                Create Free Account
+              </a>
+              <a href="/whoweare" className="btn-outline">
+                Learn About Our Mission
+              </a>
+            </div>
           </div>
         </div>
       </section>
-       
+
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }
