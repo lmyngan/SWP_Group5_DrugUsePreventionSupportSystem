@@ -65,12 +65,7 @@ const HomePage = () => {
     },
   ]
 
-  const stats = [
-    { number: "15,000+", label: "Community Members" },
-    { number: "25+", label: "Expert Mentors" },
-    { number: "24/7", label: "Support Available" },
-    { number: "100%", label: "Free Access" },
-  ]
+
 
   return (
     <div className="homepage">
@@ -101,19 +96,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="stats-section">
-        <div className="container">
-          <div className="stats-grid">
-            {stats.map((stat, index) => (
-              <div key={index} className="stat-item">
-                <div className="stat-number">{stat.number}</div>
-                <div className="stat-label">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+     
 
       {/* Why Prevention Matters */}
       <section className="prevention-section">
