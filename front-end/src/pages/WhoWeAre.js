@@ -279,8 +279,6 @@ const WhoWeAre = () => {
           </Card>
         </section>
       </main>
-
-     
     </div>
   );
 };

@@ -5,7 +5,7 @@ import { getReportData } from '../service/api';
 
 
 const DashBoard = () => {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [sidebarOpen] = useState(false);
     const [user, setUser] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
     const [modalMessage, setModalMessage] = useState('');

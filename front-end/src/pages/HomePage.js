@@ -1,6 +1,7 @@
 import "../styles/HomePage.css"
-
+import MainContent from "../components/MainConent.js";
 import { useState, useEffect } from "react";
+import "../styles/WhoWeAre.css"
 
 
 const HomePage = ({ navigateTo }) => {
@@ -44,12 +45,13 @@ const HomePage = ({ navigateTo }) => {
           </div>
         </div>
         <div className="hero-image">
-          <img src="/images/matuy.webp" alt="Recovery Support" />
+          <img src="/images/drugs.webp" alt="Recovery Support" />
         </div>
       </section>
-
+      
       {/* Quick Overview Section */}
       <section className="overview-section">
+        <MainContent/>
         <div className="container">
           <h2>What We Offer</h2>
           <div className="overview-grid">
@@ -90,40 +92,7 @@ const HomePage = ({ navigateTo }) => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="features-section">
-        <div className="container">
-          <h2>Key Features</h2>
-          <div className="features-grid">
-            <div className="feature-card">
-              <div className="feature-icon">🔍</div>
-              <h3>Smart Search</h3>
-              <p>Search content categorized by age groups: students, university students, parents, teachers</p>
-            </div>
-
-            <div
-              className="feature-card"
-              style={{ cursor: "pointer" }}
-              onClick={() => navigateTo && navigateTo("calendar")}
-            >
-              <div className="feature-icon">📅</div>
-              <h3>Schedule Consultations</h3>
-              <p>Book online appointments with professional counselors</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">👨‍⚕️</div>
-              <h3>Specialist Management</h3>
-              <p>Specialist information management system: qualifications, expertise, work schedules</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">📊</div>
-              <h3>Dashboard & Reports</h3>
-              <p>Track progress, program participation history, and detailed reports</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
+      
       {/* Call to Action Section */}
       <section className="cta-section">
         <div className="container">

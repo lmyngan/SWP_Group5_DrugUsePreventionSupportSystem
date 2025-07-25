@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { getConsultantSchedules, bookAppointment, createVNPayUrl, handleVNPayCallback, getConsultantInfo } from "../service/api";
 import "../styles/MentorPage.css";
-import Footer from "../components/Footer";
+
 
 const Mentor = () => {
   const [selectedSchedules, setSelectedSchedules] = useState({});
@@ -395,9 +395,7 @@ const Mentor = () => {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <Footer />
+       
     </div>
   );
 };
