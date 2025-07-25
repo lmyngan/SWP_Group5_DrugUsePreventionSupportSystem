@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete, MdCancel } from "react-icons/md";
 import { IoMdAddCircle } from "react-icons/io";
+import { getScheduleData, addSchedule, deleteSchedule, editSchedule } from '../service/api';
+import * as Yup from 'yup';
 
 // Format date dd/MM/yyyy
 const formatDateVN = (dateString) => {
@@ -14,58 +16,125 @@ const formatDateVN = (dateString) => {
     return `${day}/${month}/${year}`;
 };
 
+const scheduleSchema = Yup.object().shape({
+    consultantId: Yup.number().min(1, 'Consultant ID is required').required('Consultant ID is required'),
+    availableDate: Yup.string().required('Available date is required'),
+    startTime: Yup.string().required('Start time is required'),
+    endTime: Yup.string().required('End time is required'),
+    slot: Yup.number().min(1, 'Slot must be at least 1').required('Slot is required'),
+});
+
 const ManageSchedule = () => {
     const [schedules, setSchedules] = useState([]);
     const [showAdd, setShowAdd] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [newSchedule, setNewSchedule] = useState({
-        title: "",
-        description: "",
-        date: new Date().toISOString().slice(0, 10),
-        time: "",
-        location: "",
+        consultantId: 0,
+        scheduleId: 0,
+        availableDate: new Date().toISOString().slice(0, 10),
+        startTime: '',
+        endTime: '',
+        slot: 1,
     });
     const [editId, setEditId] = useState(null);
-    const [editSchedule, setEditSchedule] = useState({});
+    const [editScheduleData, setEditScheduleData] = useState({});
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
+    const [addError, setAddError] = useState('');
+    const [addFieldErrors, setAddFieldErrors] = useState({});
+    const [editError, setEditError] = useState('');
 
     useEffect(() => {
-        // TODO: Fetch schedules from API
-        setSchedules([
-            { id: 1, title: "Morning Session", description: "Consultation", date: "2024-07-20", time: "08:00-10:00", location: "Room 101" },
-            { id: 2, title: "Afternoon Session", description: "Therapy", date: "2024-07-21", time: "14:00-16:00", location: "Room 102" },
-        ]);
+        const fetchSchedules = async () => {
+            const res = await getScheduleData();
+            if (Array.isArray(res)) setSchedules(res);
+            else if (Array.isArray(res.data)) setSchedules(res.data);
+            else setSchedules([]);
+        };
+        fetchSchedules();
     }, []);
 
     // Add
     const handleAddSchedule = async () => {
-        // TODO: Call API to add schedule
-        setSchedules(prev => [
-            ...prev,
-            { ...newSchedule, id: Date.now() }
-        ]);
-        setShowAdd(false);
-        setNewSchedule({
-            title: "",
-            description: "",
-            date: new Date().toISOString().slice(0, 10),
-            time: "",
-            location: "",
-        });
+        setAddError('');
+        setAddFieldErrors({});
+        try {
+            await scheduleSchema.validate(newSchedule, { abortEarly: false });
+        } catch (err) {
+            if (err.inner && err.inner.length > 0) {
+                const fieldErrors = {};
+                err.inner.forEach(e => {
+                    fieldErrors[e.path] = e.message;
+                });
+                setAddFieldErrors(fieldErrors);
+            } else {
+                setAddError(err.message);
+            }
+            return;
+        }
+        console.log('Adding schedule with data:', newSchedule);
+
+        // Validate required fields
+        if (!newSchedule.consultantId || newSchedule.consultantId === 0) {
+            alert('Please enter a valid Consultant ID');
+            return;
+        }
+
+        if (!newSchedule.startTime || !newSchedule.endTime) {
+            alert('Please enter both start time and end time');
+            return;
+        }
+
+        const res = await addSchedule(newSchedule);
+        if (!res.error) {
+            const data = await getScheduleData();
+            if (Array.isArray(data)) setSchedules(data);
+            else if (Array.isArray(data.data)) setSchedules(data.data);
+            else setSchedules([]);
+            setShowAdd(false);
+            setNewSchedule({
+                consultantId: 0,
+                scheduleId: 0,
+                availableDate: new Date().toISOString().slice(0, 10),
+                startTime: '',
+                endTime: '',
+                slot: 1,
+            });
+        } else {
+            console.error('Add schedule failed:', res.error);
+            alert(`Failed to add schedule: ${res.error}`);
+        }
     };
 
-    // Edit
+    // Edit (giữ nguyên logic, chỉ cập nhật trường nếu cần)
     const handleEdit = (schedule) => {
-        setEditId(schedule.id);
-        setEditSchedule({ ...schedule });
+        setEditId(schedule.scheduleId);
+        setEditScheduleData({ ...schedule });
         setShowEditModal(true);
     };
     const handleSaveEdit = async () => {
-        // TODO: Call API to update schedule
-        setSchedules(prev => prev.map(s => s.id === editId ? { ...editSchedule, id: editId } : s));
-        setEditId(null);
-        setShowEditModal(false);
+        setEditError('');
+        try {
+            await scheduleSchema.validate(editScheduleData, { abortEarly: false });
+        } catch (err) {
+            if (err.inner && err.inner.length > 0) {
+                setEditError(err.inner.map(e => e.message).join(', '));
+            } else {
+                setEditError(err.message);
+            }
+            return;
+        }
+        const res = await editSchedule(editId, editScheduleData);
+        if (!res.error) {
+            const data = await getScheduleData();
+            if (Array.isArray(data)) setSchedules(data);
+            else if (Array.isArray(data.data)) setSchedules(data.data);
+            else setSchedules([]);
+            setEditId(null);
+            setShowEditModal(false);
+        } else {
+            alert(res.error || 'Failed to update schedule');
+        }
     };
     const handleCancelEdit = () => {
         setEditId(null);
@@ -78,10 +147,25 @@ const ManageSchedule = () => {
         setShowDeleteModal(true);
     };
     const confirmDelete = async () => {
-        // TODO: Call API to delete schedule
-        setSchedules(prev => prev.filter(s => s.id !== deleteId));
-        setShowDeleteModal(false);
-        setDeleteId(null);
+        console.log('Confirming delete for schedule ID:', deleteId);
+
+        if (!deleteId) {
+            alert('No schedule ID provided for deletion');
+            return;
+        }
+
+        const res = await deleteSchedule(deleteId);
+        if (!res.error) {
+            const data = await getScheduleData();
+            if (Array.isArray(data)) setSchedules(data);
+            else if (Array.isArray(data.data)) setSchedules(data.data);
+            else setSchedules([]);
+            setShowDeleteModal(false);
+            setDeleteId(null);
+        } else {
+            console.error('Delete schedule failed:', res.error);
+            alert(`Failed to delete schedule: ${res.error}`);
+        }
     };
     const cancelDelete = () => {
         setShowDeleteModal(false);
@@ -112,12 +196,33 @@ const ManageSchedule = () => {
                                 </button>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
-                                <input className="border p-2" placeholder="Title" value={newSchedule.title} onChange={e => setNewSchedule(a => ({ ...a, title: e.target.value }))} />
-                                <input className="border p-2" placeholder="Description" value={newSchedule.description} onChange={e => setNewSchedule(a => ({ ...a, description: e.target.value }))} />
-                                <input className="border p-2" type="date" value={newSchedule.date} onChange={e => setNewSchedule(a => ({ ...a, date: e.target.value }))} />
-                                <input className="border p-2" placeholder="Time" value={newSchedule.time} onChange={e => setNewSchedule(a => ({ ...a, time: e.target.value }))} />
-                                <input className="border p-2" placeholder="Location" value={newSchedule.location} onChange={e => setNewSchedule(a => ({ ...a, location: e.target.value }))} />
+                                <div className="flex flex-col">
+                                    <label className="mb-1 text-sm font-medium">Consultant ID</label>
+                                    <input className="border p-2" type="number" placeholder="Consultant ID" value={newSchedule.consultantId} onChange={e => setNewSchedule(a => ({ ...a, consultantId: parseInt(e.target.value) || 0 }))} />
+                                    {addFieldErrors.consultantId && <div className="text-red-500 text-xs mt-1">{addFieldErrors.consultantId}</div>}
+                                </div>
+                                <div className="flex flex-col">
+                                    <label className="mb-1 text-sm font-medium">Available Date</label>
+                                    <input className="border p-2" type="date" value={newSchedule.availableDate} onChange={e => setNewSchedule(a => ({ ...a, availableDate: e.target.value }))} />
+                                    {addFieldErrors.availableDate && <div className="text-red-500 text-xs mt-1">{addFieldErrors.availableDate}</div>}
+                                </div>
+                                <div className="flex flex-col">
+                                    <label className="mb-1 text-sm font-medium">Start Time</label>
+                                    <input className="border p-2" placeholder="Start Time (hh:mm:ss)" value={newSchedule.startTime} onChange={e => setNewSchedule(a => ({ ...a, startTime: e.target.value }))} />
+                                    {addFieldErrors.startTime && <div className="text-red-500 text-xs mt-1">{addFieldErrors.startTime}</div>}
+                                </div>
+                                <div className="flex flex-col">
+                                    <label className="mb-1 text-sm font-medium">End Time</label>
+                                    <input className="border p-2" placeholder="End Time (hh:mm:ss)" value={newSchedule.endTime} onChange={e => setNewSchedule(a => ({ ...a, endTime: e.target.value }))} />
+                                    {addFieldErrors.endTime && <div className="text-red-500 text-xs mt-1">{addFieldErrors.endTime}</div>}
+                                </div>
+                                <div className="flex flex-col">
+                                    <label className="mb-1 text-sm font-medium">Slot</label>
+                                    <input className="border p-2" type="number" min={1} placeholder="Slot" value={newSchedule.slot} onChange={e => setNewSchedule(a => ({ ...a, slot: parseInt(e.target.value) || 0 }))} />
+                                    {addFieldErrors.slot && <div className="text-red-500 text-xs mt-1">{addFieldErrors.slot}</div>}
+                                </div>
                             </div>
+                            {addError && <div className="text-red-500 mt-2 text-sm">{addError}</div>}
                             <div className="flex justify-end mt-6 gap-2">
                                 <button className="px-6 py-3 bg-gray-300 text-gray-700 rounded hover:bg-gray-400" onClick={() => setShowAdd(false)}><MdCancel /></button>
                                 <button className="px-6 py-3 bg-green-600 text-white rounded hover:bg-green-700" onClick={handleAddSchedule}>Add</button>
@@ -130,27 +235,25 @@ const ManageSchedule = () => {
                         <thead>
                             <tr>
                                 <th className="bg-gray-200 py-2 px-4 border">ID</th>
-                                <th className="bg-gray-200 py-2 px-4 border">Title</th>
-                                <th className="bg-gray-200 py-2 px-4 border">Description</th>
-                                <th className="bg-gray-200 py-2 px-4 border">Date</th>
-                                <th className="bg-gray-200 py-2 px-4 border">Time</th>
-                                <th className="bg-gray-200 py-2 px-4 border">Location</th>
-                                <th className="bg-gray-200 py-2 px-4 border">Actions</th>
+                                <th className="bg-gray-200 py-2 border">Consultant ID</th>
+                                <th className="bg-gray-200 py-2 border">Available Date</th>
+                                <th className="bg-gray-200 py-2 border">Time</th>
+                                <th className="bg-gray-200 py-2 px-4 border">Slot</th>
+                                <th className="bg-gray-200 py-2 border">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {schedules.map((schedule, idx) => (
-                                <tr key={schedule.id || idx}>
-                                    <td className="py-2 px-4 border">{schedule.id}</td>
-                                    <td className="py-2 px-4 border">{schedule.title}</td>
-                                    <td className="py-2 px-4 border">{schedule.description}</td>
-                                    <td className="py-2 px-4 border">{formatDateVN(schedule.date)}</td>
-                                    <td className="py-2 px-4 border">{schedule.time}</td>
-                                    <td className="py-2 px-4 border">{schedule.location}</td>
-                                    <td className="py-2 px-4 border">
-                                        <div className="flex items-center gap-2">
-                                            <button className="bg-yellow-500 text-white px-6 py-3 rounded text-xs" onClick={() => handleEdit(schedule)}><FaEdit /></button>
-                                            <button className="bg-red-500 text-white px-6 py-3 rounded text-xs" onClick={() => handleDelete(schedule.id)}><MdDelete /></button>
+                                <tr key={schedule.scheduleId || idx}>
+                                    <td className="py-2 px-4 border text-center">{schedule.scheduleId}</td>
+                                    <td className="py-2 border text-center">{schedule.consultantId}</td>
+                                    <td className="py-2 border text-center">{formatDateVN(schedule.availableDate)}</td>
+                                    <td className="py-2 border text-center">{`${schedule.startTime} - ${schedule.endTime}`}</td>
+                                    <td className="py-2 px-4 border text-center">{schedule.slot}</td>
+                                    <td className="py-2 border text-center">
+                                        <div className="flex items-center justify-center gap-2">
+                                            <button className="bg-yellow-500 text-white px-6 py-3 rounded text-xs hover:bg-yellow-600 transition-colors" onClick={() => handleEdit(schedule)}><FaEdit /></button>
+                                            <button className="bg-red-500 text-white px-6 py-3 rounded text-xs hover:bg-red-600 transition-colors" onClick={() => handleDelete(schedule.scheduleId)}><MdDelete /></button>
                                         </div>
                                     </td>
                                 </tr>
@@ -167,12 +270,32 @@ const ManageSchedule = () => {
                             <button className="text-gray-500 hover:text-gray-700 text-2xl" onClick={handleCancelEdit}><MdCancel /></button>
                         </div>
                         <div className="grid grid-cols-2 gap-4">
-                            <input className="border p-2" placeholder="Title" value={editSchedule.title || ''} onChange={e => setEditSchedule(ev => ({ ...ev, title: e.target.value }))} />
-                            <input className="border p-2" placeholder="Description" value={editSchedule.description || ''} onChange={e => setEditSchedule(ev => ({ ...ev, description: e.target.value }))} />
-                            <input className="border p-2" type="date" value={editSchedule.date ? editSchedule.date.slice(0, 10) : ''} onChange={e => setEditSchedule(ev => ({ ...ev, date: e.target.value }))} />
-                            <input className="border p-2" placeholder="Time" value={editSchedule.time || ''} onChange={e => setEditSchedule(ev => ({ ...ev, time: e.target.value }))} />
-                            <input className="border p-2" placeholder="Location" value={editSchedule.location || ''} onChange={e => setEditSchedule(ev => ({ ...ev, location: e.target.value }))} />
+                            <div className="flex flex-col">
+                                <label className="mb-1 text-sm font-medium">Consultant ID</label>
+                                <input className="border p-2" type="number" placeholder="Consultant ID" value={editScheduleData.consultantId || 0} onChange={e => setEditScheduleData(ev => ({ ...ev, consultantId: parseInt(e.target.value) || 0 }))} />
+                            </div>
+                            <div className="flex flex-col">
+                                <label className="mb-1 text-sm font-medium">Account ID</label>
+                                <input className="border p-2" type="number" placeholder="Account ID" value={editScheduleData.accountId || 0} onChange={e => setEditScheduleData(ev => ({ ...ev, accountId: parseInt(e.target.value) || 0 }))} />
+                            </div>
+                            <div className="flex flex-col">
+                                <label className="mb-1 text-sm font-medium">Available Date</label>
+                                <input className="border p-2" type="date" value={editScheduleData.availableDate ? editScheduleData.availableDate.slice(0, 10) : ''} onChange={e => setEditScheduleData(ev => ({ ...ev, availableDate: e.target.value }))} />
+                            </div>
+                            <div className="flex flex-col">
+                                <label className="mb-1 text-sm font-medium">Start Time</label>
+                                <input className="border p-2" placeholder="Start Time (hh:mm:ss)" value={editScheduleData.startTime || ''} onChange={e => setEditScheduleData(ev => ({ ...ev, startTime: e.target.value }))} />
+                            </div>
+                            <div className="flex flex-col">
+                                <label className="mb-1 text-sm font-medium">End Time</label>
+                                <input className="border p-2" placeholder="End Time (hh:mm:ss)" value={editScheduleData.endTime || ''} onChange={e => setEditScheduleData(ev => ({ ...ev, endTime: e.target.value }))} />
+                            </div>
+                            <div className="flex flex-col">
+                                <label className="mb-1 text-sm font-medium">Slot</label>
+                                <input className="border p-2" type="number" min={1} placeholder="Slot" value={editScheduleData.slot || 1} onChange={e => setEditScheduleData(ev => ({ ...ev, slot: parseInt(e.target.value) || 0 }))} />
+                            </div>
                         </div>
+                        {editError && <div className="text-red-500 mt-2 text-sm">{editError}</div>}
                         <div className="flex justify-end mt-6 gap-2">
                             <button className="px-6 py-3 bg-gray-300 text-gray-700 rounded hover:bg-gray-400" onClick={handleCancelEdit}><MdCancel /></button>
                             <button className="px-6 py-3 bg-green-600 text-white rounded hover:bg-green-700" onClick={handleSaveEdit}>Save</button>

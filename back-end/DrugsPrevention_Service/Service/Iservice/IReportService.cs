@@ -10,5 +10,8 @@ namespace DrugsPrevention_Service.Service.Iservice
     public interface IReportService
     {
         Task<ReportSummaryDTO> GetReportSummaryAsync();
+        Task<UserReportDTO> GetTopUserByEventParticipationAsync();
+        Task<List<UserReportDTO>> GetUsersOfMostPopularEventAsync();
+        Task<PopularEventReportDTO> GetMostPopularEventWithUsersAsync();
     }
 }

@@ -16,7 +16,7 @@ namespace DrugsPrevention_API.Controllers
             _consultantService = consultantService;
         }
 
-        [AuthorizeByRole(1, 2, 3, 4)]
+        
         [HttpGet("{id}")]
         public async Task<IActionResult> GetConsultantById(int id)
         {

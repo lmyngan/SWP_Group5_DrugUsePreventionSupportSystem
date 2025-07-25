@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace DrugsPrevention_Data.DTO.Schedule
 {
-    public class ScheduleDTO
+    public class BaseScheduleDTO
     {
-        public string? FullName { get; set; }
-        public int AccountId { get; set; }
+        public int ConsultantId { get; set; }   
+        public int AccountId { get; set; }  
         public int ScheduleId { get; set; }
         public DateTime AvailableDate { get; set; }
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
-        public string? Status { get; set; }
         public int Slot { get; set; }
     }
+
 }

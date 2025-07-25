@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react"
 import "../styles/BlogPage.css"
-import Footer from "../components/Footer" // Import the new Footer component
-import { blogData, addBlog } from "../service/api";
+
+import { blogData, addBlog, getRateBlog } from "../service/api";
 import { useLocation } from "react-router-dom";
 
 const BlogPage = ({ navigateTo }) => {
@@ -21,6 +21,9 @@ const BlogPage = ({ navigateTo }) => {
     event_id: "",
     categories: 1,
   })
+  const [showRateModal, setShowRateModal] = useState(false);
+  const [rateBlogId, setRateBlogId] = useState(null);
+  const [selectedRate, setSelectedRate] = useState(0);
 
   const blogCategories = [
     { id: "all", name: "All Stories" },
@@ -33,8 +36,10 @@ const BlogPage = ({ navigateTo }) => {
     const params = new URLSearchParams(location.search);
     const eventId = params.get("event");
     if (eventId) {
-      setShowCreateForm(true);
+      setShowCreateForm(false);
       setNewBlog((prev) => ({ ...prev, event_id: eventId }));
+    } else {
+      setShowCreateForm(false);
     }
     // Fetch current user
     const storedUser = localStorage.getItem("user");
@@ -108,6 +113,24 @@ const BlogPage = ({ navigateTo }) => {
     // Simulate like update - ideally this would also be an API call
     setBlogs(blogs.map((blog) => (blog.blog_id === blogId ? { ...blog, likes: blog.likes + 1 } : blog)))
   }
+
+  // Gọi API thực tế để rate blog
+  const handleRateBlog = async (blogId, rate) => {
+    try {
+      const response = await getRateBlog({ blogId, rating: rate });
+      if (!response.error) {
+        setBlogs(blogs.map((blog) => (blog.blog_id === blogId ? { ...blog, rate } : blog)));
+        setShowRateModal(false);
+        setSelectedRate(0);
+        setRateBlogId(null);
+        alert("Thank you for rating!");
+      } else {
+        alert("Failed to rate blog: " + response.error);
+      }
+    } catch (err) {
+      alert("An error occurred while rating the blog.");
+    }
+  };
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -185,12 +208,6 @@ const BlogPage = ({ navigateTo }) => {
               community of recovery and prevention.
             </p>
             <div className="hero-buttons">
-              <button
-                className="btn-primary"
-                onClick={() => (user ? setShowCreateForm(true) : alert("Please login to share your experience"))}
-              >
-                Share Your Story
-              </button>
               <button className="btn-secondary" onClick={() => document.getElementById("blogs-section").scrollIntoView()}>
                 Read Experiences
               </button>
@@ -203,46 +220,7 @@ const BlogPage = ({ navigateTo }) => {
         </div>
       </section>
 
-      {/* Blog Categories Section */}
-      <section className="overview-section">
-        <div className="container">
-          <h2>Types of Stories</h2>
-          <div className="overview-grid">
-            <div className="overview-card">
-              <div className="overview-icon">💭</div>
-              <h3>Personal Experiences</h3>
-              <p>Share your personal journey of recovery, challenges overcome, and lessons learned along the way.</p>
-              <button className="overview-link" onClick={() => setSelectedCategory(1)}>
-                Read Stories
-              </button>
-            </div>
-            <div className="overview-card">
-              <div className="overview-icon">📖</div>
-              <h3>Educational Content</h3>
-              <p>Professional insights, research findings, and educational resources about prevention and recovery.</p>
-              <button className="overview-link" onClick={() => setSelectedCategory(2)}>
-                Learn More
-              </button>
-            </div>
-            <div className="overview-card">
-              <div className="overview-icon">🤲</div>
-              <h3>Support & Advice</h3>
-              <p>Practical tips, advice for families, and guidance for supporting loved ones in their journey.</p>
-              <button className="overview-link" onClick={() => setSelectedCategory(3)}>
-                Get Support
-              </button>
-            </div>
-            <div className="overview-card">
-              <div className="overview-icon">🎯</div>
-              <h3>Event Experiences</h3>
-              <p>Share your experiences from community events and how they impacted your journey.</p>
-              <button className="overview-link" onClick={() => navigateTo && navigateTo("events")}>
-                Join Events
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+
 
       {/* Filter Section */}
       <section className="filter-section">
@@ -356,12 +334,6 @@ const BlogPage = ({ navigateTo }) => {
         <div className="container">
           <div className="section-header">
             <h2>Community Experiences</h2>
-            <button
-              className="btn-primary"
-              onClick={() => (user ? setShowCreateForm(true) : alert("Please login to share your experience"))}
-            >
-              Share Your Story
-            </button>
           </div>
           {filteredBlogs.length === 0 ? (
             <div className="no-blogs">
@@ -408,18 +380,32 @@ const BlogPage = ({ navigateTo }) => {
                   <p className="blog-content">{blog.content}</p>
 
                   <div className="blog-actions">
-                    <button className="action-btn like-btn" onClick={() => handleLikeBlog(blog.blog_id)}>
-                      <span className="action-icon">👍</span>
-                      <span>{blog.likes}</span>
+                    <button className="action-btn rate-btn" onClick={() => { setShowRateModal(true); setRateBlogId(blog.blog_id); }}>
+                      <span className="action-icon">⭐</span>
+                      <span>Rate</span>
                     </button>
-                    <button className="action-btn comment-btn">
-                      <span className="action-icon">💬</span>
-                      <span>{blog.comments}</span>
-                    </button>
-                    <button className="action-btn share-btn">
-                      <span className="action-icon">📤</span>
-                      <span>Share</span>
-                    </button>
+                    {showRateModal && rateBlogId === blog.blog_id && (
+                      <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-white/30">
+                        <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-xs flex flex-col items-center">
+                          <h3 className="text-lg font-semibold mb-4">Rate this blog</h3>
+                          <div className="flex gap-2 mb-4">
+                            {[1, 2, 3, 4, 5].map(star => (
+                              <button
+                                key={star}
+                                className={`text-2xl ${selectedRate >= star ? 'text-yellow-400' : 'text-gray-400'}`}
+                                onClick={() => setSelectedRate(star)}
+                              >
+                                ★
+                              </button>
+                            ))}
+                          </div>
+                          <div className="flex gap-2">
+                            <button className="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600" onClick={() => handleRateBlog(blog.blog_id, selectedRate)} disabled={selectedRate === 0}>Submit</button>
+                            <button className="px-4 py-2 rounded bg-gray-300 text-gray-700 hover:bg-gray-400" onClick={() => { setShowRateModal(false); setSelectedRate(0); setRateBlogId(null); }}>Cancel</button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </article>
               ))}
@@ -428,34 +414,6 @@ const BlogPage = ({ navigateTo }) => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="features-section">
-        <div className="container">
-          <h2>Why Share Your Experience?</h2>
-          <div className="features-grid">
-            <div className="feature-card">
-              <div className="feature-icon">💪</div>
-              <h3>Inspire Others</h3>
-              <p>Your story can provide hope and motivation to others who are facing similar challenges</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">🤝</div>
-              <h3>Build Community</h3>
-              <p>Connect with others who understand your journey and create meaningful relationships</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">🌱</div>
-              <h3>Personal Growth</h3>
-              <p>Reflecting on and sharing your experience can be therapeutic and aid in your own healing</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">📚</div>
-              <h3>Educate & Inform</h3>
-              <p>Help others learn from your experiences and contribute to prevention efforts</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Call to Action Section */}
       <section className="cta-section">
@@ -479,7 +437,7 @@ const BlogPage = ({ navigateTo }) => {
         </div>
       </section>
 
-      <Footer navigateTo={navigateTo} />
+
     </div>
   )
 }

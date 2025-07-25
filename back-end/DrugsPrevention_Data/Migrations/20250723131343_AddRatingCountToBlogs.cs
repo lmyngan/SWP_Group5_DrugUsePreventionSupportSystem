@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DrugsPrevention_Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitiateCreate : Migration
+    public partial class AddRatingCountToBlogs : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -63,6 +63,7 @@ namespace DrugsPrevention_Data.Migrations
                     title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     rate = table.Column<double>(type: "float", nullable: false),
+                    rating_count = table.Column<int>(type: "int", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>

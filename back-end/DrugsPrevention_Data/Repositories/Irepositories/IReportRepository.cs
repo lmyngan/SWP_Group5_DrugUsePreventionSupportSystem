@@ -11,6 +11,9 @@ namespace DrugsPrevention_Data.Repositories.Irepositories
     public interface IReportRepository
     {
         Task<ReportSummaryDTO> GetReportSummaryAsync();
+        Task<UserReportDTO> GetTopUserByEventParticipationAsync();
+        Task<List<UserReportDTO>> GetUsersOfMostPopularEventAsync();
+        Task<PopularEventReportDTO> GetMostPopularEventWithUsersAsync();
     }
 }
 

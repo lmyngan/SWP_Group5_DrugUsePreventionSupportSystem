@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getConsultantSchedules, bookAppointment, createVNPayUrl, handleVNPayCallback, getConsultantInfo } from "../service/api";
+import { getConsultantSchedules, bookAppointment, createVNPayUrl, handleVNPayCallback, addNotification, getDataConsultant } from "../service/api";
 import "../styles/MentorPage.css";
 import Footer from "../components/Footer";
 
@@ -10,9 +10,8 @@ const Mentor = () => {
   const [loadingSchedules, setLoadingSchedules] = useState({});
   const [scheduleErrors, setScheduleErrors] = useState({});
   const [qrUrl, setQrUrl] = useState(null);
-  const [paymentStatuses, setPaymentStatuses] = useState({}); // { [expertId]: 'pending' | 'success' | 'fail' }
+  const [paymentStatuses, setPaymentStatuses] = useState({});
   const [currentAppointmentId, setCurrentAppointmentId] = useState(null);
-  const [consultantInfos, setConsultantInfos] = useState({});
 
   const handleScheduleClick = async (consultantId) => {
     try {
@@ -27,7 +26,6 @@ const Mentor = () => {
         setScheduleErrors(prev => ({ ...prev, [consultantId]: data.error }));
         setSelectedSchedules(prev => ({ ...prev, [consultantId]: [] }));
       } else {
-        // Handle different data formats
         let schedules = [];
         if (Array.isArray(data)) {
           schedules = data;
@@ -59,7 +57,6 @@ const Mentor = () => {
   };
 
   const formatScheduleDisplay = (schedule) => {
-    // Format date
     let dateStr = "";
     if (schedule.availableDate) {
       const date = new Date(schedule.availableDate);
@@ -79,7 +76,6 @@ const Mentor = () => {
       });
     }
 
-    // Format time
     let timeStr = "";
     if (schedule.startTime && schedule.endTime) {
       timeStr = `${schedule.startTime} - ${schedule.endTime}`;
@@ -89,7 +85,7 @@ const Mentor = () => {
       timeStr = schedule.startTime;
     }
 
-    return `${dateStr} ${timeStr}`.trim();
+    return `${timeStr}, ${dateStr}`.trim();
   };
 
   const handleBookConsultant = async (expert) => {
@@ -113,12 +109,13 @@ const Mentor = () => {
       return;
     }
 
-    // Lấy các trường cần thiết từ schedule
     const payload = {
       accountId: user.accountId,
       consultantId: consultantId,
       scheduleId: schedule.id || schedule.scheduleId,
-      price: expert.price ? expert.price.replace(/\D/g, "") : "0", // Lấy số từ "$100"
+      price: typeof expert.price === "string"
+        ? expert.price.replace(/\D/g, "")
+        : (typeof expert.price === "number" ? String(expert.price) : "0"),
       startTime: schedule.startTime || schedule.time || schedule.dateTime || "",
       endTime: schedule.endTime || "",
       status: "pending",
@@ -129,12 +126,23 @@ const Mentor = () => {
     const response = await bookAppointment(payload);
     if (response && response.appointmentId) {
       setCurrentAppointmentId(response.appointmentId);
-      // Loại bỏ schedule vừa đặt khỏi danh sách
+
+      const notificationData = {
+        accountId: user.accountId,
+        message: `Your appointment with consultant ${consultantId} has been successfully booked.`
+      };
+
+      try {
+        await addNotification(notificationData);
+      } catch (error) {
+        console.error('Failed to send notification:', error);
+      }
+
       setSelectedSchedules(prev => ({
         ...prev,
         [consultantId]: (prev[consultantId] || []).filter(s => (s.id || s.scheduleId) !== (schedule.id || schedule.scheduleId))
       }));
-      // Gọi API lấy VNPay URL
+
       const vnpayRes = await createVNPayUrl(response.appointmentId);
       if (vnpayRes && vnpayRes.paymentUrl) {
         setQrUrl(vnpayRes.paymentUrl);
@@ -173,6 +181,7 @@ const Mentor = () => {
   // Hàm giả lập xác nhận đã thanh toán (gọi handleVNPayCallback)
   const handleConfirmPayment = async (consultantId) => {
     if (!currentAppointmentId) return;
+
     // Giả lập callback, thực tế cần truyền params đúng từ VNPay
     const callbackRes = await handleVNPayCallback({ appointmentId: currentAppointmentId });
     if (callbackRes && callbackRes.message && callbackRes.message.includes('thành công')) {
@@ -188,56 +197,56 @@ const Mentor = () => {
     }
   };
 
-  // Tạo biến availableSchedules cho từng expert trước khi return
   const getAvailableSchedules = (expertId) => {
-    return (selectedSchedules[expertId] || []).filter(
-      schedule => schedule.status === 'available' || !schedule.status
-    );
+    return (selectedSchedules[expertId] || [])
+      .filter(schedule => schedule.status === 'unbooked')
+      .sort((a, b) => {
+
+        const dateA = new Date(a.availableDate || a.dateTime || 0);
+        const dateB = new Date(b.availableDate || b.dateTime || 0);
+        if (dateA.getTime() !== dateB.getTime()) {
+          return dateA - dateB;
+        }
+
+        const parseTime = t => {
+          if (!t) return 0;
+          if (typeof t === 'string') {
+            const [h, m, s] = t.split(":").map(Number);
+            return h * 3600 + m * 60 + (s || 0);
+          }
+
+          if (typeof t === 'object' && t.hours !== undefined) {
+            return t.hours * 3600 + t.minutes * 60 + (t.seconds || 0);
+          }
+          return 0;
+        };
+        return parseTime(a.startTime) - parseTime(b.startTime);
+      });
   };
 
-  const experts = [
-    {
-      id: 1,
-      name: "Dr. Jane Smith",
-      title: "Addiction Specialist",
-      image: "/images/consultant1.webp",
-      description: "Dr. Jane Smith has over 15 years of experience in addiction medicine and has helped thousands of patients recover.",
-      specialties: ["Substance Abuse", "Mental Health", "Recovery Programs"],
-      experience: "15+ years",
-      education: "MD from Harvard Medical School",
-      price: "$100",
-      contact: "jane_smith.johnson@drugscare.com",
-    },
-    {
-      id: 2,
-      name: "Dr. Emma Jones",
-      title: "Behavioral Therapist",
-      image: "/images/consultant2.jpg",
-      description: "Specializing in cognitive behavioral therapy for addiction recovery and prevention programs.",
-      specialties: ["CBT Therapy", "Group Counseling", "Prevention"],
-      experience: "12+ years",
-      education: "PhD in Psychology from Stanford",
-      price: "$150",
-      contact: "emma_jones.chen@drugscare.com",
-    },
-  ];
+  const [experts, setExperts] = useState([]);
 
-  // Fetch consultant info khi vừa vào trang
+  const imageMap = {
+    1: "/images/consultant1.webp",
+    2: "/images/consultant2.jpg",
+    3: "/images/consultant4.jpg",
+  };
+
   useEffect(() => {
-    experts.forEach(expert => {
-      getConsultantInfo(expert.id).then(info => {
-        setConsultantInfos(prev => ({
-          ...prev,
-          [expert.id]: info
+    getDataConsultant().then(data => {
+      if (Array.isArray(data)) {
+        const mapped = data.map(consultant => ({
+          ...consultant,
+          id: consultant.consultantId,
+          image: imageMap[consultant.consultantId]
         }));
-        console.log('ConsultantId:', expert.id, 'Info:', info);
-      });
+        setExperts(mapped);
+      }
     });
-  }, []);
+  });
 
   return (
     <div className="mentor-page">
-      {/* Page Header */}
       <section className="page-header">
         <div className="container">
           <h1>Meet Our Expert Consultants</h1>
@@ -245,60 +254,50 @@ const Mentor = () => {
         </div>
       </section>
 
-      {/* Experts Section */}
       <section className="experts-section">
         <div className="container">
           <div className="experts-grid">
             {experts.map((expert) => (
-              <div key={expert.id} className="expert-card">
+              <div key={expert.consultantId} className="expert-card">
                 <div className="expert-image">
                   <img src={expert.image || "/placeholder.svg"} alt={expert.name} />
                 </div>
                 <div className="expert-info">
-                  {/* Hiển thị thông tin consultant lấy từ API */}
-                  {consultantInfos[expert.id] && (
-                    <div className="expert-details">
-                      <div className="detail-item">
-                        <h3>Dr. {consultantInfos[expert.id].fullName}</h3>
-                      </div>
-
-                      <div className="detail-item">
-                        <strong>Certificate:</strong> {consultantInfos[expert.id].certificate}
-                      </div>
-
-                      <div className="detail-item">
-                        <strong>Additional certificate:</strong> {consultantInfos[expert.id].certificateNames}
-                      </div>
-
-                      <div className="detail-item">
-                        <strong>Gender:</strong> {consultantInfos[expert.id].gender}
-                      </div>
-
-                      <div className="detail-item">
-                        <strong>Price: </strong> ${consultantInfos[expert.id].price}
-                      </div>
+                  <div className="expert-details">
+                    <div className="detail-item">
+                      <h3>{expert.fullName}</h3>
                     </div>
-                  )}
+                    <div className="detail-item">
+                      <strong>Gender:</strong> {expert.gender}
+                    </div>
+                    <div className="detail-item">
+                      <strong>Certificate:</strong> {expert.certificate}
+                    </div>
+                    <div className="detail-item">
+                      <strong>Additional certificate:</strong> {Array.isArray(expert.certificateNames) ? expert.certificateNames.join(", ") : ""}
+                    </div>
+                    <div className="detail-item">
+                      <strong>Price:</strong> ${expert.price}
+                    </div>
+                  </div>
 
                   <div className="expert-actions">
                     <button
                       className="contact-btn"
-                      onClick={() => handleScheduleClick(expert.id)}
-                      disabled={loadingSchedules[expert.id]}
+                      onClick={() => handleScheduleClick(expert.consultantId)}
+                      disabled={loadingSchedules[expert.consultantId]}
                     >
-                      {loadingSchedules[expert.id] ? "Loading..." : "Schedule Consultation"}
+                      {loadingSchedules[expert.consultantId] ? "Loading..." : "Schedule Consultation"}
                     </button>
                   </div>
 
-                  {/* Loading state */}
-                  {loadingSchedules[expert.id] && (
+                  {loadingSchedules[expert.consultantId] && (
                     <div style={{ marginTop: "1rem", textAlign: "center", color: "#666" }}>
                       Loading schedules...
                     </div>
                   )}
 
-                  {/* Error state */}
-                  {scheduleErrors[expert.id] && (
+                  {scheduleErrors[expert.consultantId] && (
                     <div style={{
                       marginTop: "1rem",
                       padding: "0.5rem",
@@ -307,50 +306,56 @@ const Mentor = () => {
                       border: "1px solid #f5c6cb",
                       color: "#721c24"
                     }}>
-                      Error: {scheduleErrors[expert.id]}
+                      Error: You do not have permission to view consultation schedule.
                     </div>
                   )}
 
-                  {/* Hiển thị lịch nếu đã lấy */}
-                  {selectedSchedules[expert.id] && Array.isArray(selectedSchedules[expert.id]) && selectedSchedules[expert.id].length > 0 && (
-                    <div style={{ marginTop: "1rem" }}>
-                      <label><strong>Available Schedules ({getAvailableSchedules(expert.id).length}):</strong></label>
-                      <select
-                        value={selectedScheduleId[expert.id] || ""}
-                        onChange={e => handleSelectChange(expert.id, e.target.value)}
-                        style={{ width: "100%", marginTop: "0.5rem", padding: "0.5rem" }}
-                      >
-                        <option value="">-- Select schedule --</option>
-                        {getAvailableSchedules(expert.id).map((schedule, idx) => (
-                          <option key={schedule.id || schedule.scheduleId || idx} value={schedule.id || schedule.scheduleId || idx}>
-                            {formatScheduleDisplay(schedule)}
-                          </option>
-                        ))}
-                      </select>
-                      <button
-                        className="contact-btn"
-                        style={{ marginTop: "1rem", width: "100%" }}
-                        onClick={() => handleBookConsultant(expert)}
-                      >
-                        Book Consultant
-                      </button>
-                    </div>
-                  )}
+                  {selectedSchedules[expert.consultantId] &&
+                    Array.isArray(selectedSchedules[expert.consultantId]) &&
+                    selectedSchedules[expert.consultantId].length > 0 &&
+                    getAvailableSchedules(expert.consultantId).length > 0 && (
+                      <div style={{ marginTop: "1rem" }}>
+                        <label><strong>Available Schedules ({getAvailableSchedules(expert.consultantId).length}):</strong></label>
+                        <select
+                          value={selectedScheduleId[expert.consultantId] || ""}
+                          onChange={e => handleSelectChange(expert.consultantId, e.target.value)}
+                          style={{ width: "100%", marginTop: "0.5rem", padding: "0.5rem" }}
+                        >
+                          <option value="">-- Select schedule --</option>
+                          {getAvailableSchedules(expert.consultantId).map((schedule, idx) => (
+                            <option key={schedule.consultantId || schedule.scheduleId || idx} value={schedule.id || schedule.scheduleId || idx}>
+                              {formatScheduleDisplay(schedule)}
+                            </option>
+                          ))}
+                        </select>
+                        <button
+                          className="contact-btn"
+                          style={{ marginTop: "1rem", width: "100%" }}
+                          onClick={() => handleBookConsultant(expert)}
+                        >
+                          Book Consultant
+                        </button>
+                      </div>
+                    )}
 
-                  {/* No schedules available */}
-                  {selectedSchedules[expert.id] && Array.isArray(selectedSchedules[expert.id]) && selectedSchedules[expert.id].length === 0 && !loadingSchedules[expert.id] && !scheduleErrors[expert.id] && (
-                    <div style={{
-                      marginTop: "1rem",
-                      padding: "0.5rem",
-                      borderRadius: "4px",
-                      backgroundColor: "#fff3cd",
-                      border: "1px solid #ffeaa7",
-                      color: "#856404"
-                    }}>
-                      No schedules available for this consultant.
-                    </div>
-                  )}
-                  {/* Thông báo booking */}
+                  {selectedSchedules[expert.consultantId] &&
+                    Array.isArray(selectedSchedules[expert.consultantId]) &&
+                    selectedSchedules[expert.consultantId].length > 0 &&
+                    getAvailableSchedules(expert.consultantId).length === 0 &&
+                    !loadingSchedules[expert.consultantId] &&
+                    !scheduleErrors[expert.consultantId] && (
+                      <div style={{
+                        marginTop: "1rem",
+                        padding: "0.5rem",
+                        borderRadius: "4px",
+                        backgroundColor: "#fff3cd",
+                        border: "1px solid #ffeaa7",
+                        color: "#856404"
+                      }}>
+                        No schedules available for this consultant.
+                      </div>
+                    )}
+
                   {bookingMessages[expert.id] && (
                     <div style={{
                       color: bookingMessages[expert.id].includes("success") ? "green" : "red",

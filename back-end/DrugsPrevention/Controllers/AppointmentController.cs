@@ -90,19 +90,20 @@ namespace DrugsPrevention_API.Controllers
         }
 
         [AuthorizeByRole(1, 2, 3)]
-        [HttpPut("{id}/status")]
-        public async Task<IActionResult> UpdateStatus(int id, [FromQuery] string status)
+        [HttpPut("schedule/{scheduleId}/status")]
+        public async Task<IActionResult> UpdateStatusBySchedule(int scheduleId, [FromQuery] string status)
         {
-            var result = await _service.UpdateAppointmentStatusAsync(id, status);
+            var result = await _service.UpdateAppointmentStatusByScheduleIdAsync(scheduleId, status);
             if (result == null) return NotFound(new { message = "Không cập nhật được trạng thái." });
 
             return Ok(new
             {
                 message = "Cập nhật trạng thái thành công",
                 status = result.Status,
-                url = $"{Request.Scheme}://{Request.Host}/api/Appointment/{result.AppointmentId}/status?status={result.Status}"
+                url = $"{Request.Scheme}://{Request.Host}/api/Appointment/schedule/{scheduleId}/status?status={result.Status}"
             });
         }
+
         [AuthorizeByRole(4)]
         [HttpGet("{appointmentId}/vnpay-url")]
         public async Task<IActionResult> CreateVNPayUrl(int appointmentId)

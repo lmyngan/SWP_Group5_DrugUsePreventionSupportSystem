@@ -1,7 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { eventData } from "./service/api.js";
 import "./App.css"
+import Footer from "./components/Footer";
 
 // Import components
 import Navbar from "./components/Navbar"
@@ -29,12 +31,15 @@ import CalendarPage from "./pages/CalendarPage"
 
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import ManageSchedule from "./pages/ManageSchedule"
+import NotFound from "./pages/NotFound"
 
 
 
 const App = () => {
   // State để quản lý trang hiện tại
-  const [currentPage, setCurrentPage] = useState("home")
+  const [currentPage, setCurrentPage] = useState("home");
+  const [events, setEvents] = useState([]);
+  const [featuredEvents, setFeaturedEvents] = useState([]);
 
   // Lấy trang từ URL khi component mount
   useEffect(() => {
@@ -48,6 +53,16 @@ const App = () => {
       const newPage = newPath.substring(1) || "home"
       setCurrentPage(newPage)
     }
+
+    const fetchEvents = async () => {
+      const data = await eventData();
+      const eventList = Array.isArray(data) ? data : data.events || [];
+      // Sắp xếp và lấy 3 event mới nhất
+      const sortedEvents = [...eventList].sort((a, b) => new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date));
+      setEvents(eventList);
+      setFeaturedEvents(sortedEvents.slice(0, 3));
+    };
+    fetchEvents();
 
     window.addEventListener("popstate", handlePopState)
     return () => window.removeEventListener("popstate", handlePopState)
@@ -101,13 +116,16 @@ const App = () => {
         return <Account />
       case "report":
         return <Report />
+      case "not-found":
+        return <NotFound navigateTo={navigateTo} />
 
       default:
-        return <HomePage /> // Fallback về trang chủ
+        return <NotFound /> // Redirect to 404 page for non-existent routes
     }
   }
 
   return (
+
     <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
       <div className="app">
         {/*Member Navbar*/}
@@ -122,8 +140,11 @@ const App = () => {
 
         {/* Main content */}
         <main className="main-content">{renderPage()}</main>
+        {/* Footer luôn hiển thị ở mọi trang */}
+        <Footer featuredEvents={featuredEvents} navigateTo={navigateTo} />
       </div>
     </GoogleOAuthProvider>
+
   )
 }
 

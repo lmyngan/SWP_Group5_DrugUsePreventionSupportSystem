@@ -201,6 +201,18 @@ export const getTestScore = async (accountId) => {
     }
 }
 
+//GET: All Consultant
+export const getDataConsultant = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Consultant`, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
 //GET: ConsultantId
 export const getConsultantInfo = async (consultantId) => {
     try {
@@ -240,15 +252,9 @@ export const getConsultantSchedules = async (consultantId) => {
 // POST: Book Appointment
 export const bookAppointment = async (appointmentData) => {
     try {
-        console.log("API: Sending request to book appointment");
-        console.log("API: Headers:", getAuthHeader());
-        console.log("API: Data:", appointmentData);
-
         const response = await axios.post(`${API_BASE_URL}/api/Appointment/book`, appointmentData, {
             headers: getAuthHeader(),
         });
-
-        console.log("API: Response received:", response.data);
         return response.data;
     } catch (error) {
         console.error("API: Booking error details:", {
@@ -262,17 +268,6 @@ export const bookAppointment = async (appointmentData) => {
                 headers: error.config?.headers
             }
         });
-
-        if (error.response?.status === 403) {
-            return { error: "Access denied. You may not have permission to book appointments or your session has expired. Please login again." };
-        }
-
-        if (error.response?.status === 400) {
-            const errorMessage = error.response?.data?.message || "Invalid request data";
-            console.error("400 Bad Request Details:", error.response?.data);
-            return { error: `Bad Request: ${errorMessage}. Please check your input data.` };
-        }
-
         return { error: error.response?.data?.message || error.message };
     }
 };
@@ -289,10 +284,10 @@ export const appointmentId = async (appointmentIdData) => {
     }
 }
 
-// PUT: Update Appointment Status (new API: appointmentId, status)
-export const updateAppointmentStatus = async (appointmentId, status) => {
+// PUT: Update Appointment Status
+export const updateAppointmentStatus = async (scheduleId, status) => {
     try {
-        const response = await axios.put(`${API_BASE_URL}/api/Appointment/${appointmentId}/status`, status, {
+        const response = await axios.put(`${API_BASE_URL}/api/Appointment/schedule/${scheduleId}/status?status=${encodeURIComponent(status)}`, null, {
             headers: getAuthHeader(),
         });
         return response.data;
@@ -316,7 +311,48 @@ export const getScheduleData = async () => {
 //POST: Add Schedule
 export const addSchedule = async (data) => {
     try {
-        const response = await axios.post(`${API_BASE_URL}/api/schedule`, data, {
+        // Convert date format to ISO string if it's not already
+        let availableDate = data.availableDate;
+        if (availableDate && !availableDate.includes('T')) {
+            availableDate = new Date(availableDate).toISOString();
+        }
+
+        const scheduleData = {
+            consultantId: parseInt(data.consultantId) || 0,
+            accountId: 0, // Add default accountId if backend requires it
+            scheduleId: parseInt(data.scheduleId) || 0,
+            availableDate: availableDate || new Date().toISOString(),
+            startTime: data.startTime || "",
+            endTime: data.endTime || "",
+            slot: parseInt(data.slot) || 0
+        };
+
+        console.log('Sending schedule data:', scheduleData);
+
+        const response = await axios.post(`${API_BASE_URL}/api/schedule`, scheduleData, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Add schedule error:', error.response?.data || error.message);
+        return { error: error.response?.data?.message || error.message };
+    }
+}
+
+//PUT: Edit Schedule
+export const editSchedule = async (scheduleId, data) => {
+    try {
+        const scheduleData = {
+            consultantId: data.consultantId || 0,
+            accountId: data.accountId || 0,
+            scheduleId: scheduleId,
+            availableDate: data.availableDate || new Date().toISOString(),
+            startTime: data.startTime || "",
+            endTime: data.endTime || "",
+            slot: data.slot || 0
+        };
+
+        const response = await axios.put(`${API_BASE_URL}/api/schedule/${scheduleId}`, scheduleData, {
             headers: getAuthHeader(),
         });
         return response.data;
@@ -325,12 +361,12 @@ export const addSchedule = async (data) => {
     }
 }
 
-//PUT: Delete schedule
+//DELETE: Delete schedule
 export const deleteSchedule = async (scheduleId) => {
     try {
-        const response = await axios.delete(`${API_BASE_URL}/api/schedule/${scheduleId},${scheduleId}`, {
+        const response = await axios.delete(`${API_BASE_URL}/api/schedule/${scheduleId}`, {
             headers: getAuthHeader(),
-        });
+        })
         return response.data;
     } catch (error) {
         return { error: error.message };
@@ -445,6 +481,18 @@ export const deleteBlog = async (blogId) => {
     }
 }
 
+//POST: Rate Blog
+export const getRateBlog = async (data) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/Blog/rate`, data, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
 //POST: Notification
 export const addNotification = async (data) => {
     try {
@@ -453,7 +501,7 @@ export const addNotification = async (data) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.response?.data?.message || error.message };
+        return { error: error.message };
     }
 };
 
@@ -465,7 +513,7 @@ export const getNotificationsByAccountId = async (accountId) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.response?.data?.message || error.message };
+        return { error: error.message };
     }
 };
 
@@ -477,7 +525,7 @@ export const markAsReadNotification = async (notificationId) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.response?.data?.message || error.message };
+        return { error: error.message };
     }
 }
 
@@ -489,7 +537,31 @@ export const getReportData = async () => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.response?.data?.message || error.message };
+        return { error: error.message };
+    }
+}
+
+//GET: Top user join event
+export const getTopUser = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Report/top-user-event-participation`, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
+//GET: Details of top event participants
+export const getTopEventDetail = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Report/most-popular-event-detail`, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
     }
 }
 

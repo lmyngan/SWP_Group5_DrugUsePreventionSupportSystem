@@ -1,7 +1,7 @@
 import React from 'react';
 import { CheckCircle, Users, GraduationCap, Heart, ArrowRight } from 'lucide-react';
 import '../styles/WhoWeAre.css';
-import Footer from "../components/Footer"
+
 
 // Button Component
 const Button = ({ children, variant = 'default', size = 'default', className = '', onClick, ...props }) => {
@@ -280,7 +280,7 @@ const WhoWeAre = () => {
         </section>
       </main>
 
-      <Footer />
+     
     </div>
   );
 };

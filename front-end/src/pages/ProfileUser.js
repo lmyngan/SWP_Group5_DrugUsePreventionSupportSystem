@@ -5,6 +5,16 @@ import { Card, Container, Row, Col } from "react-bootstrap"
 import { getTestScore, getNotificationsByAccountId, markAsReadNotification, editProfileAccount } from "../service/api"
 import "../styles/ProfileUser.css"
 
+const formatDateVN = (dateString) => {
+  if (!dateString) return '';
+  const d = new Date(dateString);
+  if (isNaN(d)) return '';
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const year = d.getFullYear();
+  return `${day}/${month}/${year}`;
+};
+
 const ProfileUser = () => {
   const [user, setUser] = useState(null)
   const [testScore, setTestScore] = useState(null)
@@ -17,6 +27,9 @@ const ProfileUser = () => {
   const dropdownRef = useRef(null);
   const [editMode, setEditMode] = useState(false);
   const [editProfile, setEditProfile] = useState({ fullName: '', dateOfBirth: '', gender: '', address: '' });
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalFadeOut, setModalFadeOut] = useState(false);
 
   useEffect(() => {
     if (!showDropdown) return;
@@ -160,6 +173,11 @@ const ProfileUser = () => {
         setUser(updatedUser);
         localStorage.setItem('user', JSON.stringify(updatedUser));
         setEditMode(false);
+        setModalMessage("Edit profile success!");
+        setShowModal(true);
+        setModalFadeOut(false);
+        setTimeout(() => setModalFadeOut(true), 800);
+        setTimeout(() => setShowModal(false), 1000);
       } else {
         alert(res.error || 'Failed to update profile');
       }
@@ -178,6 +196,13 @@ const ProfileUser = () => {
 
   return (
     <Container className="profile-container">
+      {showModal && (
+        <div className={`modal-overlay${modalFadeOut ? ' fade-out' : ''}`}>
+          <div className="modal-content-custom">
+            <div className="mb-4">{modalMessage}</div>
+          </div>
+        </div>
+      )}
       <Row className="justify-content-center">
         <Col xs={12} md={10} lg={8}>
           <Card className="profile-card">
@@ -314,7 +339,7 @@ const ProfileUser = () => {
                   </Card.Text>
                   <Card.Text>
                     <span className="profile-label">Date of Birth:</span>
-                    <span className="profile-value">{user.dateOfBirth}</span>
+                    <span className="profile-value">{formatDateVN(user.dateOfBirth)}</span>
                   </Card.Text>
                   <Card.Text>
                     <span className="profile-label">Gender:</span>

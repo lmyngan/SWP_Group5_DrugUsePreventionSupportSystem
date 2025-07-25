@@ -2,10 +2,8 @@
 using DrugsPrevention_Data.DTO.Schedule;
 using DrugsPrevention_Data.Repositories.Irepositories;
 using DrugsPrevention_Service.Service.Iservice;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DrugsPrevention_Service.Service
@@ -19,44 +17,46 @@ namespace DrugsPrevention_Service.Service
             _scheduleRepository = scheduleRepository;
         }
 
-        public async Task<IEnumerable<ScheduleDTO>> GetAllAsync()
+        public async Task<IEnumerable<BaseScheduleDTO>> GetAllAsync()
         {
             var schedules = await _scheduleRepository.GetAllAsync();
-            return schedules.Select(s => new ScheduleDTO
+            return schedules.Select(s => new BaseScheduleDTO
             {
                 ScheduleId = s.ScheduleId,
                 AvailableDate = s.AvailableDate,
                 StartTime = s.StartTime,
                 EndTime = s.EndTime,
                 Slot = s.Slot,
-                AccountName = s.Consultant?.Account?.Accountname
+                ConsultantId = s.ConsultantId,
+                AccountId = s.Consultant?.Account?.AccountId ?? 0,
             });
         }
 
-        public async Task<ScheduleDTO?> GetByIdAsync(int id)
+        public async Task<BaseScheduleDTO?> GetByIdAsync(int id)
         {
             var s = await _scheduleRepository.GetByIdAsync(id);
             if (s == null) return null;
 
-            return new ScheduleDTO
+            return new BaseScheduleDTO
             {
                 ScheduleId = s.ScheduleId,
                 AvailableDate = s.AvailableDate,
                 StartTime = s.StartTime,
                 EndTime = s.EndTime,
                 Slot = s.Slot,
-                AccountName = s.Consultant?.Account?.Accountname
+                ConsultantId = s.ConsultantId,
+                AccountId = s.Consultant?.Account?.AccountId ?? 0,
             };
         }
 
-        public async Task<bool> CreateAsync(ScheduleDTO dto)
+        public async Task<bool> CreateAsync(BaseScheduleDTO dto)
         {
-            var consultant = await _scheduleRepository.GetConsultantByAccountNameAsync(dto.AccountName);
+            var consultant = await _scheduleRepository.GetConsultantByIdAsync(dto.ConsultantId);
             if (consultant == null) return false;
 
             var schedule = new Schedule
             {
-                ConsultantId = consultant.ConsultantId,
+                ConsultantId = dto.ConsultantId,
                 AvailableDate = dto.AvailableDate,
                 StartTime = dto.StartTime,
                 EndTime = dto.EndTime,
@@ -67,7 +67,7 @@ namespace DrugsPrevention_Service.Service
             return true;
         }
 
-        public async Task<bool> UpdateAsync(ScheduleDTO dto)
+        public async Task<bool> UpdateAsync(BaseScheduleDTO dto)
         {
             var schedule = await _scheduleRepository.GetByIdAsync(dto.ScheduleId);
             if (schedule == null) return false;

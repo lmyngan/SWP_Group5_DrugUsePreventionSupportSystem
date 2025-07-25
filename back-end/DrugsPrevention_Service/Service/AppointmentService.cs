@@ -81,24 +81,35 @@ namespace DrugsPrevention_Service.Service
 
             throw new Exception("No available time slot");
         }
-        public async Task<List<ScheduleDTO>> GetSchedulesByConsultantIdAsync(int consultantId)
+        public async Task<IEnumerable<ScheduleDTO>> GetSchedulesByConsultantIdAsync(int consultantId)
         {
             var schedules = await _context.Schedules
+                .Include(s => s.Appointments)
+                    .ThenInclude(a => a.Account)
                 .Where(s => s.ConsultantId == consultantId)
-                .Select(s => new ScheduleDTO
-                {
-                    AccountName = s.Appointments.FirstOrDefault() != null ? s.Appointments.First().Account.Accountname : null,
-                    ScheduleId = s.ScheduleId,
-                    AvailableDate = s.AvailableDate,
-                    StartTime = s.StartTime,
-                    EndTime = s.EndTime,
-                    Status = s.Appointments.FirstOrDefault() != null ? s.Appointments.First().Status : null,
-                    Slot = s.Slot
-                })
-                .ToListAsync();
+                .ToListAsync(); // EF truy vấn xong tại đây
 
-            return schedules;
+            var scheduleDtos = schedules
+                .Select(s =>
+                {
+                    var firstAppointment = s.Appointments.OrderBy(a => a.StartTime).FirstOrDefault();
+                    return new ScheduleDTO
+                    {
+                        ScheduleId = s.ScheduleId,
+                        AvailableDate = s.AvailableDate,
+                        StartTime = s.StartTime,
+                        EndTime = s.EndTime,
+                        Slot = s.Slot,
+                        FullName = firstAppointment?.Account?.FullName ?? string.Empty,
+                        AccountId = firstAppointment?.AccountId ?? 0,
+                        Status = firstAppointment?.Status ?? "unbooked"
+                    };
+                })
+                .ToList();
+
+            return scheduleDtos;
         }
+
         public async Task<List<AppointmentResponseDTO>> GetAllAppointmentsAsync()
         {
             var appointments = await _repo.GetAllAsync();
@@ -186,9 +197,11 @@ namespace DrugsPrevention_Service.Service
             await _repo.SaveChangesAsync();
             return true;
         }
-        public async Task<AppointmentResponseDTO> UpdateAppointmentStatusAsync(int id, string status)
+        public async Task<AppointmentResponseDTO> UpdateAppointmentStatusByScheduleIdAsync(int scheduleId, string status)
         {
-            var appointment = await _repo.GetByIdAsync(id);
+            var appointment = await _context.Appointments
+                .FirstOrDefaultAsync(a => a.ScheduleId == scheduleId);
+
             if (appointment == null) return null;
 
             appointment.Status = status;
@@ -197,6 +210,7 @@ namespace DrugsPrevention_Service.Service
 
             return await GetAppointmentByIdAsync(appointment.AppointmentId);
         }
+
         // Tạo URL thanh toán VNPay cho Appointment
         public async Task<string> CreateVNPayPaymentUrlAsync(int appointmentId, string ipAddress)
         {

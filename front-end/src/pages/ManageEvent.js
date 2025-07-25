@@ -4,6 +4,7 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { IoMdAddCircle } from "react-icons/io";
 import { MdCancel } from "react-icons/md";
+import * as Yup from 'yup';
 
 // Format date theo dd/MM/yyyy
 const formatDateVN = (dateString) => {
@@ -22,6 +23,14 @@ const formatType = (type) => {
     return type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
 };
 
+const eventSchema = Yup.object().shape({
+    name: Yup.string().required('Event name is required'),
+    description: Yup.string().required('Description is required'),
+    location: Yup.string().required('Location is required'),
+    date: Yup.string().required('Date is required'),
+    type: Yup.string().required('Type is required'),
+});
+
 const ManageEvent = () => {
     const [events, setEvents] = useState([]);
     const [showAdd, setShowAdd] = useState(false);
@@ -38,6 +47,8 @@ const ManageEvent = () => {
     const [editEvent, setEditEvent] = useState({});
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
+    const [addError, setAddError] = useState('');
+    const [addFieldErrors, setAddFieldErrors] = useState({});
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -51,31 +62,38 @@ const ManageEvent = () => {
 
     // Add
     const handleAddEvent = async () => {
-        const user = JSON.parse(localStorage.getItem("user"));
-        const createdBy = user?.accountId || 0;
-        const body = {
-            name: newEvent.name,
-            description: newEvent.description,
-            date: new Date(newEvent.date).toISOString(),
-            location: newEvent.location,
-            createdBy,
-            type: newEvent.type
-        };
-        await addEvent(body);
-        // Refetch events
-        const data = await eventData();
-        if (Array.isArray(data)) setEvents(data);
-        else if (Array.isArray(data.events)) setEvents(data.events);
-        else setEvents([]);
-        setShowAdd(false);
-        setNewEvent({
-            name: "",
-            description: "",
-            date: new Date().toISOString().slice(0, 10),
-            location: "",
-            type: "",
-            creatorFullName: "",
-        });
+        setAddError('');
+        setAddFieldErrors({});
+        try {
+            await eventSchema.validate(newEvent, { abortEarly: false });
+            // Nếu hợp lệ, gọi API thêm event
+            await addEvent({
+                ...newEvent,
+                startDate: new Date(newEvent.startDate).toISOString(),
+                endDate: new Date(newEvent.endDate).toISOString(),
+            });
+            // Refetch events
+            const data = await eventData();
+            setEvents(Array.isArray(data) ? data : []);
+            setShowAdd(false);
+            setNewEvent({
+                eventName: '',
+                description: '',
+                location: '',
+                startDate: '',
+                endDate: '',
+            });
+        } catch (err) {
+            if (err.inner && err.inner.length > 0) {
+                const fieldErrors = {};
+                err.inner.forEach(e => {
+                    fieldErrors[e.path] = e.message;
+                });
+                setAddFieldErrors(fieldErrors);
+            } else {
+                setAddError(err.message);
+            }
+        }
     };
 
     // Edit
@@ -153,16 +171,35 @@ const ManageEvent = () => {
                                     <MdCancel />
                                 </button>
                             </div>
+                            {/* Hiển thị lỗi validate */}
+                            {addError && (
+                                <div className="text-red-500 mt-2">{addError}</div>
+                            )}
                             <div className="grid grid-cols-2 gap-4">
-                                <input className="border p-2" placeholder="Event Name" value={newEvent.name} onChange={e => setNewEvent(a => ({ ...a, name: e.target.value }))} />
-                                <input className="border p-2" placeholder="Description" value={newEvent.description} onChange={e => setNewEvent(a => ({ ...a, description: e.target.value }))} />
-                                <input className="border p-2" type="date" value={newEvent.date} onChange={e => setNewEvent(a => ({ ...a, date: e.target.value }))} />
-                                <input className="border p-2" placeholder="Location" value={newEvent.location} onChange={e => setNewEvent(a => ({ ...a, location: e.target.value }))} />
-                                <select className="border p-2" value={newEvent.type} onChange={e => setNewEvent(a => ({ ...a, type: e.target.value }))}>
-                                    <option value="Awareness">Awareness</option>
-                                    <option value="Education">Education</option>
-                                    <option value="Support">Support</option>
-                                </select>
+                                <div>
+                                    <input className="border p-2 w-full" placeholder="Event Name" value={newEvent.name} onChange={e => setNewEvent(a => ({ ...a, name: e.target.value }))} />
+                                    {addFieldErrors.name && <div className="text-red-500 text-xs mt-1">{addFieldErrors.name}</div>}
+                                </div>
+                                <div>
+                                    <input className="border p-2 w-full" placeholder="Description" value={newEvent.description} onChange={e => setNewEvent(a => ({ ...a, description: e.target.value }))} />
+                                    {addFieldErrors.description && <div className="text-red-500 text-xs mt-1">{addFieldErrors.description}</div>}
+                                </div>
+                                <div className="col-span-2">
+                                    <input className="border p-2 w-full" type="date" value={newEvent.date} onChange={e => setNewEvent(a => ({ ...a, date: e.target.value }))} />
+                                    {addFieldErrors.date && <div className="text-red-500 text-xs mt-1">{addFieldErrors.date}</div>}
+                                </div>
+                                <div className="col-span-2">
+                                    <input className="border p-2 w-full" placeholder="Location" value={newEvent.location} onChange={e => setNewEvent(a => ({ ...a, location: e.target.value }))} />
+                                    {addFieldErrors.location && <div className="text-red-500 text-xs mt-1">{addFieldErrors.location}</div>}
+                                </div>
+                                <div className="col-span-2">
+                                    <select className="border p-2 w-full" value={newEvent.type} onChange={e => setNewEvent(a => ({ ...a, type: e.target.value }))}>
+                                        <option value="Awareness">Awareness</option>
+                                        <option value="Education">Education</option>
+                                        <option value="Support">Support</option>
+                                    </select>
+                                    {addFieldErrors.type && <div className="text-red-500 text-xs mt-1">{addFieldErrors.type}</div>}
+                                </div>
                             </div>
                             <div className="flex justify-end mt-6 gap-2">
                                 <button className="px-6 py-3 bg-gray-300 text-gray-700 rounded hover:bg-gray-400" onClick={() => setShowAdd(false)}><MdCancel /></button>

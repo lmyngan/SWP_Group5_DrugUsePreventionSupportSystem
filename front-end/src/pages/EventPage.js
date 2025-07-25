@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/EventPage.css";
-import Footer from "../components/Footer";
+
 import { eventData, joinEvent } from "../service/api";
 
 const EventPage = ({ navigateTo }) => {
@@ -10,6 +10,11 @@ const EventPage = ({ navigateTo }) => {
   const [user, setUser] = useState(null);
   const [selectedType, setSelectedType] = useState("all");
   const [loading, setLoading] = useState(true);
+  // Sắp xếp events theo ngày mới nhất (dùng createdAt nếu có, nếu không dùng date)
+  const sortedEvents = [...events].sort((a, b) => new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date));
+  // Lấy 3 event mới đăng nhất
+  const featuredEvents = sortedEvents.slice(0, 3);
+
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -30,9 +35,36 @@ const EventPage = ({ navigateTo }) => {
   const filteredEvents = selectedType === "all" ? events : events.filter((event) => event.type === selectedType)
 
   const handleJoinEvent = async (eventId) => {
-  if (!user) {
-    alert("Please login to join events");
-    return;
+    if (!user) {
+      alert("Please login to join events");
+      return
+    }
+
+    console.log("[DEBUG] user object:", user);
+    console.log("[DEBUG] eventId:", eventId);
+    const accountId = user.accountId !== undefined ? user.accountId : user.account_id;
+    if (accountId === undefined) {
+      alert("User object missing accountId/account_id. Please re-login.");
+      return;
+    }
+
+    try {
+      const response = await joinEvent({
+        accountId: accountId,
+        eventId: eventId,
+        status: "joined",
+        feedback: "Looking forward to it."
+      });
+
+      if (!response.error) {
+        alert("Successfully joined the event!")
+      } else {
+        alert(`Failed to join event: ${response.error}`)
+      }
+    } catch (error) {
+      console.error("Error joining event:", error)
+      alert("An error occurred while joining the event.")
+    }
   }
 
   const accountId = user.accountId !== undefined ? user.accountId : user.account_id;
@@ -122,9 +154,12 @@ const EventPage = ({ navigateTo }) => {
           <img src="/images/event.jpg" alt="Community Events" />
         </div>
       </section>
+<<<<<<< HEAD
 
      
 
+=======
+>>>>>>> dc3bd5f495d94af7a3464e65e784628b7285b34a
       {/* Event Filter Section */}
       <section className="filter-section">
         <div className="container">
@@ -188,35 +223,7 @@ const EventPage = ({ navigateTo }) => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="features-section">
-        <div className="container">
-          <h2>Why Join Our Events?</h2>
-          <div className="features-grid">
-            <div className="feature-card">
-              <div className="feature-icon">🌟</div>
-              <h3>Expert Guidance</h3>
-              <p>Learn from certified professionals and experienced counselors in drug prevention</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">👥</div>
-              <h3>Community Support</h3>
-              <p>Connect with like-minded individuals who share your commitment to a drug-free lifestyle</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">📈</div>
-              <h3>Personal Growth</h3>
-              <p>Develop skills and knowledge to help yourself and others in prevention and recovery</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">💬</div>
-              <h3>Share & Learn</h3>
-              <p>Share your experiences through blogs and learn from others' journeys</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
+    
       {/* Call to Action Section */}
       <section className="cta-section">
         <div className="container">
@@ -236,7 +243,7 @@ const EventPage = ({ navigateTo }) => {
         </div>
       </section>
 
-      <Footer navigateTo={navigateTo} />
+     
     </div>
   )
 }
