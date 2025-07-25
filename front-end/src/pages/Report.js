@@ -48,7 +48,7 @@ const Report = () => {
             ["Total Appointments Completed:", `${report.totalAppointmentsCompleted}`],
             ["", ""],
         ];
-        // Add Top Event Detail
+
         if (topEventDetail) {
             rows.push(["Users in Most Joined Event", ""]);
             rows.push([`Event: ${topEventDetail.eventName}`, ""]);
@@ -63,7 +63,7 @@ const Report = () => {
             }
             rows.push(["", ""]);
         }
-        // Add Top User
+
         if (topUser) {
             rows.push(["User Joined Most Events", ""]);
             rows.push(["Full Name", "Joined Events"]);
