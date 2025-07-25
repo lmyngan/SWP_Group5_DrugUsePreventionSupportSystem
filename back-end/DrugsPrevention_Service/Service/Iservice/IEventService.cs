@@ -15,5 +15,6 @@ namespace DrugsPrevention_Service.Service.Iservice
         Task<EventDto> CreateEventAsync(CreateEventDto dto);
         Task<EventDto> UpdateEventAsync(UpdateEventDto dto);
         Task<bool> DeleteEventAsync(int id);
+        Task<IEnumerable<EventDto>> SearchEventsByNameAsync(string name);
     }
 }

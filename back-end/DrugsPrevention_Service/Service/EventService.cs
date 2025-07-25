@@ -87,5 +87,22 @@ namespace DrugsPrevention_Data.Service.Implementations
         {
             return await _repo.DeleteEventAsync(id);
         }
+        public async Task<IEnumerable<EventDto>> SearchEventsByNameAsync(string name)
+        {
+            var events = await _repo.SearchEventsByNameAsync(name);
+            return events.Select(e => new EventDto
+            {
+                EventId = e.EventId,
+                Name = e.Name,
+                Description = e.Description,
+                Date = e.Date,
+                Location = e.Location,
+                Type = e.Type,
+                CreatedBy = e.CreatedBy,
+                CreatorAccountId = e.Creator.AccountId,
+                CreatorAccountname = e.Creator.Accountname,
+                CreatorFullName = e.Creator.FullName
+            });
+        }
     }
 }

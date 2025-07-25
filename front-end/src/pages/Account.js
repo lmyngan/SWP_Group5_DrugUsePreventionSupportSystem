@@ -5,6 +5,7 @@ import { MdDelete } from "react-icons/md";
 import { IoMdAddCircle } from "react-icons/io";
 import { MdCancel } from "react-icons/md";
 import { FaSave } from "react-icons/fa";
+import * as Yup from 'yup';
 
 
 const roleOptions = [
@@ -25,6 +26,16 @@ const formatDateVN = (dateString) => {
     return `${day}/${month}/${year}`;
 };
 
+const accountSchema = Yup.object().shape({
+    accountname: Yup.string().required('Account name is required'),
+    password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
+    fullName: Yup.string().required('Full name is required'),
+    dateOfBirth: Yup.string().required('Date of birth is required'),
+    gender: Yup.string().oneOf(['Male', 'Female'], 'Gender is required'),
+    address: Yup.string().required('Address is required'),
+    roleId: Yup.number().oneOf([1, 2, 3, 4], 'Role is required')
+});
+
 const Account = () => {
     const [accounts, setAccounts] = useState([]);
     const [editId, setEditId] = useState(null);
@@ -37,12 +48,13 @@ const Account = () => {
         dateOfBirth: "",
         gender: "Male",
         address: "",
-        roleId: 4, // Đổi thành roleId
+        roleId: 4,
     });
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
-    const [showSuccessModal, setShowSuccessModal] = useState(false); // Modal thông báo xóa thành công
-    const [showAddSuccessModal, setShowAddSuccessModal] = useState(false); // Modal thông báo thêm thành công
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [showAddSuccessModal, setShowAddSuccessModal] = useState(false);
+    const [addError, setAddError] = useState('');
 
     useEffect(() => {
         const fetchAccounts = async () => {
@@ -101,8 +113,10 @@ const Account = () => {
 
     // Add
     const handleAddAccount = async () => {
+        setAddError('');
         try {
-            // Gọi API thêm account
+            await accountSchema.validate(newAccount, { abortEarly: false });
+            // Nếu hợp lệ, gọi API thêm account
             await addAccount({
                 accountname: newAccount.accountname,
                 password: newAccount.password,
@@ -128,8 +142,12 @@ const Account = () => {
             });
             setShowAddSuccessModal(true); // Hiện modal thành công
             setTimeout(() => setShowAddSuccessModal(false), 1000); // Ẩn sau 1 giây
-        } catch (e) {
-            alert("Add account failed!");
+        } catch (err) {
+            if (err.inner && err.inner.length > 0) {
+                setAddError(err.inner.map(e => e.message).join(', '));
+            } else {
+                setAddError(err.message);
+            }
         }
     };
 
@@ -156,6 +174,10 @@ const Account = () => {
                                     <MdCancel />
                                 </button>
                             </div>
+                            {/* Hiển thị lỗi validate */}
+                            {addError && (
+                                <div className="text-red-500 mb-2">{addError}</div>
+                            )}
                             <div className="grid grid-cols-2 gap-4">
                                 <input
                                     className="border p-2"
