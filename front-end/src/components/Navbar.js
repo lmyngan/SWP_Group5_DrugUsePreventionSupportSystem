@@ -7,7 +7,6 @@ const Navbar = ({ navigateTo, currentPage }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
 
-  // Check login status
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -17,13 +16,11 @@ const Navbar = ({ navigateTo, currentPage }) => {
     }
   }, [])
 
-  // Handle navigation
   const handleNavigation = (page) => {
     navigateTo(page)
-    setIsMenuOpen(false) // Close mobile menu
+    setIsMenuOpen(false)
   }
 
-  // Handle logout
   const handleLogout = () => {
     localStorage.removeItem("user")
     setIsLoggedIn(false)
@@ -31,22 +28,13 @@ const Navbar = ({ navigateTo, currentPage }) => {
     navigateTo("home")
   }
 
-  // Toggle mobile menu
-  /*const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen)
-  }*/
-
   return (
     <nav className="navbar">
       <div className="container">
-        {/* Logo */}
         <div className="logo" onClick={() => handleNavigation("home")}>
           DrugsCare
         </div>
 
-
-
-        {/* Navigation Links */}
         <ul className={`nav-links ${isMenuOpen ? "active" : ""}`}>
           <li>
             <button
