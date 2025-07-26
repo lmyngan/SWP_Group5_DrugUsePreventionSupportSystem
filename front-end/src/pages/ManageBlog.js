@@ -9,8 +9,7 @@ import * as Yup from 'yup';
 const blogSchema = Yup.object().shape({
     title: Yup.string().required('Title is required'),
     content: Yup.string().required('Content is required'),
-    categories: Yup.string().required('Categories is required'),
-    createdAt: Yup.string().required('Created date is required'),
+    categories: Yup.number().required('Categories is required').min(0, 'Categories must be a positive number'),
 });
 
 const ManageBlog = () => {
@@ -18,11 +17,15 @@ const ManageBlog = () => {
     const [showAdd, setShowAdd] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [newBlog, setNewBlog] = useState({
-        categories: "",
+        authorId: (() => {
+            const user = JSON.parse(localStorage.getItem("user"));
+            return user?.accountId || 0;
+        })(),
+        categories: 0,
         title: "",
         content: "",
         rate: 0,
-        createdAt: new Date().toISOString().slice(0, 10),
+        createdAt: new Date().toISOString(),
     });
     const [editId, setEditId] = useState(null);
     const [editBlog, setEditBlog] = useState({});
@@ -48,24 +51,27 @@ const ManageBlog = () => {
             const authorId = user?.accountId || 0;
             const authorFullName = user?.fullName || "";
             await addBlog({
-                categories: newBlog.categories,
+                authorId: newBlog.authorId,
+                categories: parseInt(newBlog.categories) || 0,
                 title: newBlog.title,
                 content: newBlog.content,
                 rate: 0,
-                authorId,
-                authorFullName,
-                createdAt: new Date(newBlog.createdAt).toISOString(),
+                createdAt: new Date().toISOString(),
             });
             // Refetch blogs
             const data = await blogData();
             setBlogs(Array.isArray(data) ? data : []);
             setShowAdd(false);
             setNewBlog({
-                categories: "",
+                authorId: (() => {
+                    const user = JSON.parse(localStorage.getItem("user"));
+                    return user?.accountId || 0;
+                })(),
+                categories: 0,
                 title: "",
                 content: "",
                 rate: 0,
-                createdAt: new Date().toISOString().slice(0, 10),
+                createdAt: new Date().toISOString(),
             });
         } catch (err) {
             if (err.inner && err.inner.length > 0) {
@@ -90,11 +96,10 @@ const ManageBlog = () => {
         const original = blogs.find(b => b.blogId === editId);
         await editBlogApi(editId, {
             authorId: original?.authorId ?? 0,
-            categories: editBlog.categories,
+            categories: parseInt(editBlog.categories) || 0,
             title: editBlog.title,
             content: editBlog.content,
             rate: original?.rate ?? 0,
-            blogId: editId,
         });
         // Refetch blogs
         const data = await blogData();
@@ -167,23 +172,23 @@ const ManageBlog = () => {
                             )}
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
+                                    Title:
                                     <input className="border p-2 w-full" placeholder="Title" value={newBlog.title} onChange={e => setNewBlog(a => ({ ...a, title: e.target.value }))} />
                                     {addFieldErrors.title && <div className="text-red-500 text-xs mt-1">{addFieldErrors.title}</div>}
                                 </div>
                                 <div>
+                                    Content:
                                     <input className="border p-2 w-full" placeholder="Content" value={newBlog.content} onChange={e => setNewBlog(a => ({ ...a, content: e.target.value }))} />
                                     {addFieldErrors.content && <div className="text-red-500 text-xs mt-1">{addFieldErrors.content}</div>}
                                 </div>
                                 <div>
+                                    Rate:
                                     <input className="border p-2 w-full bg-gray-100" placeholder="Rate" value={newBlog.rate} disabled />
                                 </div>
                                 <div>
-                                    <input className="border p-2 w-full" placeholder="Categories" value={newBlog.categories} onChange={e => setNewBlog(a => ({ ...a, categories: e.target.value }))} />
+                                    Category:
+                                    <input className="border p-2 w-full" type="number" placeholder="Categories (number)" value={newBlog.categories} onChange={e => setNewBlog(a => ({ ...a, categories: parseInt(e.target.value) || 0 }))} />
                                     {addFieldErrors.categories && <div className="text-red-500 text-xs mt-1">{addFieldErrors.categories}</div>}
-                                </div>
-                                <div className="col-span-2">
-                                    <input className="border p-2 w-full" type="date" value={newBlog.createdAt} onChange={e => setNewBlog(a => ({ ...a, createdAt: e.target.value }))} />
-                                    {addFieldErrors.createdAt && <div className="text-red-500 text-xs mt-1">{addFieldErrors.createdAt}</div>}
                                 </div>
                             </div>
                             <div className="flex justify-end mt-6 gap-2">
@@ -204,7 +209,7 @@ const ManageBlog = () => {
                                 <input className="border p-2" placeholder="Title" value={editBlog.title || ''} onChange={e => setEditBlog(b => ({ ...b, title: e.target.value }))} />
                                 <input className="border p-2" placeholder="Content" value={editBlog.content || ''} onChange={e => setEditBlog(b => ({ ...b, content: e.target.value }))} />
                                 <input className="border p-2 bg-gray-100" placeholder="Rate" value={editBlog.rate || ''} disabled />
-                                <input className="border p-2" placeholder="Categories" value={editBlog.categories || ''} onChange={e => setEditBlog(b => ({ ...b, categories: e.target.value }))} />
+                                <input className="border p-2" type="number" placeholder="Categories (number)" value={editBlog.categories || 0} onChange={e => setEditBlog(b => ({ ...b, categories: parseInt(e.target.value) || 0 }))} />
                                 <input className="border p-2" type="date" value={editBlog.createdAt ? editBlog.createdAt.slice(0, 10) : ''} onChange={e => setEditBlog(b => ({ ...b, createdAt: e.target.value }))} />
                                 <input className="border p-2 bg-gray-100" placeholder="Creator" value={editBlog.authorFullName || ''} disabled />
                             </div>
