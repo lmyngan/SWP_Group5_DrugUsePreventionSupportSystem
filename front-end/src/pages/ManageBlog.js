@@ -30,6 +30,9 @@ const ManageBlog = () => {
     const [deleteId, setDeleteId] = useState(null);
     const [addError, setAddError] = useState('');
     const [addFieldErrors, setAddFieldErrors] = useState({});
+    const [showAddSuccessModal, setShowAddSuccessModal] = useState(false);
+    const [showEditSuccessModal, setShowEditSuccessModal] = useState(false);
+    const [showDeleteSuccessModal, setShowDeleteSuccessModal] = useState(false);
 
     useEffect(() => {
         const fetchBlogs = async () => {
@@ -67,6 +70,8 @@ const ManageBlog = () => {
                 rate: 0,
                 createdAt: new Date().toISOString().slice(0, 10),
             });
+            setShowAddSuccessModal(true); // Hiện modal thành công
+            setTimeout(() => setShowAddSuccessModal(false), 1000); // Ẩn sau 1 giây
         } catch (err) {
             if (err.inner && err.inner.length > 0) {
                 const fieldErrors = {};
@@ -101,6 +106,8 @@ const ManageBlog = () => {
         setBlogs(Array.isArray(data) ? data : []);
         setEditId(null);
         setShowEditModal(false);
+        setShowEditSuccessModal(true); // Hiện modal thành công
+        setTimeout(() => setShowEditSuccessModal(false), 1000); // Ẩn sau 1 giây
     };
     const handleCancelEdit = () => {
         setEditId(null);
@@ -119,6 +126,8 @@ const ManageBlog = () => {
         setBlogs(Array.isArray(data) ? data : []);
         setShowDeleteModal(false);
         setDeleteId(null);
+        setShowDeleteSuccessModal(true); // Hiện modal thành công
+        setTimeout(() => setShowDeleteSuccessModal(false), 1000); // Ẩn sau 1 giây
     };
     const cancelDelete = () => {
         setShowDeleteModal(false);
@@ -260,6 +269,27 @@ const ManageBlog = () => {
                             <button className="px-6 py-3 bg-red-600 text-white rounded hover:bg-red-700" onClick={confirmDelete}><MdDelete /></button>
                             <button className="px-6 py-3 bg-gray-300 text-white rounded hover:bg-gray-400" onClick={cancelDelete}><MdCancel /></button>
                         </div>
+                    </div>
+                </div>
+            )}
+            {showAddSuccessModal && (
+                <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-300 ease-in-out">
+                    <div className="bg-white rounded-lg shadow p-4 w-full max-w-xs text-center animate-fadeInScale">
+                        <h3 className="text-lg font-semibold mb-2 text-green-500">Add blog successfully!</h3>
+                    </div>
+                </div>
+            )}
+            {showEditSuccessModal && (
+                <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-300 ease-in-out">
+                    <div className="bg-white rounded-lg shadow p-4 w-full max-w-xs text-center animate-fadeInScale">
+                        <h3 className="text-lg font-semibold mb-2 text-green-500">Update blog successfully!</h3>
+                    </div>
+                </div>
+            )}
+            {showDeleteSuccessModal && (
+                <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-300 ease-in-out">
+                    <div className="bg-white rounded-lg shadow p-4 w-full max-w-xs text-center animate-fadeInScale">
+                        <h3 className="text-lg font-semibold mb-2 text-green-500">Delete blog successfully!</h3>
                     </div>
                 </div>
             )}
