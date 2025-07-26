@@ -10,11 +10,6 @@ const EventPage = ({ navigateTo }) => {
   const [user, setUser] = useState(null);
   const [selectedType, setSelectedType] = useState("all");
   const [loading, setLoading] = useState(true);
-  // Sắp xếp events theo ngày mới nhất (dùng createdAt nếu có, nếu không dùng date)
-  const sortedEvents = [...events].sort((a, b) => new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date));
-  // Lấy 3 event mới đăng nhất
-  const featuredEvents = sortedEvents.slice(0, 3);
-
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -42,35 +37,35 @@ const EventPage = ({ navigateTo }) => {
 
     console.log("[DEBUG] user object:", user);
     console.log("[DEBUG] eventId:", eventId);
-    
 
-  const accountId = user.accountId !== undefined ? user.accountId : user.account_id;
-  if (accountId === undefined) {
-    alert("User object missing accountId/account_id. Please re-login.");
-    return;
-  }
 
-  try {
-    // Gọi API lưu người tham gia
-    const response = await joinEvent({
-      accountId: accountId,
-      eventId: eventId,
-      status: "joined",
-      feedback: "Looking forward to it."
-    });
-
-    if (!response.error) {
-      alert("Successfully joined the event!");
-      // Nếu muốn cập nhật lại danh sách người tham gia, gọi lại fetchEvents() hoặc cập nhật state events tại đây
-      // await fetchEvents();
-    } else {
-      alert(`Failed to join event: ${response.error}`);
+    const accountId = user.accountId !== undefined ? user.accountId : user.account_id;
+    if (accountId === undefined) {
+      alert("User object missing accountId/account_id. Please re-login.");
+      return;
     }
-  } catch (error) {
-    console.error("Error joining event:", error);
-    alert("An error occurred while joining the event.");
-  }
-};
+
+    try {
+      // Gọi API lưu người tham gia
+      const response = await joinEvent({
+        accountId: accountId,
+        eventId: eventId,
+        status: "joined",
+        feedback: "Looking forward to it."
+      });
+
+      if (!response.error) {
+        alert("Successfully joined the event!");
+        // Nếu muốn cập nhật lại danh sách người tham gia, gọi lại fetchEvents() hoặc cập nhật state events tại đây
+        // await fetchEvents();
+      } else {
+        alert(`Failed to join event: ${response.error}`);
+      }
+    } catch (error) {
+      console.error("Error joining event:", error);
+      alert("An error occurred while joining the event.");
+    }
+  };
 
   const handleShareExperience = (eventId) => {
     navigate(`/blogs?event=${eventId}`);
@@ -132,7 +127,7 @@ const EventPage = ({ navigateTo }) => {
         </div>
       </section>
 
-     
+
 
       {/* Event Filter Section */}
       <section className="filter-section">
@@ -197,7 +192,7 @@ const EventPage = ({ navigateTo }) => {
         </div>
       </section>
 
-    
+
       {/* Call to Action Section */}
       <section className="cta-section">
         <div className="container">
@@ -217,7 +212,7 @@ const EventPage = ({ navigateTo }) => {
         </div>
       </section>
 
-     
+
     </div>
   )
 }

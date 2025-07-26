@@ -3,24 +3,17 @@
 import { useState, useEffect } from "react"
 import "../styles/BlogPage.css"
 
-import { blogData, addBlog, getRateBlog } from "../service/api";
+import { blogData, getRateBlog } from "../service/api";
 import { useLocation } from "react-router-dom";
 
 const BlogPage = ({ navigateTo }) => {
-  const location = useLocation();
   const [blogs, setBlogs] = useState([])
   const [events, setEvents] = useState([])
   const [user, setUser] = useState(null)
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [selectedEvent, setSelectedEvent] = useState("all")
   const [loading, setLoading] = useState(true)
-  const [showCreateForm, setShowCreateForm] = useState(false)
-  const [newBlog, setNewBlog] = useState({
-    title: "",
-    content: "",
-    event_id: "",
-    categories: 1,
-  })
+
   const [showRateModal, setShowRateModal] = useState(false);
   const [rateBlogId, setRateBlogId] = useState(null);
   const [selectedRate, setSelectedRate] = useState(0);
@@ -33,19 +26,9 @@ const BlogPage = ({ navigateTo }) => {
   ]
 
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const eventId = params.get("event");
-    if (eventId) {
-      setShowCreateForm(false);
-      setNewBlog((prev) => ({ ...prev, event_id: eventId }));
-    } else {
-      setShowCreateForm(false);
-    }
-    // Fetch current user
     const storedUser = localStorage.getItem("user");
     if (storedUser) setUser(JSON.parse(storedUser));
 
-    // Fetch blogs
     const fetchBlogs = async () => {
       setLoading(true);
       const data = await blogData();
@@ -53,13 +36,7 @@ const BlogPage = ({ navigateTo }) => {
       setLoading(false);
     };
     fetchBlogs();
-
-    // Fetch events (nếu cần)
-    fetch("/api/events")
-      .then((res) => res.json())
-      .then((data) => setEvents(data))
-      .catch((error) => console.error("Failed to fetch events for blog page:", error));
-  }, [location.search]);
+  }, []);
 
   const filteredBlogs = blogs.filter((blog) => {
     const categoryMatch = selectedCategory === "all" || blog.categories === selectedCategory
@@ -67,52 +44,6 @@ const BlogPage = ({ navigateTo }) => {
     return categoryMatch && eventMatch
   })
 
-  const handleCreateBlog = async (e) => {
-    e.preventDefault();
-
-    if (!user) {
-      alert("Please login to share your experience");
-      return;
-    }
-
-    if (!newBlog.title || !newBlog.content || !newBlog.event_id) {
-      alert("Please fill in all required fields");
-      return;
-    }
-
-    try {
-      const response = await addBlog({
-        authorId: user.account_id,
-        categories: Number.parseInt(newBlog.categories),
-        title: newBlog.title,
-        content: newBlog.content,
-        event_id: Number.parseInt(newBlog.event_id),
-      });
-
-      if (!response.error) {
-        // Lấy lại danh sách blogs mới nhất
-        const data = await blogData();
-        setBlogs(Array.isArray(data) ? data : []);
-        setNewBlog({ title: "", content: "", event_id: "", categories: 1 });
-        setShowCreateForm(false);
-        alert("Blog shared successfully!");
-      } else {
-        alert(`Failed to share experience: ${response.error}`);
-      }
-    } catch (error) {
-      console.error("Error creating blog:", error);
-      alert("An error occurred while sharing your experience.");
-    }
-  };
-
-  const handleLikeBlog = (blogId) => {
-    if (!user) {
-      alert("Please login to like posts")
-      return
-    }
-    // Simulate like update - ideally this would also be an API call
-    setBlogs(blogs.map((blog) => (blog.blog_id === blogId ? { ...blog, likes: blog.likes + 1 } : blog)))
-  }
 
 
   const handleRateBlog = async (blogId, rate) => {
@@ -267,79 +198,7 @@ const BlogPage = ({ navigateTo }) => {
         </div>
       </section>
 
-      {/* Create Blog Form */}
-      {showCreateForm && (
-        <section className="create-form-section">
-          <div className="container">
-            <div className="create-form-overlay">
-              <div className="create-form">
-                <div className="form-header">
-                  <h3>Share Your Experience</h3>
-                  <button className="close-btn" onClick={() => setShowCreateForm(false)}>
-                    ×
-                  </button>
-                </div>
-                <form onSubmit={handleCreateBlog}>
-                  <div className="form-group">
-                    <label>Title *</label>
-                    <input
-                      type="text"
-                      value={newBlog.title}
-                      onChange={(e) => setNewBlog({ ...newBlog, title: e.target.value })}
-                      placeholder="Give your story a meaningful title"
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Related Event *</label>
-                    <select
-                      value={newBlog.event_id}
-                      onChange={(e) => setNewBlog({ ...newBlog, event_id: e.target.value })}
-                      required
-                    >
-                      <option value="">Select an event</option>
-                      {events.map((event) => (
-                        <option key={event.event_id} value={event.event_id}>
-                          {event.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label>Category</label>
-                    <select
-                      value={newBlog.categories}
-                      onChange={(e) => setNewBlog({ ...newBlog, categories: e.target.value })}
-                    >
-                      <option value={1}>Personal Experience</option>
-                      <option value={2}>Educational Content</option>
-                      <option value={3}>Support & Advice</option>
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label>Your Story *</label>
-                    <textarea
-                      value={newBlog.content}
-                      onChange={(e) => setNewBlog({ ...newBlog, content: e.target.value })}
-                      placeholder="Share your experience, insights, or advice..."
-                      rows="6"
-                      required
-                    />
-                  </div>
-                  <div className="form-actions">
-                    <button type="button" className="btn-outline" onClick={() => setShowCreateForm(false)}>
-                      Cancel
-                    </button>
-                    <button type="submit" className="btn-primary">
-                      Share Experience
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
+
 
       {/* Blogs List Section */}
       <section id="blogs-section" className="blogs-section">
@@ -350,12 +209,6 @@ const BlogPage = ({ navigateTo }) => {
           {filteredBlogs.length === 0 ? (
             <div className="no-blogs">
               <p>No experiences found for the selected filters.</p>
-              <button
-                className="btn-primary"
-                onClick={() => (user ? setShowCreateForm(true) : alert("Please login to share your experience"))}
-              >
-                Be the first to share
-              </button>
             </div>
           ) : (
             <div className="blogs-grid">
@@ -370,7 +223,7 @@ const BlogPage = ({ navigateTo }) => {
                       {blog.rate > 0 && (
                         <>
                           <div className="stars">{renderStars(blog.rate)}</div>
-                          <span className="rating-value">({blog.rate})</span>
+                          <span className="rating-value">({blog.rate.toFixed(1)})</span>
                         </>
                       )}
                     </div>
@@ -412,7 +265,7 @@ const BlogPage = ({ navigateTo }) => {
                             ))}
                           </div>
                           <div className="flex gap-2">
-                            <button className="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600" onClick={() => handleRateBlog(blog.blog_id, selectedRate)} disabled={selectedRate === 0}>Submit</button>
+                            <button className="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600" onClick={() => handleRateBlog(blog.blogId, selectedRate)} disabled={selectedRate === 0}>Submit</button>
                             <button className="px-4 py-2 rounded bg-gray-300 text-gray-700 hover:bg-gray-400" onClick={() => { setShowRateModal(false); setSelectedRate(0); setRateBlogId(null); }}>Cancel</button>
                           </div>
                         </div>
@@ -427,27 +280,7 @@ const BlogPage = ({ navigateTo }) => {
       </section>
 
 
-      {/* Call to Action Section */}
-      <section className="cta-section">
-        <div className="container">
-          <h2>Your Story Matters</h2>
-          <p>
-            Every experience shared helps build a stronger, more supportive community. Join us in creating a space where
-            everyone feels heard and supported.
-          </p>
-          <div className="cta-buttons">
-            <button
-              className="btn-primary"
-              onClick={() => (user ? setShowCreateForm(true) : alert("Please login to share your experience"))}
-            >
-              Share Your Experience
-            </button>
-            <button className="btn-outline" onClick={() => navigateTo && navigateTo("events")}>
-              Join Community Events
-            </button>
-          </div>
-        </div>
-      </section>
+
 
 
     </div>
