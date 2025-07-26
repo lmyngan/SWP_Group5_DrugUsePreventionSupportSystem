@@ -175,16 +175,6 @@ const HomePage = () => {
           <h2>Get Started Today</h2>
           <div className="quick-access-grid">
             <div className="access-card">
-              <div className="access-icon">📚</div>
-              <h3>Free Prevention Courses</h3>
-              <p>
-                Access our comprehensive library of drug prevention courses designed for different age groups and roles.
-              </p>
-              <a href="/freecourse" className="access-link">
-                Browse All Courses →
-              </a>
-            </div>
-            <div className="access-card">
               <div className="access-icon">👨‍⚕️</div>
               <h3>Expert Mentors</h3>
               <p>
