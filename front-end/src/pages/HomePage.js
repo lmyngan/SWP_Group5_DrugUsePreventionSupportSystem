@@ -173,6 +173,7 @@ const HomePage = () => {
       <section className="quick-access-section">
         <div className="container">
           <h2>Get Started Today</h2>
+
           <div className="quick-access-grid">
             <div className="access-card">
               <div className="access-icon">👨‍⚕️</div>
@@ -187,9 +188,9 @@ const HomePage = () => {
             </div>
             <div className="access-card">
               <div className="access-icon">💬</div>
-              <h3>Community Blog</h3>
+              <h3>Community Event</h3>
               <p>Read inspiring recovery stories, expert insights, and practical prevention tips from our community.</p>
-              <a href="/blog" className="access-link">
+              <a href="/event" className="access-link">
                 Read Stories →
               </a>
             </div>

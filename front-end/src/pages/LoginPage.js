@@ -7,6 +7,7 @@ import { FaTimes, FaCheck } from "react-icons/fa"
 import "../styles/LoginPage.css"
 import { loginUser, getUserById } from "../service/api"
 
+
 const LoginPage = () => {
   const [accountname, setAccountname] = useState("")
   const [password, setPassword] = useState("")
@@ -58,7 +59,7 @@ const LoginPage = () => {
         localStorage.setItem("user", JSON.stringify(user))
 
         // Hiển thị thông báo thành công
-        showNotification("success", "LOGIN SUCCESSFUL", 3000)
+        showNotification("success", "LOGIN SUCCESSFUL", 1000)
 
         // Chuyển hướng sau khi hiển thị thông báo
         setTimeout(() => {
@@ -67,7 +68,7 @@ const LoginPage = () => {
           } else {
             window.location.href = "/dashboard"
           }
-        }, 3000)
+        }, 1000)
       } else {
         // Hiển thị thông báo lỗi với nội dung cụ thể
         const errorMessage = response.message || "Login failed! Please check your credentials and try again."
