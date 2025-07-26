@@ -81,8 +81,8 @@ const HomePage = () => {
                 the tools and knowledge you need to make a positive impact in the fight against substance abuse.
               </p>
               <div className="hero-buttons">
-                <a href="/freecourse" className="btn-primary">
-                  Start Free Courses
+                <a href="/survey" className="btn-primary">
+                  Start Free Assessment
                 </a>
                 <a href="/mentor" className="btn-secondary">
                   Find a Mentor
@@ -90,7 +90,7 @@ const HomePage = () => {
               </div>
             </div>
             <div className="hero-image">
-              <img src="/placeholder.svg?height=500&width=600" alt="Community Support" />
+              <img src="/images/matuy-homepage.jpg" alt="Community Support" />
             </div>
           </div>
         </div>
@@ -125,7 +125,7 @@ const HomePage = () => {
               </div>
             </div>
             <div className="prevention-image">
-              <img src="/placeholder.svg?height=400&width=500" alt="Prevention Education" />
+              <img src="/images/matuy.webp" alt="Prevention Education" />
             </div>
           </div>
         </div>
