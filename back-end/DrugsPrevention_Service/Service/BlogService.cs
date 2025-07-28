@@ -31,6 +31,7 @@ namespace DrugsPrevention_Service.Service
                 Title = b.Title,
                 Content = b.Content,
                 Rate = (float)b.Rate,
+                RatingCount = b.RatingCount,
                 CreatedAt = b.CreatedAt,
                 AuthorAccountname = b.Account?.Accountname,
                 AuthorFullName = b.Account?.FullName
@@ -50,6 +51,7 @@ namespace DrugsPrevention_Service.Service
                 Title = b.Title,
                 Content = b.Content,
                 Rate = (float)b.Rate,
+                RatingCount = b.RatingCount,
                 CreatedAt = b.CreatedAt,
                 AuthorAccountname = b.Account?.Accountname,
                 AuthorFullName = b.Account?.FullName
@@ -64,7 +66,8 @@ namespace DrugsPrevention_Service.Service
                 Categories = dto.Categories,
                 Title = dto.Title,
                 Content = dto.Content,
-                Rate = dto.Rate,
+                Rate = 0, // Khởi tạo rating = 0
+                RatingCount = 0, // Khởi tạo rating count = 0
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -81,7 +84,7 @@ namespace DrugsPrevention_Service.Service
             blog.Categories = dto.Categories;
             blog.Title = dto.Title;
             blog.Content = dto.Content;
-            blog.Rate = dto.Rate;
+            // Không thay đổi Rate và RatingCount khi update
 
             _blogRepository.Update(blog);
             await _blogRepository.SaveAsync();
@@ -97,10 +100,30 @@ namespace DrugsPrevention_Service.Service
         }
         public async Task RateBlogAsync(int blogId, float newRating)
         {
-            var blog = await _blogRepository.GetByIdAsync(blogId);
-            if (blog == null) return;
+            // Validation
+            if (newRating < 0 || newRating > 5)
+            {
+                throw new ArgumentException("Rating phải nằm trong khoảng từ 0 đến 5");
+            }
 
-            blog.Rate = ((float)blog.Rate * blog.RatingCount + newRating) / (blog.RatingCount + 1);
+            var blog = await _blogRepository.GetByIdAsync(blogId);
+            if (blog == null)
+            {
+                throw new ArgumentException("Blog không tồn tại");
+            }
+
+            // Tính toán rating mới
+            if (blog.RatingCount == 0)
+            {
+                // Nếu chưa có rating nào, set rating đầu tiên
+                blog.Rate = newRating;
+            }
+            else
+            {
+                // Tính trung bình cộng của tất cả ratings
+                blog.Rate = ((double)blog.Rate * blog.RatingCount + newRating) / (blog.RatingCount + 1);
+            }
+            
             blog.RatingCount++;
 
             _blogRepository.Update(blog);

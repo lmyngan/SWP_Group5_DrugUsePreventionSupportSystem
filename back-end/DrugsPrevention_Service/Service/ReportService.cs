@@ -2,6 +2,7 @@
 using DrugsPrevention_Data.Repositories.Irepositories;
 using DrugsPrevention_Service.Service.Iservice;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace DrugsPrevention_Service.Service
 {
@@ -30,6 +31,11 @@ namespace DrugsPrevention_Service.Service
         public async Task<PopularEventReportDTO> GetMostPopularEventWithUsersAsync()
         {
             return await _reportRepository.GetMostPopularEventWithUsersAsync();
+        }
+
+        public async Task<BlogRatingReportDTO> GetBlogRatingReportAsync()
+        {
+            return await _reportRepository.GetBlogRatingReportAsync();
         }
     }
 }

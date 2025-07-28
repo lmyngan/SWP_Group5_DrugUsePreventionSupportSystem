@@ -14,6 +14,7 @@ namespace DrugsPrevention_Data.Repositories.Irepositories
         Task<UserReportDTO> GetTopUserByEventParticipationAsync();
         Task<List<UserReportDTO>> GetUsersOfMostPopularEventAsync();
         Task<PopularEventReportDTO> GetMostPopularEventWithUsersAsync();
+        Task<BlogRatingReportDTO> GetBlogRatingReportAsync();
     }
 }
 
