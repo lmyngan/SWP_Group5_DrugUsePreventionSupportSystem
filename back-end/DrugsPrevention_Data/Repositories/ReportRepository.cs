@@ -141,5 +141,24 @@ namespace DrugsPrevention_Data.Repositories.Implementations
             };
         }
 
+        public async Task<BlogRatingReportDTO> GetBlogRatingReportAsync()
+        {
+            var blogs = await _context.Blogs.ToListAsync();
+            
+            var report = new BlogRatingReportDTO
+            {
+                FiveStarCount = blogs.Count(b => b.Rate >= 4.5 && b.Rate <= 5.0),
+                FourStarCount = blogs.Count(b => b.Rate >= 3.5 && b.Rate < 4.5),
+                ThreeStarCount = blogs.Count(b => b.Rate >= 2.5 && b.Rate < 3.5),
+                TwoStarCount = blogs.Count(b => b.Rate >= 1.5 && b.Rate < 2.5),
+                OneStarCount = blogs.Count(b => b.Rate >= 0.5 && b.Rate < 1.5),
+                ZeroStarCount = blogs.Count(b => b.Rate >= 0.0 && b.Rate < 0.5),
+                TotalBlogs = blogs.Count,
+                AverageRating = blogs.Count > 0 ? Math.Round(blogs.Average(b => b.Rate), 1) : 0
+            };
+
+            return report;
+        }
+
     }
 }

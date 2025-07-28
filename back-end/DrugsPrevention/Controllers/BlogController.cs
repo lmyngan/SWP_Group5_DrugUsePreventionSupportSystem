@@ -3,6 +3,7 @@ using DrugsPrevention_Data.DTO.Blog;
 using DrugsPrevention_Service.Service.Iservice;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace DrugsPrevention_API.Controllers
 {
@@ -70,11 +71,53 @@ namespace DrugsPrevention_API.Controllers
             await _blogService.DeleteAsync(id);
             return Ok(new { message = "Xoá blog thành công." });
         }
+        [AuthorizeByRole(1, 2, 3, 4)]
         [HttpPost("rate")]
         public async Task<IActionResult> RateBlog([FromBody] RateBlogDto dto)
         {
-            await _blogService.RateBlogAsync(dto.BlogId, dto.Rating);
-            return Ok(new { message = "Rated successfully" });
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                await _blogService.RateBlogAsync(dto.BlogId, dto.Rating);
+                return Ok(new { message = "Đánh giá blog thành công!" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [AuthorizeByRole(1, 2, 3, 4)]
+        [HttpGet("{id}/rating-stats")]
+        public async Task<IActionResult> GetBlogRatingStats(int id)
+        {
+            try
+            {
+                var blog = await _blogService.GetByIdAsync(id);
+                if (blog == null)
+                {
+                    return NotFound(new { message = "Blog không tồn tại" });
+                }
+
+                var stats = new
+                {
+                    BlogId = blog.BlogId,
+                    Title = blog.Title,
+                    CurrentRating = blog.Rate,
+                    RatingCount = blog.RatingCount,
+                    AverageRating = blog.RatingCount > 0 ? blog.Rate : 0
+                };
+
+                return Ok(stats);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
 }
