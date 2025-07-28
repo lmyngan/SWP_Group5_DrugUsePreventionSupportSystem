@@ -54,6 +54,7 @@ const Account = () => {
     const [deleteId, setDeleteId] = useState(null);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showAddSuccessModal, setShowAddSuccessModal] = useState(false);
+    const [showEditSuccessModal, setShowEditSuccessModal] = useState(false);
     const [addError, setAddError] = useState('');
     const [addFieldErrors, setAddFieldErrors] = useState({});
 
@@ -79,6 +80,8 @@ const Account = () => {
             const data = await getFullAccount();
             if (Array.isArray(data)) setAccounts(data);
             else setAccounts([]);
+            setShowEditSuccessModal(true); // Hiện modal thành công
+            setTimeout(() => setShowEditSuccessModal(false), 1000); // Ẩn sau 1 giây
         } catch (e) {
             alert("Update role failed!");
         }
@@ -418,6 +421,13 @@ const Account = () => {
                 <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-300 ease-in-out">
                     <div className="bg-white rounded-lg shadow p-4 w-full max-w-xs text-center animate-fadeInScale">
                         <h3 className="text-lg font-semibold mb-2 text-green-500">Add account successfully!</h3>
+                    </div>
+                </div>
+            )}
+            {showEditSuccessModal && (
+                <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-300 ease-in-out">
+                    <div className="bg-white rounded-lg shadow p-4 w-full max-w-xs text-center animate-fadeInScale">
+                        <h3 className="text-lg font-semibold mb-2 text-green-500">Update role successfully!</h3>
                     </div>
                 </div>
             )}

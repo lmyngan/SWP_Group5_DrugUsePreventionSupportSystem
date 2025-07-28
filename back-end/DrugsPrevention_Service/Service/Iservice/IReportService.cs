@@ -13,5 +13,6 @@ namespace DrugsPrevention_Service.Service.Iservice
         Task<UserReportDTO> GetTopUserByEventParticipationAsync();
         Task<List<UserReportDTO>> GetUsersOfMostPopularEventAsync();
         Task<PopularEventReportDTO> GetMostPopularEventWithUsersAsync();
+        Task<BlogRatingReportDTO> GetBlogRatingReportAsync();
     }
 }
