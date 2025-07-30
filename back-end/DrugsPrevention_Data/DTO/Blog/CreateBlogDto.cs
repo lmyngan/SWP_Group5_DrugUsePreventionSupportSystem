@@ -15,5 +15,6 @@ namespace DrugsPrevention_Data.DTO.Blog
         [Required]
         public string Title { get; set; }
         public string Content { get; set; }
+        public float Rate { get; set; }
     }
 }
