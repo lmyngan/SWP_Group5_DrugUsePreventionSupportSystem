@@ -42,15 +42,17 @@ namespace DrugsPrevention_Service.Service
 
             var claims = new[]
             {
-        new Claim(ClaimTypes.NameIdentifier, account.AccountId.ToString()),
-        new Claim(ClaimTypes.Name, account.Accountname),
-        new Claim(ClaimTypes.Role, account.RoleId.ToString()),
-        new Claim("AccountId", account.AccountId.ToString()),
-        new Claim("Gender", account.Gender ?? ""),
-        new Claim("Address", account.Address ?? ""),
-        new Claim("DateOfBirth", account.DateOfBirth.GetValueOrDefault().ToString("yyyy-MM-dd")),
-        new Claim("CreatedAt", account.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"))
-    };
+            new Claim(ClaimTypes.NameIdentifier, account.AccountId.ToString()),
+            new Claim(ClaimTypes.Name, account.Accountname),
+            new Claim(ClaimTypes.Role, account.RoleId.ToString()),
+            new Claim("AccountId", account.AccountId.ToString()),
+            new Claim("Gender", account.Gender ?? ""),
+            new Claim("Address", account.Address ?? ""),
+            new Claim("DateOfBirth", account.DateOfBirth.GetValueOrDefault().ToString("yyyy-MM-dd")),
+            new Claim("CreatedAt", account.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")),
+
+            new Claim(ClaimTypes.Email, account.Email ?? "")
+            };
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
