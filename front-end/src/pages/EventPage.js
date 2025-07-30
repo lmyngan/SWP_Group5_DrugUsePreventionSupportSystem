@@ -1,74 +1,77 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import "../styles/EventPage.css";
+"use client"
 
-import { eventData, joinEvent } from "../service/api";
+import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import "../styles/EventPage.css"
+
+import { eventData, joinEvent } from "../service/api"
 
 const EventPage = ({ navigateTo }) => {
-  const navigate = useNavigate();
-  const [events, setEvents] = useState([]);
-  const [user, setUser] = useState(null);
-  const [selectedType, setSelectedType] = useState("all");
-  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate()
+  const [events, setEvents] = useState([])
+  const [user, setUser] = useState(null)
+  const [selectedType, setSelectedType] = useState("all")
+  const [searchQuery, setSearchQuery] = useState("")
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) setUser(JSON.parse(storedUser));
+    const storedUser = localStorage.getItem("user")
+    if (storedUser) setUser(JSON.parse(storedUser))
 
     const fetchEvents = async () => {
-      setLoading(true);
-      const data = await eventData();
-      setEvents(Array.isArray(data) ? data : data.events || []);
-      setLoading(false);
-    };
-    fetchEvents();
-  }, []);
-
+      setLoading(true)
+      const data = await eventData()
+      setEvents(Array.isArray(data) ? data : data.events || [])
+      setLoading(false)
+    }
+    fetchEvents()
+  }, [])
 
   const eventTypes = ["all", "Awareness", "Education", "Support"]
 
-  const filteredEvents = selectedType === "all" ? events : events.filter((event) => event.type === selectedType)
+  // Updated filtering logic to include both type and search
+  const filteredEvents = events.filter((event) => {
+    const matchesType = selectedType === "all" || event.type === selectedType
+    const matchesSearch = searchQuery === "" || event.name.toLowerCase().includes(searchQuery.toLowerCase())
+    return matchesType && matchesSearch
+  })
 
   const handleJoinEvent = async (eventId) => {
     if (!user) {
-      alert("Please login to join events");
+      alert("Please login to join events")
       return
     }
 
-    console.log("[DEBUG] user object:", user);
-    console.log("[DEBUG] eventId:", eventId);
+    console.log("[DEBUG] user object:", user)
+    console.log("[DEBUG] eventId:", eventId)
 
-
-    const accountId = user.accountId !== undefined ? user.accountId : user.account_id;
+    const accountId = user.accountId !== undefined ? user.accountId : user.account_id
     if (accountId === undefined) {
-      alert("User object missing accountId/account_id. Please re-login.");
-      return;
+      alert("User object missing accountId/account_id. Please re-login.")
+      return
     }
 
     try {
-      // Gọi API lưu người tham gia
       const response = await joinEvent({
         accountId: accountId,
         eventId: eventId,
         status: "joined",
-        feedback: "Looking forward to it."
-      });
+        feedback: "Looking forward to it.",
+      })
 
       if (!response.error) {
-        alert("Successfully joined the event!");
-        // Nếu muốn cập nhật lại danh sách người tham gia, gọi lại fetchEvents() hoặc cập nhật state events tại đây
-        // await fetchEvents();
+        alert("Successfully joined the event!")
       } else {
-        alert(`Failed to join event: ${response.error}`);
+        alert(`Failed to join event: ${response.error}`)
       }
     } catch (error) {
-      console.error("Error joining event:", error);
-      alert("An error occurred while joining the event.");
+      console.error("Error joining event:", error)
+      alert("An error occurred while joining the event.")
     }
-  };
+  }
 
-  const handleShareExperience = () => {
-    navigate(`/blogs`);
+  const handleShareExperience = (eventId) => {
+    navigate(`/blogs?event=${eventId}`);
   };
 
   const formatDate = (dateString) => {
@@ -83,14 +86,18 @@ const EventPage = ({ navigateTo }) => {
   const getTypeColor = (type) => {
     switch (type) {
       case "Awareness":
-        return "type-awareness";
+        return "type-awareness"
       case "Education":
-        return "type-education";
+        return "type-education"
       case "Support":
-        return "type-support";
+        return "type-support"
       default:
-        return "type-default";
+        return "type-default"
     }
+  }
+
+  const clearSearch = () => {
+    setSearchQuery("")
   }
 
   if (loading) {
@@ -126,8 +133,30 @@ const EventPage = ({ navigateTo }) => {
         </div>
       </section>
 
+
+
+      {/* Event Filter Section */}
       <section className="filter-section">
         <div className="container">
+          {/* Search Bar */}
+          <div className="search-container">
+            <div className="search-input-wrapper">
+              <input
+                type="text"
+                placeholder="Search events by name..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="search-input"
+              />
+              {searchQuery && (
+                <button onClick={clearSearch} className="clear-search-btn">
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Filter Tabs */}
           <div className="filter-tabs">
             {eventTypes.map((type) => (
               <button
@@ -139,15 +168,46 @@ const EventPage = ({ navigateTo }) => {
               </button>
             ))}
           </div>
+
+          {/* Results Count */}
+          {(searchQuery || selectedType !== "all") && (
+            <div className="results-info">
+              <p>
+                Found {filteredEvents.length} event{filteredEvents.length !== 1 ? "s" : ""}
+                {searchQuery && ` matching "${searchQuery}"`}
+                {selectedType !== "all" && ` in ${selectedType}`}
+              </p>
+              {(searchQuery || selectedType !== "all") && (
+                <button
+                  onClick={() => {
+                    setSearchQuery("")
+                    setSelectedType("all")
+                  }}
+                  className="clear-filters-btn"
+                >
+                  Clear all filters
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </section>
 
       <section id="events-section" className="events-section">
         <div className="container">
-          <h2>Upcoming Events</h2>
+          <h2>{searchQuery || selectedType !== "all" ? "Search Results" : "Upcoming Events"}</h2>
           {filteredEvents.length === 0 ? (
             <div className="no-events">
-              <p>No events found for the selected category.</p>
+              <p>
+                {searchQuery
+                  ? `No events found matching "${searchQuery}"${selectedType !== "all" ? ` in ${selectedType}` : ""}.`
+                  : "No events found for the selected category."}
+              </p>
+              {searchQuery && (
+                <button onClick={clearSearch} className="btn-outline">
+                  Clear search
+                </button>
+              )}
             </div>
           ) : (
             <div className="events-grid">
@@ -187,6 +247,8 @@ const EventPage = ({ navigateTo }) => {
         </div>
       </section>
 
+
+      {/* Call to Action Section */}
       <section className="cta-section">
         <div className="container">
           <h2>Ready to Make a Difference?</h2>
@@ -204,8 +266,6 @@ const EventPage = ({ navigateTo }) => {
           </div>
         </div>
       </section>
-
-
     </div>
   )
 }
