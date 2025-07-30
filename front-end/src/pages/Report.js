@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getReportData, getTopEventDetail, getTopUser } from '../service/api';
+import { getReportData, getTopEventDetail, getTopUser, getBlogRateDetail } from '../service/api';
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 
@@ -15,21 +15,40 @@ const Report = () => {
         const fetchReport = async () => {
             setLoading(true);
             setError(null);
-            const res = await getReportData();
-            if (res && !res.error) {
-                setReport(res);
-            } else {
-                setError(res.error || 'Failed to fetch report data');
+            try {
+                const res = await getReportData();
+                if (res && !res.error) {
+                    setReport(res);
+                } else {
+                    setError(res.error || 'Failed to fetch report data');
+                }
+            } catch (error) {
+                if (error?.response?.status === 403) {
+                    setError("You do not have access to this page. Please contact an administrator.");
+                } else {
+                    setError("Failed to load report data. Please try again later.");
+                }
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
         };
         const fetchTopEventDetail = async () => {
-            const res = await getTopEventDetail();
-            if (res && !res.error) setTopEventDetail(res);
+            try {
+                const res = await getTopEventDetail();
+                if (res && !res.error) setTopEventDetail(res);
+            } catch (error) {
+                // Silently handle errors for secondary data
+                console.log("Failed to fetch top event detail:", error);
+            }
         };
         const fetchTopUser = async () => {
-            const res = await getTopUser();
-            if (res && !res.error) setTopUser(res);
+            try {
+                const res = await getTopUser();
+                if (res && !res.error) setTopUser(res);
+            } catch (error) {
+                // Silently handle errors for secondary data
+                console.log("Failed to fetch top user:", error);
+            }
         };
         fetchReport();
         fetchTopEventDetail();

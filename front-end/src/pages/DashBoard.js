@@ -1,7 +1,7 @@
 //import { Link } from "react-router-dom";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { useState, useEffect } from "react";
-import { getReportData, getTopUser, getTopEventDetail } from '../service/api';
+import { getReportData, getTopUser, getTopEventDetail, getBlogRateDetail } from '../service/api';
 
 
 const DashBoard = () => {
@@ -14,6 +14,7 @@ const DashBoard = () => {
     const [error, setError] = useState(null);
     const [topUsers, setTopUsers] = useState([]);
     const [topEvent, setTopEvent] = useState(null);
+    const [blogRatingData, setBlogRatingData] = useState(null);
 
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
@@ -35,40 +36,63 @@ const DashBoard = () => {
         }
     }, [modalOpen]);
 
-    // Dữ liệu mẫu cho Consultant Review Chart
-    const consultantReviewData = [
-        { name: '5 Stars', value: 12 },
-        { name: '4 Stars', value: 8 },
-        { name: '3 Stars', value: 3 },
-        { name: '2 Stars', value: 1 },
-        { name: '1 Star', value: 1 },
-    ];
     const COLORS = ['#22c55e', '#2563eb', '#eab308', '#f97316', '#ef4444'];
 
-    // Tính trung bình rating consultant
+    // Convert API data to chart format
+    const consultantReviewData = blogRatingData ? [
+        { name: '5 Stars', value: blogRatingData.fiveStarCount || 0 },
+        { name: '4 Stars', value: blogRatingData.fourStarCount || 0 },
+        { name: '3 Stars', value: blogRatingData.threeStarCount || 0 },
+        { name: '2 Stars', value: blogRatingData.twoStarCount || 0 },
+        { name: '1 Star', value: blogRatingData.oneStarCount || 0 },
+    ].filter(item => item.value > 0) : [
+        { name: '5 Stars', value: 0 },
+        { name: '4 Stars', value: 0 },
+        { name: '3 Stars', value: 0 },
+        { name: '2 Stars', value: 0 },
+        { name: '1 Star', value: 0 },
+    ];
+
     const totalReviews = consultantReviewData.reduce((sum, d) => sum + d.value, 0);
+
+    // Debug: Log the chart data
+    console.log("Chart data:", consultantReviewData);
+    console.log("Total reviews:", totalReviews);
 
     useEffect(() => {
         const fetchReport = async () => {
             setLoading(true);
             setError(null);
-            const res = await getReportData();
-            if (res && !res.error) {
-                setReport(res);
-            } else {
-                setError(res.error || 'Failed to fetch report data');
-            }
+            try {
+                const res = await getReportData();
+                if (res && !res.error) {
+                    setReport(res);
+                } else {
+                    setError(res.error || 'Failed to fetch report data');
+                }
+                const topUserRes = await getTopUser();
+                if (topUserRes && !topUserRes.error) {
+                    setTopUsers(Array.isArray(topUserRes) ? topUserRes : [topUserRes]);
+                }
+                const topEventRes = await getTopEventDetail();
+                if (topEventRes && !topEventRes.error) {
+                    setTopEvent(topEventRes);
+                }
 
-            const topUserRes = await getTopUser();
-            if (topUserRes && !topUserRes.error) {
-                setTopUsers(Array.isArray(topUserRes) ? topUserRes : [topUserRes]);
+                const blogRatingRes = await getBlogRateDetail();
+                console.log("Blog rating data:", blogRatingRes);
+                if (blogRatingRes && !blogRatingRes.error) {
+                    setBlogRatingData(blogRatingRes);
+                }
+            } catch (error) {
+                if (error?.response?.status === 403) {
+                    setError("You do not have access to this page. Please contact an administrator.");
+                } else {
+                    setError("Failed to load dashboard data. Please try again later.");
+                }
+            } finally {
+                setLoading(false);
             }
-            // Fetch top event detail
-            const topEventRes = await getTopEventDetail();
-            if (topEventRes && !topEventRes.error) {
-                setTopEvent(topEventRes);
-            }
-            setLoading(false);
         };
         fetchReport();
     }, []);

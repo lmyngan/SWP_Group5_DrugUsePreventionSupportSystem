@@ -217,7 +217,7 @@ const BlogPage = ({ navigateTo }) => {
                 <article key={blog.blogId} className="blog-card">
                   <div className="blog-header">
                     <div className="blog-meta">
-                      <span className={`blog-category ${getCategoryColor(blog.categories)}`}>{blog.blogId}</span>
+                      <span className={`blog-category ${getCategoryColor(blog.categories)}`}>{blogCategories.find(cat => cat.id === blog.categories)?.name || blog.categories}</span>
                       <span className="blog-date">{formatDate(blog.createdAt)}</span>
                     </div>
                     <div className="blog-rating">

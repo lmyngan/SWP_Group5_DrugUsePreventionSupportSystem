@@ -565,6 +565,18 @@ export const getTopEventDetail = async () => {
     }
 }
 
+//GET: Detail Star Rating
+export const getBlogRateDetail = async () => {
+    try {
+        const response = await axios.get(`${API_BASE_URL}/api/Report/blog-rating`, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
 // VNPay Payment Functions
 // GET: Create VNPay Payment URL
 export const createVNPayUrl = async (appointmentId) => {
