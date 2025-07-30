@@ -27,8 +27,6 @@ const eventSchema = Yup.object().shape({
     name: Yup.string().required('Event name is required'),
     description: Yup.string().required('Description is required'),
     location: Yup.string().required('Location is required'),
-    date: Yup.string().required('Date is required'),
-    type: Yup.string().required('Type is required'),
 });
 
 const ManageEvent = () => {
@@ -60,7 +58,6 @@ const ManageEvent = () => {
         fetchEvents();
     }, []);
 
-    // Add
     const handleAddEvent = async () => {
         setAddError('');
         setAddFieldErrors({});
@@ -96,7 +93,6 @@ const ManageEvent = () => {
         }
     };
 
-    // Edit
     const handleEdit = (event) => {
         setEditId(event.eventId);
         setEditEvent({ ...event });
@@ -128,7 +124,6 @@ const ManageEvent = () => {
         setShowEditModal(false);
     };
 
-    // Delete
     const handleDelete = (id) => {
         setDeleteId(id);
         setShowDeleteModal(true);
@@ -158,7 +153,6 @@ const ManageEvent = () => {
                 >
                     <IoMdAddCircle />
                 </button>
-                {/* Modal Add Event */}
                 {showAdd && (
                     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40 transition-opacity duration-300 ease-in-out">
                         <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg transition-all duration-300 ease-out transform opacity-100 scale-100 animate-fadeInScale">
@@ -171,7 +165,6 @@ const ManageEvent = () => {
                                     <MdCancel />
                                 </button>
                             </div>
-                            {/* Hiển thị lỗi validate */}
                             {addError && (
                                 <div className="text-red-500 mt-2">{addError}</div>
                             )}
