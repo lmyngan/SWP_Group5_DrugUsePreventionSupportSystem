@@ -44,17 +44,18 @@ const BlogPage = ({ navigateTo }) => {
     return categoryMatch && eventMatch
   })
 
-
-
   const handleRateBlog = async (blogId, rate) => {
     if (!user) {
       alert("Please login to rate blogs");
       return;
     }
     try {
-      const response = await getRateBlog({ blogId: Number(blogId), rating: Number(rate) });
+      console.log("Blog ID:", blogId, "Rate:", rate);
+      const response = await getRateBlog({ blogId: blogId, rating: rate });
+      console.log(response);
       if (!response.error) {
-        setBlogs(blogs.map((blog) => (blog.blog_id === blogId ? { ...blog, rate } : blog)));
+        const updatedBlogs = await blogData();
+        setBlogs(Array.isArray(updatedBlogs) ? updatedBlogs : []);
         setShowRateModal(false);
         setSelectedRate(0);
         setRateBlogId(null);
@@ -213,10 +214,10 @@ const BlogPage = ({ navigateTo }) => {
           ) : (
             <div className="blogs-grid">
               {filteredBlogs.map((blog) => (
-                <article key={blog.blog_id} className="blog-card">
+                <article key={blog.blogId} className="blog-card">
                   <div className="blog-header">
                     <div className="blog-meta">
-                      <span className={`blog-category ${getCategoryColor(blog.categories)}`}>{blog.category_name}</span>
+                      <span className={`blog-category ${getCategoryColor(blog.categories)}`}>{blog.blogId}</span>
                       <span className="blog-date">{formatDate(blog.createdAt)}</span>
                     </div>
                     <div className="blog-rating">
@@ -245,11 +246,11 @@ const BlogPage = ({ navigateTo }) => {
                   <p className="blog-content">{blog.content}</p>
 
                   <div className="blog-actions">
-                    <button className="action-btn rate-btn" onClick={() => { setShowRateModal(true); setRateBlogId(blog.blog_id); }}>
+                    <button className="action-btn rate-btn" onClick={() => { setShowRateModal(true); setRateBlogId(blog.blogId); }}>
                       <span className="action-icon">⭐</span>
                       <span>Rate</span>
                     </button>
-                    {showRateModal && rateBlogId === blog.blog_id && (
+                    {showRateModal && rateBlogId === blog.blogId && (
                       <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-white/30">
                         <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-xs flex flex-col items-center">
                           <h3 className="text-lg font-semibold mb-4">Rate this blog</h3>
