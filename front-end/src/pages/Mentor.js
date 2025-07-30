@@ -178,11 +178,9 @@ const Mentor = () => {
     }
   };
 
-  // Hàm giả lập xác nhận đã thanh toán (gọi handleVNPayCallback)
   const handleConfirmPayment = async (consultantId) => {
     if (!currentAppointmentId) return;
 
-    // Giả lập callback, thực tế cần truyền params đúng từ VNPay
     const callbackRes = await handleVNPayCallback({ appointmentId: currentAppointmentId });
     if (callbackRes && callbackRes.message && callbackRes.message.includes('thành công')) {
       setPaymentStatuses(prev => ({
@@ -198,10 +196,32 @@ const Mentor = () => {
   };
 
   const getAvailableSchedules = (expertId) => {
-    return (selectedSchedules[expertId] || [])
-      .filter(schedule => schedule.status === 'unbooked')
-      .sort((a, b) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
+    return (selectedSchedules[expertId] || [])
+      .filter(schedule => {
+        if (schedule.status !== 'unbooked') {
+          return false;
+        }
+
+        let scheduleDate = null;
+        if (schedule.availableDate) {
+          scheduleDate = new Date(schedule.availableDate);
+        } else if (schedule.dateTime) {
+          scheduleDate = new Date(schedule.dateTime);
+        }
+
+        if (scheduleDate) {
+          scheduleDate.setHours(0, 0, 0, 0);
+          if (scheduleDate < today) {
+            return false;
+          }
+        }
+
+        return true;
+      })
+      .sort((a, b) => {
         const dateA = new Date(a.availableDate || a.dateTime || 0);
         const dateB = new Date(b.availableDate || b.dateTime || 0);
         if (dateA.getTime() !== dateB.getTime()) {

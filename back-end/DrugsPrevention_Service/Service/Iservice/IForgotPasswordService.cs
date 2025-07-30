@@ -8,7 +8,6 @@ namespace DrugsPrevention_Service.Service.Iservice
 {
     public interface IForgotPasswordService
     {
-        Task<bool> SendForgotPasswordEmailAsync(string email);
         Task<bool> ResetPasswordAsync(string email, string newPassword);
         Task<bool> ForgotPasswordAsync(string email);
     }

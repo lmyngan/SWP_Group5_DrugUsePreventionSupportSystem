@@ -9,6 +9,11 @@ const DashBoard = () => {
     const [user, setUser] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
+    const [report, setReport] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [topUsers, setTopUsers] = useState([]);
+    const [topEvent, setTopEvent] = useState(null);
 
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
@@ -30,24 +35,6 @@ const DashBoard = () => {
         }
     }, [modalOpen]);
 
-    const data = [
-        { name: 'Mon', visits: 120 },
-        { name: 'Tue', visits: 98 },
-        { name: 'Wed', visits: 150 },
-        { name: 'Thu', visits: 200 },
-        { name: 'Fri', visits: 170 },
-        { name: 'Sat', visits: 90 },
-        { name: 'Sun', visits: 60 },
-    ];
-
-    // Dữ liệu mẫu cho Event Participation Chart
-    const eventParticipationData = [
-        { name: 'Community Outreach', participants: 30 },
-        { name: 'Youth Workshop', participants: 45 },
-        { name: 'Health Fair', participants: 20 },
-        { name: 'School Talk', participants: 15 },
-    ];
-
     // Dữ liệu mẫu cho Consultant Review Chart
     const consultantReviewData = [
         { name: '5 Stars', value: 12 },
@@ -60,23 +47,6 @@ const DashBoard = () => {
 
     // Tính trung bình rating consultant
     const totalReviews = consultantReviewData.reduce((sum, d) => sum + d.value, 0);
-    const avgRating = (
-        consultantReviewData.reduce((sum, d) => {
-            const star = parseInt(d.name);
-            return sum + (isNaN(star) ? 0 : star * d.value);
-        }, 0) / totalReviews
-    ).toFixed(1);
-
-    // Tính trung bình người tham gia event
-    const avgEventParticipants = (
-        eventParticipationData.reduce((sum, d) => sum + d.participants, 0) / eventParticipationData.length
-    ).toFixed(1);
-
-    const [report, setReport] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [topUsers, setTopUsers] = useState([]);
-    const [topEvent, setTopEvent] = useState(null);
 
     useEffect(() => {
         const fetchReport = async () => {
@@ -88,7 +58,7 @@ const DashBoard = () => {
             } else {
                 setError(res.error || 'Failed to fetch report data');
             }
-            // Fetch top users
+
             const topUserRes = await getTopUser();
             if (topUserRes && !topUserRes.error) {
                 setTopUsers(Array.isArray(topUserRes) ? topUserRes : [topUserRes]);

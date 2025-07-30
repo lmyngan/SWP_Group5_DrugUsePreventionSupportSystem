@@ -70,14 +70,12 @@ const LoginPage = () => {
           }
         }, 1000)
       } else {
-        // Hiển thị thông báo lỗi với nội dung cụ thể
-        const errorMessage = response.message || "Login failed! Please check your credentials and try again."
+        const errorMessage = response.message || "Login failed! Please check your username or password."
         showNotification("error", errorMessage)
       }
     } catch (error) {
       console.error("Login error:", error)
 
-      // Xử lý các loại lỗi khác nhau
       let errorMessage = "Login failed! Please try again."
 
       if (error.message) {

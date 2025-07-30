@@ -71,8 +71,8 @@ const EventPage = ({ navigateTo }) => {
   }
 
   const handleShareExperience = (eventId) => {
-    navigate(`/blogs?event=${eventId}`)
-  }
+    navigate(`/blogs?event=${eventId}`);
+  };
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -112,7 +112,6 @@ const EventPage = ({ navigateTo }) => {
 
   return (
     <div className="eventpage">
-      {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-content">
           <h1>Join Our Community Events</h1>
@@ -124,7 +123,7 @@ const EventPage = ({ navigateTo }) => {
             <button className="btn-primary" onClick={() => document.getElementById("events-section").scrollIntoView()}>
               Browse Events
             </button>
-            <button className="btn-secondary" onClick={() => navigateTo && navigateTo("blogs")}>
+            <button className="btn-secondary" onClick={() => handleShareExperience()}>
               Share Experience
             </button>
           </div>
@@ -134,7 +133,9 @@ const EventPage = ({ navigateTo }) => {
         </div>
       </section>
 
-      {/* Search and Filter Section */}
+
+
+      {/* Event Filter Section */}
       <section className="filter-section">
         <div className="container">
           {/* Search Bar */}
@@ -198,7 +199,6 @@ const EventPage = ({ navigateTo }) => {
         </div>
       </section>
 
-      {/* Events List Section */}
       <section id="events-section" className="events-section">
         <div className="container">
           <h2>{searchQuery || selectedType !== "all" ? "Search Results" : "Upcoming Events"}</h2>
@@ -252,6 +252,7 @@ const EventPage = ({ navigateTo }) => {
           )}
         </div>
       </section>
+
 
       {/* Call to Action Section */}
       <section className="cta-section">

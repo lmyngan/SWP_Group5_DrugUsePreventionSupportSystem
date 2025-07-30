@@ -70,7 +70,6 @@ const Survey = () => {
         if (riskLevel === "moderate") recommendation = "You should join Event.";
         if (riskLevel === "high") recommendation = "You should book appointment with consultant.";
 
-        // Gửi kết quả lên server nếu đã đăng nhập
         if (user && user.accountId) {
             await submitTestScore({
                 accountId: user.accountId,

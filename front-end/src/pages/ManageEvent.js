@@ -28,7 +28,7 @@ const eventSchema = Yup.object().shape({
     description: Yup.string().required('Description is required'),
     location: Yup.string().required('Location is required'),
     date: Yup.string().required('Date is required'),
-    type: Yup.string().oneOf(['Awareness', 'Education', 'Support'], 'Please select a valid type').required('Type is required'),
+    type: Yup.string().required('Type is required'),
 });
 
 const ManageEvent = () => {
@@ -63,7 +63,6 @@ const ManageEvent = () => {
         fetchEvents();
     }, []);
 
-    // Add
     const handleAddEvent = async () => {
         setAddError('');
         setAddFieldErrors({});
@@ -72,7 +71,7 @@ const ManageEvent = () => {
             // Lấy thông tin user hiện tại
             const user = JSON.parse(localStorage.getItem("user"));
             const createdBy = user?.accountId || 0;
-            
+
             // Tạo object dữ liệu theo đúng format API
             const eventPayload = {
                 name: newEvent.name,
@@ -82,18 +81,18 @@ const ManageEvent = () => {
                 createdBy: Number(createdBy), // Đảm bảo là number
                 type: newEvent.type,
             };
-            
+
             console.log('Sending event data:', eventPayload); // Debug log
-            
+
             // Nếu hợp lệ, gọi API thêm event
             const response = await addEvent(eventPayload);
-            
+
             if (response.error) {
                 console.error('API Error:', response.error);
                 setAddError(`Failed to add event: ${response.error}`);
                 return;
             }
-            
+
             // Refetch events
             const data = await eventData();
             if (Array.isArray(data)) setEvents(data);
@@ -122,7 +121,6 @@ const ManageEvent = () => {
         }
     };
 
-    // Edit
     const handleEdit = (event) => {
         setEditId(event.eventId);
         setEditEvent({ ...event });
@@ -156,7 +154,6 @@ const ManageEvent = () => {
         setShowEditModal(false);
     };
 
-    // Delete
     const handleDelete = (id) => {
         setDeleteId(id);
         setShowDeleteModal(true);
@@ -188,7 +185,6 @@ const ManageEvent = () => {
                 >
                     <IoMdAddCircle />
                 </button>
-                {/* Modal Add Event */}
                 {showAdd && (
                     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40 transition-opacity duration-300 ease-in-out">
                         <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg transition-all duration-300 ease-out transform opacity-100 scale-100 animate-fadeInScale">
@@ -201,7 +197,6 @@ const ManageEvent = () => {
                                     <MdCancel />
                                 </button>
                             </div>
-                            {/* Hiển thị lỗi validate */}
                             {addError && (
                                 <div className="text-red-500 mt-2">{addError}</div>
                             )}

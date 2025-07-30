@@ -9,8 +9,7 @@ import * as Yup from 'yup';
 const blogSchema = Yup.object().shape({
     title: Yup.string().required('Title is required'),
     content: Yup.string().required('Content is required'),
-    categories: Yup.string().required('Categories is required'),
-    createdAt: Yup.string().required('Created date is required'),
+    categories: Yup.number().required('Categories is required').min(0, 'Categories must be a positive number'),
 });
 
 const ManageBlog = () => {
@@ -18,11 +17,15 @@ const ManageBlog = () => {
     const [showAdd, setShowAdd] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [newBlog, setNewBlog] = useState({
-        categories: "",
+        authorId: (() => {
+            const user = JSON.parse(localStorage.getItem("user"));
+            return user?.accountId || 0;
+        })(),
+        categories: 0,
         title: "",
         content: "",
         rate: 0,
-        createdAt: new Date().toISOString().slice(0, 10),
+        createdAt: new Date().toISOString(),
     });
     const [editId, setEditId] = useState(null);
     const [editBlog, setEditBlog] = useState({});
@@ -51,24 +54,27 @@ const ManageBlog = () => {
             const authorId = user?.accountId || 0;
             const authorFullName = user?.fullName || "";
             await addBlog({
-                categories: newBlog.categories,
+                authorId: newBlog.authorId,
+                categories: parseInt(newBlog.categories) || 0,
                 title: newBlog.title,
                 content: newBlog.content,
                 rate: 0,
-                authorId,
-                authorFullName,
-                createdAt: new Date(newBlog.createdAt).toISOString(),
+                createdAt: new Date().toISOString(),
             });
             // Refetch blogs
             const data = await blogData();
             setBlogs(Array.isArray(data) ? data : []);
             setShowAdd(false);
             setNewBlog({
-                categories: "",
+                authorId: (() => {
+                    const user = JSON.parse(localStorage.getItem("user"));
+                    return user?.accountId || 0;
+                })(),
+                categories: 0,
                 title: "",
                 content: "",
                 rate: 0,
-                createdAt: new Date().toISOString().slice(0, 10),
+                createdAt: new Date().toISOString(),
             });
             setShowAddSuccessModal(true); // Hiện modal thành công
             setTimeout(() => setShowAddSuccessModal(false), 1000); // Ẩn sau 1 giây
@@ -92,14 +98,14 @@ const ManageBlog = () => {
         setShowEditModal(true);
     };
     const handleSaveEdit = async () => {
-        const original = blogs.find(b => b.blogId === editId);
+        const user = JSON.parse(localStorage.getItem("user"));
+        const authorId = user?.accountId || 0;
         await editBlogApi(editId, {
-            authorId: original?.authorId ?? 0,
-            categories: editBlog.categories,
+            authorId: authorId,
+            categories: parseInt(editBlog.categories) || 0,
             title: editBlog.title,
             content: editBlog.content,
-            rate: original?.rate ?? 0,
-            blogId: editId,
+            rate: editBlog.rate || 0,
         });
         // Refetch blogs
         const data = await blogData();
@@ -157,7 +163,6 @@ const ManageBlog = () => {
                         <IoMdAddCircle />
                     </button>
                 </div>
-                {/* Modal Add Blog */}
                 {showAdd && (
                     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40 transition-opacity duration-300 ease-in-out">
                         <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg transition-all duration-300 ease-out transform opacity-100 scale-100 animate-fadeInScale">
@@ -170,29 +175,28 @@ const ManageBlog = () => {
                                     <MdCancel />
                                 </button>
                             </div>
-                            {/* Hiển thị lỗi validate */}
                             {addError && (
                                 <div className="text-red-500 mt-2">{addError}</div>
                             )}
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
+                                    Title:
                                     <input className="border p-2 w-full" placeholder="Title" value={newBlog.title} onChange={e => setNewBlog(a => ({ ...a, title: e.target.value }))} />
                                     {addFieldErrors.title && <div className="text-red-500 text-xs mt-1">{addFieldErrors.title}</div>}
                                 </div>
                                 <div>
+                                    Content:
                                     <input className="border p-2 w-full" placeholder="Content" value={newBlog.content} onChange={e => setNewBlog(a => ({ ...a, content: e.target.value }))} />
                                     {addFieldErrors.content && <div className="text-red-500 text-xs mt-1">{addFieldErrors.content}</div>}
                                 </div>
                                 <div>
+                                    Rate:
                                     <input className="border p-2 w-full bg-gray-100" placeholder="Rate" value={newBlog.rate} disabled />
                                 </div>
                                 <div>
-                                    <input className="border p-2 w-full" placeholder="Categories" value={newBlog.categories} onChange={e => setNewBlog(a => ({ ...a, categories: e.target.value }))} />
+                                    Category:
+                                    <input className="border p-2 w-full" type="number" placeholder="Categories (number)" value={newBlog.categories} onChange={e => setNewBlog(a => ({ ...a, categories: parseInt(e.target.value) || 0 }))} />
                                     {addFieldErrors.categories && <div className="text-red-500 text-xs mt-1">{addFieldErrors.categories}</div>}
-                                </div>
-                                <div className="col-span-2">
-                                    <input className="border p-2 w-full" type="date" value={newBlog.createdAt} onChange={e => setNewBlog(a => ({ ...a, createdAt: e.target.value }))} />
-                                    {addFieldErrors.createdAt && <div className="text-red-500 text-xs mt-1">{addFieldErrors.createdAt}</div>}
                                 </div>
                             </div>
                             <div className="flex justify-end mt-6 gap-2">
@@ -210,12 +214,22 @@ const ManageBlog = () => {
                                 <button className="text-gray-500 hover:text-gray-700 text-2xl" onClick={handleCancelEdit}><MdCancel /></button>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
-                                <input className="border p-2" placeholder="Title" value={editBlog.title || ''} onChange={e => setEditBlog(b => ({ ...b, title: e.target.value }))} />
-                                <input className="border p-2" placeholder="Content" value={editBlog.content || ''} onChange={e => setEditBlog(b => ({ ...b, content: e.target.value }))} />
-                                <input className="border p-2 bg-gray-100" placeholder="Rate" value={editBlog.rate || ''} disabled />
-                                <input className="border p-2" placeholder="Categories" value={editBlog.categories || ''} onChange={e => setEditBlog(b => ({ ...b, categories: e.target.value }))} />
-                                <input className="border p-2" type="date" value={editBlog.createdAt ? editBlog.createdAt.slice(0, 10) : ''} onChange={e => setEditBlog(b => ({ ...b, createdAt: e.target.value }))} />
-                                <input className="border p-2 bg-gray-100" placeholder="Creator" value={editBlog.authorFullName || ''} disabled />
+                                <div>
+                                    Title:
+                                    <input className="border p-2 w-full" placeholder="Title" value={editBlog.title || ''} onChange={e => setEditBlog(b => ({ ...b, title: e.target.value }))} />
+                                </div>
+                                <div>
+                                    Content:
+                                    <input className="border p-2 w-full" placeholder="Content" value={editBlog.content || ''} onChange={e => setEditBlog(b => ({ ...b, content: e.target.value }))} />
+                                </div>
+                                <div>
+                                    Rate:
+                                    <input className="border p-2 w-full bg-gray-100" placeholder="Rate" value={editBlog.rate || 0} disabled />
+                                </div>
+                                <div>
+                                    Category:
+                                    <input className="border p-2 w-full" type="number" placeholder="Categories (number)" value={editBlog.categories || 0} onChange={e => setEditBlog(b => ({ ...b, categories: parseInt(e.target.value) || 0 }))} />
+                                </div>
                             </div>
                             <div className="flex justify-end mt-6 gap-2">
                                 <button className="px-6 py-3 bg-gray-300 text-gray-700 rounded hover:bg-gray-400" onClick={handleCancelEdit}><MdCancel /></button>
