@@ -32,35 +32,41 @@ namespace DrugsPrevention_Service.Service
             {
                 return null;
             }
-            return GenerateJwtToken(user);
+            return GenerateJwtToken(user, 60);
         }
 
-        private string GenerateJwtToken(Accounts account)
+        public string GenerateJwtToken(Accounts account, int expiresInMinutes)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, account.AccountId.ToString()),
-                new Claim(ClaimTypes.Name, account.Accountname),
-                new Claim(ClaimTypes.Role, account.RoleId.ToString()),
-                new Claim("AccountId", account.AccountId.ToString()),
-                new Claim("Gender", account.Gender ?? ""),
-                new Claim("Address", account.Address ?? ""),
-                new Claim("DateOfBirth", account.DateOfBirth.GetValueOrDefault().ToString("yyyy-MM-dd")),
-                new Claim("CreatedAt", account.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"))
-            };
+        new Claim(ClaimTypes.NameIdentifier, account.AccountId.ToString()),
+        new Claim(ClaimTypes.Name, account.Accountname),
+        new Claim(ClaimTypes.Role, account.RoleId.ToString()),
+        new Claim("AccountId", account.AccountId.ToString()),
+        new Claim("Gender", account.Gender ?? ""),
+        new Claim("Address", account.Address ?? ""),
+        new Claim("DateOfBirth", account.DateOfBirth.GetValueOrDefault().ToString("yyyy-MM-dd")),
+        new Claim("CreatedAt", account.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"))
+    };
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(1),
+                expires: DateTime.UtcNow.AddMinutes(expiresInMinutes),
                 signingCredentials: creds
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task<Accounts> GetAccountByEmailAsync(string email)
+        {
+            var allAccounts = await _repository.GetAllAccountsAsync();
+            return allAccounts.FirstOrDefault(a => a.Email == email);
         }
 
         public async Task<bool> RegisterAccount(RegisterRequestDTO request)
@@ -101,57 +107,5 @@ namespace DrugsPrevention_Service.Service
             }
             await _repository.SaveChangesAsync();
         }
-
-        public async Task<string> LoginWithGoogleAsync(string idToken)
-        {
-            var clientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
-            if (string.IsNullOrEmpty(clientId))
-                throw new Exception("GOOGLE_CLIENT_ID not set.");
-
-            var payload = await GoogleJsonWebSignature.ValidateAsync(idToken, new GoogleJsonWebSignature.ValidationSettings
-            {
-                Audience = new[] { clientId }
-            });
-
-            var provider = "Google";
-            var providerKey = payload.Subject;
-            var email = payload.Email;
-
-            var user = await _repository.GetUserByExternalLoginAsync(provider, providerKey);
-            if (user == null)
-            {
-                var newAccount = new Accounts
-                {
-                    Accountname = email,
-                    Password = BCrypt.Net.BCrypt.HashPassword(Guid.NewGuid().ToString()),
-                    FullName = payload.Name ?? email,
-                    Gender = null,
-                    DateOfBirth = null,
-                    Address = null,
-                    RoleId = 4,
-                    CreatedAt = DateTime.UtcNow
-                };
-
-                await _repository.AddAccountAsync(newAccount);
-                await _repository.SaveChangesAsync();
-
-                var newExternal = new ExternalLogins
-                {
-                    Provider = provider,
-                    ProviderKey = providerKey,
-                    AccountId = newAccount.AccountId,
-                    Email = email,
-                    CreatedAt = DateTime.UtcNow
-                };
-
-                await _repository.AddExternalLoginAsync(newExternal);
-                await _repository.SaveChangesAsync();
-
-                user = newAccount;
-            }
-
-            return GenerateJwtToken(user);
-        }
-
     }
 }

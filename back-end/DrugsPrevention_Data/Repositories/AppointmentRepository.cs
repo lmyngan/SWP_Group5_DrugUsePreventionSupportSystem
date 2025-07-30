@@ -33,15 +33,12 @@ namespace DrugsPrevention_Data.Repositories
 
         public async Task<bool> IsSlotAvailable(int scheduleId, TimeSpan startTime, TimeSpan endTime)
         {
-            var schedule = await _context.Schedules.FindAsync(scheduleId);
-            if (schedule == null) return false;
-
-            int count = await _context.Appointments.CountAsync(a =>
+            return !await _context.Appointments.AnyAsync(a =>
                 a.ScheduleId == scheduleId &&
-                a.StartTime == startTime && a.EndTime == endTime);
-
-            return count == 0;
+                a.StartTime == startTime &&
+                a.EndTime == endTime);
         }
+
         public async Task<List<Appointment>> GetAllAsync()
         {
             return await _context.Appointments

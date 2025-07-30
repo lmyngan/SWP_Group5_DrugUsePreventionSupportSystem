@@ -16,26 +16,14 @@ namespace DrugsPrevention_Service.Service
     public class ForgotPasswordService : IForgotPasswordService
     {
         private readonly DrugsPrevention_DBContext _context;
-        private readonly IMailerSendService _mailerService;
+        private readonly IMailtrapService _mailerService;
         private readonly IConfiguration _configuration;
 
-        public ForgotPasswordService(DrugsPrevention_DBContext context, IMailerSendService mailerService, IConfiguration configuration)
+        public ForgotPasswordService(DrugsPrevention_DBContext context, IMailtrapService mailerService, IConfiguration configuration)
         {
             _context = context;
             _mailerService = mailerService;
             _configuration = configuration;
-        }
-
-        public async Task<bool> SendForgotPasswordEmailAsync(string email)
-        {
-            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Email == email);
-            if (account == null)
-                return false;
-
-            var token = Guid.NewGuid().ToString();
-            await _mailerService.SendResetPasswordEmail(email, account.FullName, token);
-
-            return true;
         }
 
         public async Task<bool> ResetPasswordAsync(string token, string newPassword)

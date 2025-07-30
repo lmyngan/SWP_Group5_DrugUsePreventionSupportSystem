@@ -1,9 +1,9 @@
-﻿using DrugsPrevention_Data.DTO.ExternalLogin;
-using DrugsPrevention_Data.DTO.Login;
+﻿using DrugsPrevention_Data.DTO.Login;
 using DrugsPrevention_Data.DTO.Password;
 using DrugsPrevention_Data.DTO.Register;
 using DrugsPrevention_Service.Service.Iservice;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Threading.Tasks;
 
@@ -15,13 +15,19 @@ namespace DrugsPrevention_API.Controllers
     {
         private readonly IAuthService _authService;
         private readonly IForgotPasswordService _forgotPasswordService;
+        private readonly IConfiguration _configuration;
+        private readonly IMailtrapService _mailerService;
 
         public AuthController(
             IAuthService authService,
-            IForgotPasswordService forgotPasswordService)
+            IForgotPasswordService forgotPasswordService,
+            IMailtrapService mailerService,
+            IConfiguration configuration)
         {
             _authService = authService;
             _forgotPasswordService = forgotPasswordService;
+            _mailerService = mailerService;
+            _configuration = configuration;
         }
 
         [HttpPost("register")]
@@ -29,9 +35,8 @@ namespace DrugsPrevention_API.Controllers
         {
             var result = await _authService.RegisterAccount(request);
             if (!result)
-            {
                 return BadRequest(new { message = "Tên tài khoản đã tồn tại hoặc vai trò không hợp lệ!" });
-            }
+
             return Ok(new { message = "Đăng ký thành công!" });
         }
 
@@ -39,7 +44,9 @@ namespace DrugsPrevention_API.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO request)
         {
             var token = await _authService.LoginAsync(request.Accountname, request.Password);
-            if (token == null) return Unauthorized(new { message = "Sai tên đăng nhập hoặc mật khẩu." });
+            if (token == null)
+                return Unauthorized(new { message = "Sai tên đăng nhập hoặc mật khẩu." });
+
             return Ok(new { Token = token });
         }
 
@@ -50,24 +57,22 @@ namespace DrugsPrevention_API.Controllers
             return Ok(new { message = "Hash mật khẩu thành công!" });
         }
 
-        [HttpPost("login-google")]
-        public async Task<IActionResult> LoginWithGoogle([FromBody] ExternalLoginRequestDTO request)
-        {
-            var token = await _authService.LoginWithGoogleAsync(request.IdToken);
-            if (token == null)
-                return Unauthorized(new { message = "Đăng nhập bằng Google thất bại!" });
-
-            return Ok(new { Token = token });
-        }
-
         [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDTO model)
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDTO request)
         {
-            var result = await _forgotPasswordService.ForgotPasswordAsync(model.Email);
-            if (!result)
+            var account = await _authService.GetAccountByEmailAsync(request.Email);
+            if (account == null)
                 return BadRequest(new { message = "Email không tồn tại." });
 
-            return Ok(new { message = "Đã gửi email đặt lại mật khẩu." });
+            // Tạo token JWT có thời hạn 15 phút
+            var token = _authService.GenerateJwtToken(account, expiresInMinutes: 15);
+
+            var resetLink = $"{_configuration["ResetPasswordBaseUrl"]}?token={token}";
+
+            await _mailerService.SendResetPasswordEmail(account.Email, account.FullName, token);
+
+            // Gửi link về FE để test dễ hơn
+            return Ok(new { message = "Đã gửi email đặt lại mật khẩu.", resetLink });
         }
 
         [HttpPost("reset-password")]

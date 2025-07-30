@@ -1,4 +1,4 @@
-﻿using DrugsPrevention_Data.DTO.ExternalLogin;
+﻿using DrugsPrevention_Data.Data;
 using DrugsPrevention_Data.DTO.Register;
 using System;
 using System.Collections.Generic;
@@ -13,6 +13,7 @@ namespace DrugsPrevention_Service.Service.Iservice
         Task<string> LoginAsync(string accountName, string password);
         Task<bool> RegisterAccount(RegisterRequestDTO request);
         Task MigratePlaintextPasswordsToHash();
-        Task<string> LoginWithGoogleAsync(string idToken);
+        string GenerateJwtToken(Accounts account, int expiresInMinutes);
+        Task<Accounts> GetAccountByEmailAsync(string email);
     }
 }
