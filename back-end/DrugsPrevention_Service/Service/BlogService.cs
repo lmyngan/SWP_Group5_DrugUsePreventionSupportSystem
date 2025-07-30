@@ -98,7 +98,7 @@ namespace DrugsPrevention_Service.Service
             _blogRepository.Delete(blog);
             await _blogRepository.SaveAsync();
         }
-        public async Task RateBlogAsync(int blogId, float newRating)
+        public async Task RateBlogAsync(int blogId, int accountId, float newRating)
         {
             // Validation
             if (newRating < 0 || newRating > 5)
@@ -112,22 +112,34 @@ namespace DrugsPrevention_Service.Service
                 throw new ArgumentException("Blog không tồn tại");
             }
 
-            // Tính toán rating mới
+            // Khởi tạo danh sách người đã đánh giá nếu chưa có
+            var ratedUserIds = string.IsNullOrEmpty(blog.RatedUserIds)
+                ? new List<int>()
+                : blog.RatedUserIds.Split(',').Select(id => int.Parse(id)).ToList();
+
+            // Kiểm tra nếu người dùng đã đánh giá rồi
+            if (ratedUserIds.Contains(accountId))
+            {
+                throw new InvalidOperationException("Bạn đã đánh giá blog này rồi.");
+            }
+
+            // Cập nhật rating trung bình
             if (blog.RatingCount == 0)
             {
-                // Nếu chưa có rating nào, set rating đầu tiên
                 blog.Rate = newRating;
             }
             else
             {
-                // Tính trung bình cộng của tất cả ratings
-                blog.Rate = ((double)blog.Rate * blog.RatingCount + newRating) / (blog.RatingCount + 1);
+                blog.Rate = ((float)blog.Rate * blog.RatingCount + newRating) / (blog.RatingCount + 1);
             }
-            
+
             blog.RatingCount++;
+            ratedUserIds.Add(accountId);
+            blog.RatedUserIds = string.Join(",", ratedUserIds);
 
             _blogRepository.Update(blog);
             await _blogRepository.SaveAsync();
         }
+
     }
 }
