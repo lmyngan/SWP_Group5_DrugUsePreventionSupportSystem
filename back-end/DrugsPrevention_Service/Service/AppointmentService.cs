@@ -31,15 +31,24 @@ namespace DrugsPrevention_Service.Service
         public async Task<AppointmentResponseDTO> BookAppointmentAsync(AppointmentCreateDTO dto)
         {
             var schedule = await _repo.GetScheduleByIdAsync(dto.ScheduleId);
-            if (schedule == null) throw new Exception("Schedule not found");
+            if (schedule == null)
+                throw new Exception("Schedule not found");
 
             var slotDuration = (schedule.EndTime - schedule.StartTime).TotalMinutes / schedule.Slot;
+
+            if (slotDuration <= 0)
+                throw new Exception("Invalid schedule time range: StartTime must be earlier than EndTime.");
+
             TimeSpan bookedStartTime = schedule.StartTime;
 
             // Find next available time slot
             for (int i = 0; i < schedule.Slot; i++)
             {
                 TimeSpan bookedEndTime = bookedStartTime.Add(TimeSpan.FromMinutes(slotDuration));
+
+                if (bookedStartTime >= bookedEndTime)
+                    throw new Exception("Invalid appointment time: StartTime must be earlier than EndTime.");
+
                 if (await _repo.IsSlotAvailable(schedule.ScheduleId, bookedStartTime, bookedEndTime))
                 {
                     var consultant = await _context.Consultants
@@ -76,18 +85,20 @@ namespace DrugsPrevention_Service.Service
                         Notes = result.Notes
                     };
                 }
+
                 bookedStartTime = bookedStartTime.Add(TimeSpan.FromMinutes(slotDuration));
             }
 
             throw new Exception("No available time slot");
         }
+
         public async Task<IEnumerable<ScheduleDTO>> GetSchedulesByConsultantIdAsync(int consultantId)
         {
             var schedules = await _context.Schedules
                 .Include(s => s.Appointments)
                     .ThenInclude(a => a.Account)
                 .Where(s => s.ConsultantId == consultantId)
-                .ToListAsync(); // EF truy vấn xong tại đây
+                .ToListAsync();
 
             var scheduleDtos = schedules
                 .Select(s =>

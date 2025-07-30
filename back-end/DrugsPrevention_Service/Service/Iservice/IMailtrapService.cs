@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DrugsPrevention_Service.Service.Iservice
 {
-    public interface IMailerSendService
+    public interface IMailtrapService
     {
         Task SendResetPasswordEmail(string toEmail, string fullName, string token);
     }
