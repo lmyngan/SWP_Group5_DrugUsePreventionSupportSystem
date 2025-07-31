@@ -1,5 +1,4 @@
-﻿using DrugsPrevention.Utilities;
-using DrugsPrevention_Data;
+﻿using DrugsPrevention_Data;
 using DrugsPrevention_Data.Data;
 using DrugsPrevention_Data.DTO.Appointment;
 using DrugsPrevention_Data.DTO.Schedule;
@@ -19,13 +18,11 @@ namespace DrugsPrevention_Service.Service
     {
         private readonly IAppointmentRepository _repo;
         private readonly DrugsPrevention_DBContext _context;
-        private readonly VNPayHelper _vnpayHelper;
 
-        public AppointmentService(IAppointmentRepository repo, DrugsPrevention_DBContext context, VNPayHelper vnpayHelper)
+        public AppointmentService(IAppointmentRepository repo, DrugsPrevention_DBContext context)
         {
             _repo = repo;
             _context = context;
-            _vnpayHelper = vnpayHelper;
         }
 
         public async Task<AppointmentResponseDTO> BookAppointmentAsync(AppointmentCreateDTO dto)
@@ -36,62 +33,64 @@ namespace DrugsPrevention_Service.Service
 
             var today = DateTime.UtcNow.Date;
             if (schedule.AvailableDate.Date < today)
-            {
                 throw new Exception("Không thể đặt lịch vào ngày trong quá khứ.");
-            }
 
-            var slotDuration = (schedule.EndTime - schedule.StartTime).TotalMinutes / schedule.Slot;
-            if (slotDuration <= 0)
-                throw new Exception("Invalid schedule time range: StartTime must be earlier than EndTime.");
+            // ktra StartTime < EndTime
+            if (dto.StartTime >= dto.EndTime)
+                throw new Exception("StartTime phải nhỏ hơn EndTime.");
 
-            TimeSpan bookedStartTime = schedule.StartTime;
+            // ktra StartTime và EndTime nằm trong khoảng thời gian Schedule cho phép
+            if (dto.StartTime < schedule.StartTime || dto.EndTime > schedule.EndTime)
+                throw new Exception("Thời gian đặt lịch không nằm trong khung giờ cho phép của Schedule.");
 
-            for (int i = 0; i < schedule.Slot; i++)
+            // ktra xem có trùng cuộc hẹn nào không
+            var existingAppointments = await _context.Appointments
+                .Where(a => a.ScheduleId == schedule.ScheduleId)
+                .ToListAsync();
+
+            bool isOverlap = existingAppointments.Any(a =>
+                a.StartTime < dto.EndTime && a.EndTime > dto.StartTime);
+
+            if (isOverlap)
+                throw new Exception("Khoảng thời gian đã được đặt trước.");
+
+            // lấy consultant
+            var consultant = await _context.Consultants
+                .Include(c => c.Account)
+                .FirstOrDefaultAsync(c => c.ConsultantId == schedule.ConsultantId);
+
+            if (consultant == null || consultant.Account == null)
+                throw new Exception("Consultant hoặc tài khoản không tồn tại.");
+
+            // tạo cuộc hẹn mới
+            var appointment = new Appointment
             {
-                TimeSpan bookedEndTime = bookedStartTime.Add(TimeSpan.FromMinutes(slotDuration));
-                if (bookedStartTime >= bookedEndTime)
-                    throw new Exception("Invalid appointment time: StartTime must be earlier than EndTime.");
+                AccountId = dto.AccountId,
+                ConsultantId = consultant.ConsultantId,
+                ScheduleId = schedule.ScheduleId,
+                Price = consultant.Price,
+                StartTime = dto.StartTime,
+                EndTime = dto.EndTime,
+                Status = "pending",
+                Notes = dto.Notes,
+                CreatedAt = DateTime.UtcNow
+            };
 
-                if (await _repo.IsSlotAvailable(schedule.ScheduleId, bookedStartTime, bookedEndTime))
-                {
-                    var consultant = await _context.Consultants
-                        .Include(c => c.Account)
-                        .FirstOrDefaultAsync(c => c.ConsultantId == schedule.ConsultantId);
-                    if (consultant == null || consultant.Account == null)
-                        throw new Exception("Consultant or related Account not found");
+            var result = await _repo.CreateAppointmentAsync(appointment);
 
-                    var appointment = new Appointment
-                    {
-                        AccountId = dto.AccountId,
-                        ConsultantId = consultant.ConsultantId,
-                        ScheduleId = schedule.ScheduleId,
-                        Price = consultant.Price,
-                        StartTime = bookedStartTime,
-                        EndTime = bookedEndTime,
-                        Status = "pending",
-                        Notes = dto.Notes,
-                        CreatedAt = DateTime.UtcNow
-                    };
-
-                    var result = await _repo.CreateAppointmentAsync(appointment);
-                    return new AppointmentResponseDTO
-                    {
-                        AppointmentId = result.AppointmentId,
-                        ConsultantName = consultant.Account.FullName,
-                        Date = schedule.AvailableDate,
-                        StartTime = result.StartTime,
-                        EndTime = result.EndTime,
-                        Price = (float)result.Price,
-                        Status = result.Status,
-                        Notes = result.Notes
-                    };
-                }
-
-                bookedStartTime = bookedStartTime.Add(TimeSpan.FromMinutes(slotDuration));
-            }
-
-            throw new Exception("No available time slot");
+            return new AppointmentResponseDTO
+            {
+                AppointmentId = result.AppointmentId,
+                ConsultantName = consultant.Account.FullName,
+                Date = schedule.AvailableDate,
+                StartTime = result.StartTime,
+                EndTime = result.EndTime,
+                Price = (float)result.Price,
+                Status = result.Status,
+                Notes = result.Notes
+            };
         }
+
 
 
         public async Task<IEnumerable<ScheduleDTO>> GetSchedulesByConsultantIdAsync(int consultantId)
@@ -223,59 +222,5 @@ namespace DrugsPrevention_Service.Service
 
             return await GetAppointmentByIdAsync(appointment.AppointmentId);
         }
-
-        //// Tạo URL thanh toán VNPay cho Appointment
-        //public async Task<string> CreateVNPayPaymentUrlAsync(int appointmentId, string ipAddress)
-        //{
-        //    var appointment = await _repo.GetByIdAsync(appointmentId);
-        //    if (appointment == null)
-        //    {
-        //        throw new Exception("Appointment not found!");
-        //    }
-
-        //    if (appointment.Status != "pending")
-        //    {
-        //        throw new Exception("Appointment must be in pending status to proceed with payment!");
-        //    }
-
-        //    string paymentUrl = _vnpayHelper.CreatePaymentUrl(
-        //        appointment.AppointmentId.ToString(),  // dùng Id dạng string
-        //        (decimal)appointment.Price,           // giá tiền
-        //        ipAddress);
-
-        //    return paymentUrl;
-        //}
-
-        //// Xử lý callback VNPay cho Appointment
-        //public async Task<bool> HandleVNPayCallbackAsync(Dictionary<string, string> vnpayData)
-        //{
-        //    bool isValid = _vnpayHelper.VerifyCallback(vnpayData);
-        //    if (!isValid)
-        //    {
-        //        return false;
-        //    }
-
-        //    string appointmentIdStr = vnpayData["vnp_TxnRef"];
-        //    int appointmentId = int.Parse(appointmentIdStr);
-
-        //    string responseCode = vnpayData["vnp_ResponseCode"];
-        //    string transactionStatus = vnpayData["vnp_TransactionStatus"];
-
-        //    var appointment = await _repo.GetByIdAsync(appointmentId);
-        //    if (appointment == null)
-        //    {
-        //        throw new Exception("Appointment not found!");
-        //    }
-
-        //    if (responseCode == "00" && transactionStatus == "00")
-        //    {
-        //        appointment.Status = "paid";
-        //        await _repo.UpdateAsync(appointment);
-        //        await _repo.SaveChangesAsync();
-        //        return true;
-        //    }
-
-        //    return false;
-        //}
     }
 }
