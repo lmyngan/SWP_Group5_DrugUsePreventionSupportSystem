@@ -1,7 +1,4 @@
-﻿using DrugsPrevention.Utilities;
-using DrugsPrevention_Data;
-using DrugsPrevention_Data.Data;
-using DrugsPrevention_Data.DTO.Appointment;
+﻿using DrugsPrevention_Data.DTO.Appointment;
 using DrugsPrevention_Data.DTO.Schedule;
 using DrugsPrevention_Data.Repositories.Irepositories;
 using DrugsPrevention_Service.Service.Iservice;
@@ -12,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DrugsPrevention_Data;
+using DrugsPrevention_Data.Data;
 
 namespace DrugsPrevention_Service.Service
 {
@@ -19,13 +18,11 @@ namespace DrugsPrevention_Service.Service
     {
         private readonly IAppointmentRepository _repo;
         private readonly DrugsPrevention_DBContext _context;
-        private readonly VNPayHelper _vnpayHelper;
 
-        public AppointmentService(IAppointmentRepository repo, DrugsPrevention_DBContext context, VNPayHelper vnpayHelper)
+        public AppointmentService(IAppointmentRepository repo, DrugsPrevention_DBContext context)
         {
             _repo = repo;
             _context = context;
-            _vnpayHelper = vnpayHelper;
         }
 
         public async Task<AppointmentResponseDTO> BookAppointmentAsync(AppointmentCreateDTO dto)
@@ -242,58 +239,10 @@ namespace DrugsPrevention_Service.Service
             return await GetAppointmentByIdAsync(appointment.AppointmentId);
         }
 
-        //// Tạo URL thanh toán VNPay cho Appointment
-        //public async Task<string> CreateVNPayPaymentUrlAsync(int appointmentId, string ipAddress)
-        //{
-        //    var appointment = await _repo.GetByIdAsync(appointmentId);
-        //    if (appointment == null)
-        //    {
-        //        throw new Exception("Appointment not found!");
-        //    }
-
-        //    if (appointment.Status != "pending")
-        //    {
-        //        throw new Exception("Appointment must be in pending status to proceed with payment!");
-        //    }
-
-        //    string paymentUrl = _vnpayHelper.CreatePaymentUrl(
-        //        appointment.AppointmentId.ToString(),  // dùng Id dạng string
-        //        (decimal)appointment.Price,           // giá tiền
-        //        ipAddress);
-
-        //    return paymentUrl;
-        //}
-
-        //// Xử lý callback VNPay cho Appointment
-        //public async Task<bool> HandleVNPayCallbackAsync(Dictionary<string, string> vnpayData)
-        //{
-        //    bool isValid = _vnpayHelper.VerifyCallback(vnpayData);
-        //    if (!isValid)
-        //    {
-        //        return false;
-        //    }
-
-        //    string appointmentIdStr = vnpayData["vnp_TxnRef"];
-        //    int appointmentId = int.Parse(appointmentIdStr);
-
-        //    string responseCode = vnpayData["vnp_ResponseCode"];
-        //    string transactionStatus = vnpayData["vnp_TransactionStatus"];
-
-        //    var appointment = await _repo.GetByIdAsync(appointmentId);
-        //    if (appointment == null)
-        //    {
-        //        throw new Exception("Appointment not found!");
-        //    }
-
-        //    if (responseCode == "00" && transactionStatus == "00")
-        //    {
-        //        appointment.Status = "paid";
-        //        await _repo.UpdateAsync(appointment);
-        //        await _repo.SaveChangesAsync();
-        //        return true;
-        //    }
-
-        //    return false;
-        //}
+        // Test method to check compilation
+        public string TestCompilation()
+        {
+            return "Compilation successful";
+        }
     }
 }

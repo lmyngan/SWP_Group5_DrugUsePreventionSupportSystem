@@ -9,6 +9,14 @@ const getAuthHeader = () => {
     return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
+// Utility function to handle 403 errors
+const handle403Error = (error, customMessage = "You do not have access to perform this action.") => {
+    if (error.response?.status === 403) {
+        return { error: customMessage };
+    }
+    return { error: error.response?.data?.message || error.message };
+};
+
 // Common POST method
 export const postData = async (url, data) => {
     try {
@@ -17,7 +25,7 @@ export const postData = async (url, data) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.response?.data?.message || error.message };
+        return handle403Error(error);
     }
 };
 
@@ -34,7 +42,7 @@ export const loginUser = async (credentials) => {
 
         return { token, accountId };
     } catch (error) {
-        return { error: error.response?.data?.message || error.message };
+        return handle403Error(error);
     }
 };
 
@@ -47,7 +55,7 @@ export const loginWithGoogle = async (idToken) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.response?.data?.message || error.message };
+        return handle403Error(error);
     }
 };
 
@@ -59,7 +67,7 @@ export const registerUser = async (data) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.response?.data?.message || error.message };
+        return handle403Error(error);
     }
 };
 
@@ -71,7 +79,7 @@ export const forgotPasswordUser = async (data) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
@@ -83,7 +91,7 @@ export const resetPasswordUser = async (data) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
@@ -95,7 +103,7 @@ export const getFullAccount = async () => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error, "You do not have access to view account information.");
     }
 }
 
@@ -107,7 +115,7 @@ export const getUserById = async (accountId) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 };
 
@@ -119,7 +127,7 @@ export const addAccount = async (data) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
@@ -131,7 +139,7 @@ export const editProfileAccount = async (accountId, data) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
@@ -143,7 +151,7 @@ export const editAccount = async (accountId, data) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
@@ -155,7 +163,7 @@ export const deleteAccount = async (accountId) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
@@ -167,7 +175,7 @@ export const getTestId = async (testId) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
@@ -179,7 +187,7 @@ export const getTestQuestion = async (testId) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
@@ -191,7 +199,7 @@ export const getTestResult = async (testId, resultId) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
@@ -209,7 +217,7 @@ export const submitTestScore = async ({ accountId, testId, score, riskLevel, rec
         });
         return response.data;
     } catch (error) {
-        return { error: error.response?.data?.message || error.message };
+        return handle403Error(error);
     }
 };
 
@@ -221,7 +229,7 @@ export const getTestScore = async (accountId) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.response?.data?.message || error.message };
+        return handle403Error(error);
     }
 }
 
@@ -233,11 +241,11 @@ export const getDataConsultant = async () => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
-//GET: ConsultantId
+//GET: Consultant Info
 export const getConsultantInfo = async (consultantId) => {
     try {
         const response = await axios.get(`${API_BASE_URL}/api/Consultant/${consultantId}`, {
@@ -245,7 +253,7 @@ export const getConsultantInfo = async (consultantId) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.response?.data?.message || error.message };
+        return handle403Error(error, "You do not have access to view consultant information.");
     }
 }
 
@@ -257,7 +265,7 @@ export const editConsultant = async (consultantId, data) => {
         })
         return response.data;
     } catch (error) {
-        return { error: error.response?.data?.message || error.message };
+        return handle403Error(error);
     }
 }
 
@@ -269,7 +277,7 @@ export const getConsultantSchedules = async (consultantId) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.response?.data?.message || error.message };
+        return handle403Error(error, "You do not have access to view consultation schedules.");
     }
 };
 
@@ -281,18 +289,7 @@ export const bookAppointment = async (data) => {
         });
         return response.data;
     } catch (error) {
-        console.error("API: Booking error details:", {
-            status: error.response?.status,
-            statusText: error.response?.statusText,
-            data: error.response?.data,
-            message: error.message,
-            config: {
-                url: error.config?.url,
-                method: error.config?.method,
-                headers: error.config?.headers
-            }
-        });
-        return { error: error.message };
+        return handle403Error(error, "You do not have access to book consultations.");
     }
 };
 
@@ -304,13 +301,7 @@ export const createAppointment = async (data) => {
         });
         return response.data;
     } catch (error) {
-        console.error("API: Create appointment error details:", {
-            status: error.response?.status,
-            statusText: error.response?.statusText,
-            data: error.response?.data,
-            message: error.message
-        });
-        return { error: error.message };
+        return handle403Error(error, "You do not have access to create appointments.");
     }
 };
 
@@ -322,7 +313,7 @@ export const appointmentId = async (appointmentIdData) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.response?.data?.message || error.message };
+        return handle403Error(error);
     }
 }
 
@@ -334,7 +325,7 @@ export const updateAppointmentStatus = async (scheduleId, status) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.response?.data?.message || error.message };
+        return handle403Error(error);
     }
 };
 
@@ -346,7 +337,7 @@ export const getScheduleData = async () => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
@@ -377,7 +368,7 @@ export const addSchedule = async (data) => {
         return response.data;
     } catch (error) {
         console.error('Add schedule error:', error.response?.data || error.message);
-        return { error: error.response?.data?.message || error.message };
+        return handle403Error(error);
     }
 }
 
@@ -399,7 +390,7 @@ export const editSchedule = async (scheduleId, data) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
@@ -411,7 +402,7 @@ export const deleteSchedule = async (scheduleId) => {
         })
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
@@ -423,7 +414,7 @@ export const eventData = async () => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
@@ -435,7 +426,7 @@ export const addEvent = async (data) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
@@ -447,7 +438,7 @@ export const editEvent = async (eventId, data) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
@@ -459,7 +450,7 @@ export const deleteEvent = async (eventId) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message }
+        return handle403Error(error);
     }
 }
 
@@ -471,7 +462,7 @@ export const joinEvent = async (data) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
@@ -483,7 +474,7 @@ export const blogData = async () => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
@@ -495,7 +486,7 @@ export const addBlog = async (data) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
@@ -507,7 +498,7 @@ export const editBlog = async (blogId, data) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
@@ -519,7 +510,7 @@ export const deleteBlog = async (blogId) => {
         })
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
@@ -531,7 +522,7 @@ export const getRateBlog = async (data) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
@@ -543,7 +534,7 @@ export const addNotification = async (data) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 };
 
@@ -555,7 +546,7 @@ export const getNotificationsByAccountId = async (accountId) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 };
 
@@ -567,7 +558,7 @@ export const markAsReadNotification = async (notificationId) => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error);
     }
 }
 
@@ -579,7 +570,7 @@ export const getReportData = async () => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error, "You do not have access to view reports.");
     }
 }
 
@@ -591,7 +582,7 @@ export const getTopUser = async () => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error, "You do not have access to view user statistics.");
     }
 }
 
@@ -603,11 +594,11 @@ export const getTopEventDetail = async () => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error, "You do not have access to view event statistics.");
     }
 }
 
-//GET: Detail Star Rating
+//GET: Blog Rate Detail
 export const getBlogRateDetail = async () => {
     try {
         const response = await axios.get(`${API_BASE_URL}/api/Report/blog-rating`, {
@@ -615,6 +606,6 @@ export const getBlogRateDetail = async () => {
         });
         return response.data;
     } catch (error) {
-        return { error: error.message };
+        return handle403Error(error, "You do not have access to view blog statistics.");
     }
-};
+}

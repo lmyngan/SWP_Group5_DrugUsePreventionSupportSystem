@@ -26,12 +26,20 @@ const Consultant = () => {
 
         const response = await getConsultantInfo(userConsultantId);
         if (response.error) {
-          setError(response.error);
+          if (response.error.includes('403') || response.error.includes('Forbidden') || response.error.includes('400')) {
+            setError("You do not have access to view consultant information.");
+          } else {
+            setError(response.error);
+          }
         } else {
           setProfile(response);
         }
       } catch (err) {
-        setError("Failed to fetch consultant information");
+        if (err.response?.status === 403 || err.response?.status === 400) {
+          setError("You do not have access to view consultant information.");
+        } else {
+          setError("Failed to fetch consultant information");
+        }
       } finally {
         setLoading(false);
       }

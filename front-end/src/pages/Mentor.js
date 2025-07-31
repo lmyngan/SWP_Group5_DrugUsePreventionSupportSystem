@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getConsultantSchedules, createAppointment, getDataConsultant } from "../service/api";
+import { getConsultantSchedules, getDataConsultant, bookAppointment } from "../service/api";
 import "../styles/MentorPage.css";
 import Footer from "../components/Footer";
 
@@ -9,6 +9,7 @@ const Mentor = () => {
   const [bookingMessages, setBookingMessages] = useState({});
   const [loadingSchedules, setLoadingSchedules] = useState({});
   const [scheduleErrors, setScheduleErrors] = useState({});
+  const [bookingLoading, setBookingLoading] = useState({});
 
   const handleScheduleClick = async (consultantId) => {
     try {
@@ -20,7 +21,11 @@ const Mentor = () => {
       console.log('ConsultantId:', consultantId, 'Schedules data:', data);
 
       if (data.error) {
-        setScheduleErrors(prev => ({ ...prev, [consultantId]: data.error }));
+        if (data.error.includes('403') || data.error.includes('Forbidden')) {
+          setScheduleErrors(prev => ({ ...prev, [consultantId]: "You do not have access to view consultation schedules." }));
+        } else {
+          setScheduleErrors(prev => ({ ...prev, [consultantId]: data.error }));
+        }
         setSelectedSchedules(prev => ({ ...prev, [consultantId]: [] }));
       } else {
         let schedules = [];
@@ -39,7 +44,11 @@ const Mentor = () => {
       }
     } catch (error) {
       console.error('Error fetching schedules:', error);
-      setScheduleErrors(prev => ({ ...prev, [consultantId]: error.message || 'Unknown error' }));
+      if (error.response?.status === 403) {
+        setScheduleErrors(prev => ({ ...prev, [consultantId]: "You do not have access to view consultation schedules." }));
+      } else {
+        setScheduleErrors(prev => ({ ...prev, [consultantId]: error.message || 'Unknown error' }));
+      }
       setSelectedSchedules(prev => ({ ...prev, [consultantId]: [] }));
     } finally {
       setLoadingSchedules(prev => ({ ...prev, [consultantId]: false }));
@@ -123,8 +132,11 @@ const Mentor = () => {
     };
 
     try {
+      setBookingLoading(prev => ({ ...prev, [consultantId]: true }));
+      setBookingMessages(prev => ({ ...prev, [consultantId]: "" }));
+
       console.log("Payload: ", payload);
-      const response = await createAppointment(payload);
+      const response = await bookAppointment(payload);
       if (response && response.appointmentId) {
         setBookingMessages(prev => ({
           ...prev,
@@ -151,10 +163,19 @@ const Mentor = () => {
       }
     } catch (error) {
       console.error('Error booking appointment:', error);
-      setBookingMessages(prev => ({
-        ...prev,
-        [consultantId]: "Booking failed. Please try again."
-      }));
+      if (error.response?.status === 403) {
+        setBookingMessages(prev => ({
+          ...prev,
+          [consultantId]: "You do not have access to book consultations."
+        }));
+      } else {
+        setBookingMessages(prev => ({
+          ...prev,
+          [consultantId]: "Booking failed. Please try again."
+        }));
+      }
+    } finally {
+      setBookingLoading(prev => ({ ...prev, [consultantId]: false }));
     }
   };
 
@@ -289,7 +310,7 @@ const Mentor = () => {
                       border: "1px solid #f5c6cb",
                       color: "#721c24"
                     }}>
-                      Error: You do not have permission to view consultation schedule.
+                      {scheduleErrors[expert.consultantId]}
                     </div>
                   )}
 
@@ -315,8 +336,9 @@ const Mentor = () => {
                           className="contact-btn"
                           style={{ marginTop: "1rem", width: "100%" }}
                           onClick={() => handleBookConsultant(expert)}
+                          disabled={bookingLoading[expert.id]}
                         >
-                          Book Consultant
+                          {bookingLoading[expert.id] ? "Booking..." : "Book Consultant"}
                         </button>
                       </div>
                     )}

@@ -38,7 +38,6 @@ const DashBoard = () => {
 
     const COLORS = ['#22c55e', '#2563eb', '#eab308', '#f97316', '#ef4444'];
 
-    // Convert API data to chart format
     const consultantReviewData = blogRatingData ? [
         { name: '5 Stars', value: blogRatingData.fiveStarCount || 0 },
         { name: '4 Stars', value: blogRatingData.fourStarCount || 0 },
