@@ -88,6 +88,7 @@ namespace DrugsPrevention_Service.Service
                 Gender = request.Gender,
                 DateOfBirth = request.DateOfBirth,
                 Address = request.Address,
+                Email = request.Email,
                 RoleId = role.RoleId,
                 CreatedAt = DateTime.UtcNow
             };
