@@ -5,7 +5,6 @@ import { IoMdAddCircle } from "react-icons/io";
 import { getScheduleData, addSchedule, deleteSchedule, editSchedule } from '../service/api';
 import * as Yup from 'yup';
 
-// Format date dd/MM/yyyy
 const formatDateVN = (dateString) => {
     if (!dateString) return '';
     const d = new Date(dateString);
@@ -16,11 +15,26 @@ const formatDateVN = (dateString) => {
     return `${day}/${month}/${year}`;
 };
 
+const timeToMinutes = (timeString) => {
+    if (!timeString) return 0;
+    const parts = timeString.split(':');
+    if (parts.length !== 3) return 0;
+    return parseInt(parts[0]) * 60 + parseInt(parts[1]);
+};
+
 const scheduleSchema = Yup.object().shape({
     consultantId: Yup.number().min(1, 'Consultant ID is required').required('Consultant ID is required'),
     availableDate: Yup.string().required('Available date is required'),
     startTime: Yup.string().required('Start time is required'),
-    endTime: Yup.string().required('End time is required'),
+    endTime: Yup.string().required('End time is required').test('time-validation', 'Time invalid', function (value) {
+        const { startTime } = this.parent;
+        if (!startTime || !value) return true;
+
+        const startMinutes = timeToMinutes(startTime);
+        const endMinutes = timeToMinutes(value);
+
+        return startMinutes < endMinutes;
+    }),
     slot: Yup.number().min(1, 'Slot must be at least 1').required('Slot is required'),
 });
 
@@ -57,7 +71,6 @@ const ManageSchedule = () => {
         fetchSchedules();
     }, []);
 
-    // Add
     const handleAddSchedule = async () => {
         setAddError('');
         setAddFieldErrors({});
@@ -77,7 +90,6 @@ const ManageSchedule = () => {
         }
         console.log('Adding schedule with data:', newSchedule);
 
-        // Validate required fields
         if (!newSchedule.consultantId || newSchedule.consultantId === 0) {
             alert('Please enter a valid Consultant ID');
             return;
@@ -103,15 +115,14 @@ const ManageSchedule = () => {
                 endTime: '',
                 slot: 1,
             });
-            setShowAddSuccessModal(true); // Hiện modal thành công
-            setTimeout(() => setShowAddSuccessModal(false), 1000); // Ẩn sau 1 giây
+            setShowAddSuccessModal(true);
+            setTimeout(() => setShowAddSuccessModal(false), 1000);
         } else {
             console.error('Add schedule failed:', res.error);
             alert(`Failed to add schedule: ${res.error}`);
         }
     };
 
-    // Edit (giữ nguyên logic, chỉ cập nhật trường nếu cần)
     const handleEdit = (schedule) => {
         setEditId(schedule.scheduleId);
         setEditScheduleData({ ...schedule });
@@ -123,7 +134,11 @@ const ManageSchedule = () => {
             await scheduleSchema.validate(editScheduleData, { abortEarly: false });
         } catch (err) {
             if (err.inner && err.inner.length > 0) {
-                setEditError(err.inner.map(e => e.message).join(', '));
+                const errorMessages = [];
+                err.inner.forEach(e => {
+                    errorMessages.push(e.message);
+                });
+                setEditError(errorMessages.join(', '));
             } else {
                 setEditError(err.message);
             }
@@ -137,8 +152,8 @@ const ManageSchedule = () => {
             else setSchedules([]);
             setEditId(null);
             setShowEditModal(false);
-            setShowEditSuccessModal(true); // Hiện modal thành công
-            setTimeout(() => setShowEditSuccessModal(false), 1000); // Ẩn sau 1 giây
+            setShowEditSuccessModal(true);
+            setTimeout(() => setShowEditSuccessModal(false), 1000);
         } else {
             alert(res.error || 'Failed to update schedule');
         }
@@ -148,7 +163,6 @@ const ManageSchedule = () => {
         setShowEditModal(false);
     };
 
-    // Delete
     const handleDelete = (id) => {
         setDeleteId(id);
         setShowDeleteModal(true);
@@ -169,8 +183,8 @@ const ManageSchedule = () => {
             else setSchedules([]);
             setShowDeleteModal(false);
             setDeleteId(null);
-            setShowDeleteSuccessModal(true); // Hiện modal thành công
-            setTimeout(() => setShowDeleteSuccessModal(false), 1000); // Ẩn sau 1 giây
+            setShowDeleteSuccessModal(true);
+            setTimeout(() => setShowDeleteSuccessModal(false), 1000);
         } else {
             console.error('Delete schedule failed:', res.error);
             alert(`Failed to delete schedule: ${res.error}`);
@@ -191,7 +205,6 @@ const ManageSchedule = () => {
                 >
                     <IoMdAddCircle />
                 </button>
-                {/* Modal Add Schedule */}
                 {showAdd && (
                     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40 transition-opacity duration-300 ease-in-out">
                         <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg transition-all duration-300 ease-out transform opacity-100 scale-100 animate-fadeInScale">

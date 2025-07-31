@@ -1,16 +1,14 @@
-"use client"
-
 // src/pages/RegisterPage.js
 import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { FaChevronDown } from "react-icons/fa"
 import { registerUser } from "../service/api"
 import "../styles/RegisterPage.css"
 import * as Yup from "yup"
 
 const registerSchema = Yup.object().shape({
-  accountname: Yup.string().required("Username is required"), // Đổi từ email thành accountname
-  email: Yup.string().email("Invalid email format").nullable(), // Trường email mới, có thể null
+  accountname: Yup.string().required("Username is required"),
+  email: Yup.string().email("Invalid email format").nullable(),
   password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password"), null], "Passwords do not match")

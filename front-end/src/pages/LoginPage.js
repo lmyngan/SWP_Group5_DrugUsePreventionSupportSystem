@@ -1,8 +1,6 @@
-"use client"
-
 // src/pages/LoginPage.js
 import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom" // Import Link
+import { useNavigate } from "react-router-dom" // Import Link
 import { FaTimes, FaCheck } from "react-icons/fa"
 import "../styles/LoginPage.css"
 import { loginUser, getUserById } from "../service/api"
@@ -12,14 +10,12 @@ const LoginPage = () => {
   const [password, setPassword] = useState("")
   const navigate = useNavigate()
 
-  // State cho notification
   const [notification, setNotification] = useState({
     show: false,
-    type: "", // 'success' hoặc 'error'
+    type: "",
     message: "",
   })
 
-  // Hàm hiển thị notification
   const showNotification = (type, message, duration = 4000) => {
     setNotification({
       show: true,
@@ -27,7 +23,6 @@ const LoginPage = () => {
       message,
     })
 
-    // Tự động ẩn notification sau thời gian được set
     setTimeout(() => {
       setNotification({
         show: false,
@@ -37,7 +32,6 @@ const LoginPage = () => {
     }, duration)
   }
 
-  // Hàm đóng notification thủ công
   const closeNotification = () => {
     setNotification({
       show: false,
@@ -57,26 +51,22 @@ const LoginPage = () => {
         const user = await getUserById(response.accountId)
         localStorage.setItem("user", JSON.stringify(user))
 
-        // Hiển thị thông báo thành công
-        showNotification("success", "LOGIN SUCCESSFUL", 3000)
+        showNotification("success", "LOGIN SUCCESSFUL", 1000)
 
-        // Chuyển hướng sau khi hiển thị thông báo
         setTimeout(() => {
           if (user.roleId === 4) {
             window.location.href = "/"
           } else {
             window.location.href = "/dashboard"
           }
-        }, 3000)
+        }, 1000)
       } else {
-        // Hiển thị thông báo lỗi với nội dung cụ thể
         const errorMessage = response.message || "Login failed! Please check your credentials and try again."
         showNotification("error", errorMessage)
       }
     } catch (error) {
       console.error("Login error:", error)
 
-      // Xử lý các loại lỗi khác nhau
       let errorMessage = "Login failed! Please try again."
 
       if (error.message) {
@@ -99,7 +89,6 @@ const LoginPage = () => {
 
   return (
     <div className="login-container">
-      {/* Notification Component */}
       {notification.show && (
         <div className={`notification-box ${notification.type}`}>
           <div className="notification-content">
@@ -158,7 +147,7 @@ const LoginPage = () => {
           </div>
 
           <div className="forgot-password">
-            <a href="/forget-password">Forgot Password?</a> {/* Thêm link quên mật khẩu */}
+            <a href="/forget-password">Forgot Password?</a>
           </div>
 
           <button type="submit" className="btn">
@@ -167,7 +156,7 @@ const LoginPage = () => {
         </form>
         <div className="register-link">
           <p>
-             Don't have an account? <a href="/register">Register</a>
+            Don't have an account? <a href="/register">Register</a>
           </p>
         </div>
       </div>

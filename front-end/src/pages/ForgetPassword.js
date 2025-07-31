@@ -1,6 +1,5 @@
 // src/pages/ForgetPassword.js
 import { useState } from "react"
-import { Link } from "react-router-dom"
 import { forgotPasswordUser, resetPasswordUser } from "../service/api"
 import "../styles/ForgetPassword.css"
 
@@ -198,7 +197,7 @@ const ForgetPasswordPage = () => {
 
         <div className="back-to-login-link">
           <p>
-            Remember your password? <Link to="/login">Back to Login</Link>
+            Remember your password? <a href="/login">Back to Login</a>
           </p>
         </div>
       </div>
