@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getConsultantSchedules, bookAppointment, createVNPayUrl, handleVNPayCallback, addNotification, getDataConsultant } from "../service/api";
+import { getConsultantSchedules, createAppointment, getDataConsultant } from "../service/api";
 import "../styles/MentorPage.css";
 import Footer from "../components/Footer";
 
@@ -9,9 +9,6 @@ const Mentor = () => {
   const [bookingMessages, setBookingMessages] = useState({});
   const [loadingSchedules, setLoadingSchedules] = useState({});
   const [scheduleErrors, setScheduleErrors] = useState({});
-  const [qrUrl, setQrUrl] = useState(null);
-  const [paymentStatuses, setPaymentStatuses] = useState({});
-  const [currentAppointmentId, setCurrentAppointmentId] = useState(null);
 
   const handleScheduleClick = async (consultantId) => {
     try {
@@ -97,10 +94,12 @@ const Mentor = () => {
       }));
       return;
     }
+
     const consultantId = expert.id;
     const scheduleId = selectedScheduleId[consultantId];
     const schedules = selectedSchedules[consultantId] || [];
     const schedule = schedules.find(s => (s.id || s.scheduleId) === scheduleId || String(s.id || s.scheduleId) === String(scheduleId));
+
     if (!schedule) {
       setBookingMessages(prev => ({
         ...prev,
@@ -112,85 +111,49 @@ const Mentor = () => {
     const payload = {
       accountId: user.accountId,
       consultantId: consultantId,
-      scheduleId: schedule.id || schedule.scheduleId,
+      scheduleId: schedule.scheduleId,
       price: typeof expert.price === "string"
-        ? expert.price.replace(/\D/g, "")
-        : (typeof expert.price === "number" ? String(expert.price) : "0"),
-      startTime: schedule.startTime || schedule.time || schedule.dateTime || "",
-      endTime: schedule.endTime || "",
+        ? parseFloat(expert.price.replace(/\D/g, "")) || 0
+        : (typeof expert.price === "number" ? expert.price : 0),
+      startTime: schedule.startTime,
+      endTime: schedule.endTime,
       status: "pending",
       notes: "",
       createdAt: new Date().toISOString()
     };
 
-    const response = await bookAppointment(payload);
-    if (response && response.appointmentId) {
-      setCurrentAppointmentId(response.appointmentId);
-
-      const notificationData = {
-        accountId: user.accountId,
-        message: `Your appointment with consultant ${consultantId} has been successfully booked.`
-      };
-
-      try {
-        await addNotification(notificationData);
-      } catch (error) {
-        console.error('Failed to send notification:', error);
-      }
-
-      setSelectedSchedules(prev => ({
-        ...prev,
-        [consultantId]: (prev[consultantId] || []).filter(s => (s.id || s.scheduleId) !== (schedule.id || schedule.scheduleId))
-      }));
-
-      const vnpayRes = await createVNPayUrl(response.appointmentId);
-      if (vnpayRes && vnpayRes.paymentUrl) {
-        setQrUrl(vnpayRes.paymentUrl);
-        setPaymentStatuses(prev => ({
-          ...prev,
-          [consultantId]: 'pending'
-        }));
+    try {
+      console.log("Payload: ", payload);
+      const response = await createAppointment(payload);
+      if (response && response.appointmentId) {
         setBookingMessages(prev => ({
           ...prev,
-          [consultantId]: "Booking successful! Please proceed to payment."
+          [consultantId]: "Booking successful! Your consultation has been confirmed."
         }));
+
+        setSelectedSchedules(prev => ({
+          ...prev,
+          [consultantId]: (prev[consultantId] || []).filter(s => (s.id || s.scheduleId) !== (schedule.id || schedule.scheduleId))
+        }));
+
+        setSelectedScheduleId(prev => ({
+          ...prev,
+          [consultantId]: ""
+        }));
+
+        console.log('Booking successful:', response);
       } else {
-        setQrUrl(null);
-        setPaymentStatuses(prev => ({
-          ...prev,
-          [consultantId]: 'fail'
-        }));
         setBookingMessages(prev => ({
           ...prev,
-          [consultantId]: "Booking succeeded but failed to get payment URL."
+          [consultantId]: "Booking failed. Please try again."
         }));
+        console.error('Booking failed:', response);
       }
-    } else {
-      setQrUrl(null);
-      setPaymentStatuses(prev => ({
-        ...prev,
-        [consultantId]: 'fail'
-      }));
+    } catch (error) {
+      console.error('Error booking appointment:', error);
       setBookingMessages(prev => ({
         ...prev,
         [consultantId]: "Booking failed. Please try again."
-      }));
-    }
-  };
-
-  const handleConfirmPayment = async (consultantId) => {
-    if (!currentAppointmentId) return;
-
-    const callbackRes = await handleVNPayCallback({ appointmentId: currentAppointmentId });
-    if (callbackRes && callbackRes.message && callbackRes.message.includes('thành công')) {
-      setPaymentStatuses(prev => ({
-        ...prev,
-        [consultantId]: 'success'
-      }));
-    } else {
-      setPaymentStatuses(prev => ({
-        ...prev,
-        [consultantId]: 'fail'
       }));
     }
   };
@@ -263,7 +226,7 @@ const Mentor = () => {
         setExperts(mapped);
       }
     });
-  });
+  }, []);
 
   return (
     <div className="mentor-page">
@@ -378,29 +341,15 @@ const Mentor = () => {
 
                   {bookingMessages[expert.id] && (
                     <div style={{
-                      color: bookingMessages[expert.id].includes("success") ? "green" : "red",
+                      color: bookingMessages[expert.id].includes("successful") ? "green" : "red",
                       marginTop: "1rem",
                       padding: "0.5rem",
                       borderRadius: "4px",
-                      backgroundColor: bookingMessages[expert.id].includes("success") ? "#d4edda" : "#f8d7da",
-                      border: `1px solid ${bookingMessages[expert.id].includes("success") ? "#c3e6cb" : "#f5c6cb"}`
+                      backgroundColor: bookingMessages[expert.id].includes("successful") ? "#d4edda" : "#f8d7da",
+                      border: `1px solid ${bookingMessages[expert.id].includes("successful") ? "#c3e6cb" : "#f5c6cb"}`
                     }}>
                       {bookingMessages[expert.id]}
                     </div>
-                  )}
-                  {qrUrl && paymentStatuses[expert.id] === 'pending' && (
-                    <div style={{ marginTop: 16, textAlign: 'center' }}>
-                      <h3>Scan QR code to pay</h3>
-                      <img src={`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrUrl)}`} alt="VNPay QR" />
-                      <p>Please scan the QR code with your banking app to pay.</p>
-                      <button className="contact-btn" style={{ marginTop: 12 }} onClick={() => handleConfirmPayment(expert.id)}>I paid</button>
-                    </div>
-                  )}
-                  {paymentStatuses[expert.id] === 'success' && (
-                    <div style={{ color: 'green', fontWeight: 'bold', marginTop: 16 }}>Payment successful!</div>
-                  )}
-                  {paymentStatuses[expert.id] === 'fail' && (
-                    <div style={{ color: 'red', fontWeight: 'bold', marginTop: 16 }}>Payment failed!</div>
                   )}
                 </div>
               </div>

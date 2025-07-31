@@ -274,9 +274,9 @@ export const getConsultantSchedules = async (consultantId) => {
 };
 
 // POST: Book Appointment
-export const bookAppointment = async (appointmentData) => {
+export const bookAppointment = async (data) => {
     try {
-        const response = await axios.post(`${API_BASE_URL}/api/Appointment/book`, appointmentData, {
+        const response = await axios.post(`${API_BASE_URL}/api/Appointment/book`, data, {
             headers: getAuthHeader(),
         });
         return response.data;
@@ -292,7 +292,25 @@ export const bookAppointment = async (appointmentData) => {
                 headers: error.config?.headers
             }
         });
-        return { error: error.response?.data?.message || error.message };
+        return { error: error.message };
+    }
+};
+
+// POST: Create Appointment (uses exact times from frontend)
+export const createAppointment = async (data) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/Appointment`, data, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        console.error("API: Create appointment error details:", {
+            status: error.response?.status,
+            statusText: error.response?.statusText,
+            data: error.response?.data,
+            message: error.message
+        });
+        return { error: error.message };
     }
 };
 
@@ -598,31 +616,5 @@ export const getBlogRateDetail = async () => {
         return response.data;
     } catch (error) {
         return { error: error.message };
-    }
-}
-
-// VNPay Payment Functions
-// GET: Create VNPay Payment URL
-export const createVNPayUrl = async (appointmentId) => {
-    try {
-        const response = await axios.get(`${API_BASE_URL}/api/Appointment/${appointmentId}/vnpay-url`, {
-            headers: getAuthHeader(),
-        });
-        return response.data;
-    } catch (error) {
-        return { error: error.response?.data?.message || error.message };
-    }
-};
-
-// GET: Handle VNPay Callback
-export const handleVNPayCallback = async (queryParams) => {
-    try {
-        const queryString = new URLSearchParams(queryParams).toString();
-        const response = await axios.get(`${API_BASE_URL}/api/Appointment/vnpay-callback?${queryString}`, {
-            headers: getAuthHeader(),
-        });
-        return response.data;
-    } catch (error) {
-        return { error: error.response?.data?.message || error.message };
     }
 };

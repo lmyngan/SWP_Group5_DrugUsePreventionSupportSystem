@@ -179,7 +179,25 @@ namespace DrugsPrevention_Service.Service
             await _repo.AddAsync(appointment);
             await _repo.SaveChangesAsync();
 
-            return await GetAppointmentByIdAsync(appointment.AppointmentId);
+            // Get consultant name for response
+            var consultant = await _context.Consultants
+                .Include(c => c.Account)
+                .FirstOrDefaultAsync(c => c.ConsultantId == request.ConsultantId);
+
+            return new AppointmentResponseDTO
+            {
+                AppointmentId = appointment.AppointmentId,
+                ConsultantId = appointment.ConsultantId,
+                ScheduleId = appointment.ScheduleId,
+                ConsultantName = consultant?.Account?.FullName ?? "",
+                AccountName = null, // Will be populated if needed
+                Date = DateTime.UtcNow.Date, // You might want to get this from schedule
+                StartTime = appointment.StartTime,
+                EndTime = appointment.EndTime,
+                Price = (float)appointment.Price,
+                Status = appointment.Status,
+                Notes = appointment.Notes
+            };
         }
 
         public async Task<AppointmentResponseDTO> UpdateAppointmentAsync(int id, AppointmentCreateDTO request)

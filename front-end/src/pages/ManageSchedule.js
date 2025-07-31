@@ -24,7 +24,13 @@ const timeToMinutes = (timeString) => {
 
 const scheduleSchema = Yup.object().shape({
     consultantId: Yup.number().min(1, 'Consultant ID is required').required('Consultant ID is required'),
-    availableDate: Yup.string().required('Available date is required'),
+    availableDate: Yup.string().required('Available date is required').test('future-date', 'Date must be from today onwards', function (value) {
+        if (!value) return true;
+        const selectedDate = new Date(value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return selectedDate >= today;
+    }),
     startTime: Yup.string().required('Start time is required'),
     endTime: Yup.string().required('End time is required').test('time-validation', 'Time invalid', function (value) {
         const { startTime } = this.parent;
@@ -100,6 +106,14 @@ const ManageSchedule = () => {
             return;
         }
 
+        const selectedDate = new Date(newSchedule.availableDate);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (selectedDate < today) {
+            setAddFieldErrors(prev => ({ ...prev, availableDate: 'Date must be from today onwards' }));
+            return;
+        }
+
         const res = await addSchedule(newSchedule);
         if (!res.error) {
             const data = await getScheduleData();
@@ -144,6 +158,15 @@ const ManageSchedule = () => {
             }
             return;
         }
+
+        const selectedDate = new Date(editScheduleData.availableDate);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (selectedDate < today) {
+            setEditError('Date must be from today onwards');
+            return;
+        }
+
         const res = await editSchedule(editId, editScheduleData);
         if (!res.error) {
             const data = await getScheduleData();
@@ -225,7 +248,13 @@ const ManageSchedule = () => {
                                 </div>
                                 <div className="flex flex-col">
                                     <label className="mb-1 text-sm font-medium">Available Date</label>
-                                    <input className="border p-2" type="date" value={newSchedule.availableDate} onChange={e => setNewSchedule(a => ({ ...a, availableDate: e.target.value }))} />
+                                    <input
+                                        className="border p-2"
+                                        type="date"
+                                        min={new Date().toISOString().slice(0, 10)}
+                                        value={newSchedule.availableDate}
+                                        onChange={e => setNewSchedule(a => ({ ...a, availableDate: e.target.value }))}
+                                    />
                                     {addFieldErrors.availableDate && <div className="text-red-500 text-xs mt-1">{addFieldErrors.availableDate}</div>}
                                 </div>
                                 <div className="flex flex-col">
@@ -302,7 +331,13 @@ const ManageSchedule = () => {
                             </div>
                             <div className="flex flex-col">
                                 <label className="mb-1 text-sm font-medium">Available Date</label>
-                                <input className="border p-2" type="date" value={editScheduleData.availableDate ? editScheduleData.availableDate.slice(0, 10) : ''} onChange={e => setEditScheduleData(ev => ({ ...ev, availableDate: e.target.value }))} />
+                                <input
+                                    className="border p-2"
+                                    type="date"
+                                    min={new Date().toISOString().slice(0, 10)}
+                                    value={editScheduleData.availableDate ? editScheduleData.availableDate.slice(0, 10) : ''}
+                                    onChange={e => setEditScheduleData(ev => ({ ...ev, availableDate: e.target.value }))}
+                                />
                             </div>
                             <div className="flex flex-col">
                                 <label className="mb-1 text-sm font-medium">Start Time</label>
