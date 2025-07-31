@@ -34,18 +34,21 @@ namespace DrugsPrevention_Service.Service
             if (schedule == null)
                 throw new Exception("Schedule not found");
 
-            var slotDuration = (schedule.EndTime - schedule.StartTime).TotalMinutes / schedule.Slot;
+            var today = DateTime.UtcNow.Date;
+            if (schedule.AvailableDate.Date < today)
+            {
+                throw new Exception("Không thể đặt lịch vào ngày trong quá khứ.");
+            }
 
+            var slotDuration = (schedule.EndTime - schedule.StartTime).TotalMinutes / schedule.Slot;
             if (slotDuration <= 0)
                 throw new Exception("Invalid schedule time range: StartTime must be earlier than EndTime.");
 
             TimeSpan bookedStartTime = schedule.StartTime;
 
-            // Find next available time slot
             for (int i = 0; i < schedule.Slot; i++)
             {
                 TimeSpan bookedEndTime = bookedStartTime.Add(TimeSpan.FromMinutes(slotDuration));
-
                 if (bookedStartTime >= bookedEndTime)
                     throw new Exception("Invalid appointment time: StartTime must be earlier than EndTime.");
 
@@ -54,7 +57,6 @@ namespace DrugsPrevention_Service.Service
                     var consultant = await _context.Consultants
                         .Include(c => c.Account)
                         .FirstOrDefaultAsync(c => c.ConsultantId == schedule.ConsultantId);
-
                     if (consultant == null || consultant.Account == null)
                         throw new Exception("Consultant or related Account not found");
 
@@ -72,7 +74,6 @@ namespace DrugsPrevention_Service.Service
                     };
 
                     var result = await _repo.CreateAppointmentAsync(appointment);
-
                     return new AppointmentResponseDTO
                     {
                         AppointmentId = result.AppointmentId,
@@ -91,6 +92,7 @@ namespace DrugsPrevention_Service.Service
 
             throw new Exception("No available time slot");
         }
+
 
         public async Task<IEnumerable<ScheduleDTO>> GetSchedulesByConsultantIdAsync(int consultantId)
         {
