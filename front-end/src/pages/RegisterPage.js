@@ -21,8 +21,8 @@ const registerSchema = Yup.object().shape({
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
-    accountname: "", // Trường username
-    email: "", // Trường email mới
+    accountname: "",
+    email: "",
     password: "",
     confirmPassword: "",
     fullName: "",

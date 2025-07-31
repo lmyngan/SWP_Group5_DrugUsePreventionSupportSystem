@@ -1,4 +1,3 @@
-using DrugsPrevention.Utilities;
 using DrugsPrevention_Data;
 using DrugsPrevention_Data.Data;
 using DrugsPrevention_Data.DTO.Appointment;
@@ -6,14 +5,11 @@ using DrugsPrevention_Data.DTO.Schedule;
 using DrugsPrevention_Data.Repositories.Irepositories;
 using DrugsPrevention_Service.Service.Iservice;
 using Microsoft.EntityFrameworkCore;
-using ServiceStack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DrugsPrevention_Data;
-using DrugsPrevention_Data.Data;
 
 namespace DrugsPrevention_Service.Service
 {
@@ -242,6 +238,12 @@ namespace DrugsPrevention_Service.Service
             await _repo.SaveChangesAsync();
 
             return await GetAppointmentByIdAsync(appointment.AppointmentId);
+        }
+
+        // Test method to check compilation
+        public string TestCompilation()
+        {
+            return "Compilation successful";
         }
 
         //// Tạo URL thanh toán VNPay cho Appointment
