@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import "../styles/EventPage.css"
 
-import { eventData, joinEvent } from "../service/api"
+import { eventData, joinEvent, addNotification } from "../service/api"
 
 const EventPage = ({ navigateTo }) => {
   const navigate = useNavigate()
@@ -60,6 +60,19 @@ const EventPage = ({ navigateTo }) => {
       })
 
       if (!response.error) {
+        const event = events.find(e => e.eventId === eventId || e.event_id === eventId)
+
+        if (event) {
+          try {
+            await addNotification({
+              accountId: accountId,
+              message: `You have successfully joined "${event.name}" event. We look forward to seeing you there!`
+            })
+          } catch (notificationError) {
+            console.error("Failed to send notification:", notificationError)
+          }
+        }
+
         alert("Successfully joined the event!")
       } else {
         alert(`Failed to join event: ${response.error}`)
