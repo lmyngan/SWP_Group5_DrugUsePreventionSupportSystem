@@ -202,7 +202,7 @@ const RegisterPage = () => {
 
         <div className="login-link">
           <p>
-            Do you have an account? <Link to="/login">Login</Link>
+            Do you have an account? <a href="/login">Login</a>
           </p>
         </div>
 

@@ -66,7 +66,7 @@ const ForgetPasswordPage = () => {
         </form>
         <div className="back-to-login-link">
           <p>
-            Remember your password? <Link to="/">Back to Login</Link>
+            Remember your password? <a href="/login">Back to Login</a>
           </p>
         </div>
       </div>
