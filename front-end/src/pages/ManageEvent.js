@@ -27,7 +27,15 @@ const eventSchema = Yup.object().shape({
     name: Yup.string().required('Event name is required'),
     description: Yup.string().required('Description is required'),
     location: Yup.string().required('Location is required'),
-    date: Yup.string().required('Date is required'),
+    date: Yup.string()
+        .required('Date is required')
+        .test('future-date', 'Date must be from today onwards', function (value) {
+            if (!value) return false;
+            const selectedDate = new Date(value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            return selectedDate >= today;
+        }),
     type: Yup.string().required('Type is required'),
 });
 
@@ -68,17 +76,26 @@ const ManageEvent = () => {
         setAddFieldErrors({});
         try {
             await eventSchema.validate(newEvent, { abortEarly: false });
-            // Lấy thông tin user hiện tại
+
+            // Additional JavaScript validation for past dates
+            const selectedDate = new Date(newEvent.date);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (selectedDate < today) {
+                setAddFieldErrors(prev => ({ ...prev, date: 'Date must be from today onwards' }));
+                return;
+            }
+
             const user = JSON.parse(localStorage.getItem("user"));
             const createdBy = user?.accountId || 0;
 
-            // Tạo object dữ liệu theo đúng format API
             const eventPayload = {
                 name: newEvent.name,
                 description: newEvent.description,
                 date: new Date(newEvent.date).toISOString(),
                 location: newEvent.location,
-                createdBy: Number(createdBy), // Đảm bảo là number
+                createdBy: Number(createdBy),
                 type: newEvent.type,
             };
 
@@ -127,27 +144,40 @@ const ManageEvent = () => {
         setShowEditModal(true);
     };
     const handleSaveEdit = async () => {
-        const user = JSON.parse(localStorage.getItem("user"));
-        const createdBy = user?.accountId || 0;
-        const body = {
-            name: editEvent.name,
-            description: editEvent.description,
-            date: new Date(editEvent.date).toISOString(),
-            location: editEvent.location,
-            createdBy,
-            type: editEvent.type,
-            eventId: editId
-        };
-        await editEventApi(editId, body);
-        // Refetch events
-        const data = await eventData();
-        if (Array.isArray(data)) setEvents(data);
-        else if (Array.isArray(data.events)) setEvents(data.events);
-        else setEvents([]);
-        setEditId(null);
-        setShowEditModal(false);
-        setShowEditSuccessModal(true); // Hiện modal thành công
-        setTimeout(() => setShowEditSuccessModal(false), 1000); // Ẩn sau 1 giây
+        try {
+            const selectedDate = new Date(editEvent.date);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (selectedDate < today) {
+                alert('Date must be from today onwards');
+                return;
+            }
+
+            const user = JSON.parse(localStorage.getItem("user"));
+            const createdBy = user?.accountId || 0;
+            const body = {
+                name: editEvent.name,
+                description: editEvent.description,
+                date: new Date(editEvent.date).toISOString(),
+                location: editEvent.location,
+                createdBy,
+                type: editEvent.type,
+                eventId: editId
+            };
+            await editEventApi(editId, body);
+            const data = await eventData();
+            if (Array.isArray(data)) setEvents(data);
+            else if (Array.isArray(data.events)) setEvents(data.events);
+            else setEvents([]);
+            setEditId(null);
+            setShowEditModal(false);
+            setShowEditSuccessModal(true);
+            setTimeout(() => setShowEditSuccessModal(false), 1000);
+        } catch (error) {
+            console.error('Error updating event:', error);
+            alert('Failed to update event. Please try again.');
+        }
     };
     const handleCancelEdit = () => {
         setEditId(null);
@@ -160,15 +190,14 @@ const ManageEvent = () => {
     };
     const confirmDelete = async () => {
         await deleteEvent(deleteId);
-        // Refetch events
         const data = await eventData();
         if (Array.isArray(data)) setEvents(data);
         else if (Array.isArray(data.events)) setEvents(data.events);
         else setEvents([]);
         setShowDeleteModal(false);
         setDeleteId(null);
-        setShowDeleteSuccessModal(true); // Hiện modal thành công
-        setTimeout(() => setShowDeleteSuccessModal(false), 1000); // Ẩn sau 1 giây
+        setShowDeleteSuccessModal(true);
+        setTimeout(() => setShowDeleteSuccessModal(false), 1000);
     };
     const cancelDelete = () => {
         setShowDeleteModal(false);
@@ -210,7 +239,7 @@ const ManageEvent = () => {
                                     {addFieldErrors.description && <div className="text-red-500 text-xs mt-1">{addFieldErrors.description}</div>}
                                 </div>
                                 <div className="col-span-2">
-                                    <input className="border p-2 w-full" type="date" value={newEvent.date} onChange={e => setNewEvent(a => ({ ...a, date: e.target.value }))} />
+                                    <input className="border p-2 w-full" type="date" value={newEvent.date} onChange={e => setNewEvent(a => ({ ...a, date: e.target.value }))} min={new Date().toISOString().slice(0, 10)} />
                                     {addFieldErrors.date && <div className="text-red-500 text-xs mt-1">{addFieldErrors.date}</div>}
                                 </div>
                                 <div className="col-span-2">
@@ -280,7 +309,7 @@ const ManageEvent = () => {
                         <div className="grid grid-cols-2 gap-4">
                             <input className="border p-2" placeholder="Event Name" value={editEvent.name || ''} onChange={e => setEditEvent(ev => ({ ...ev, name: e.target.value }))} />
                             <input className="border p-2" placeholder="Description" value={editEvent.description || ''} onChange={e => setEditEvent(ev => ({ ...ev, description: e.target.value }))} />
-                            <input className="border p-2" type="date" value={editEvent.date ? editEvent.date.slice(0, 10) : ''} onChange={e => setEditEvent(ev => ({ ...ev, date: e.target.value }))} />
+                            <input className="border p-2" type="date" value={editEvent.date ? editEvent.date.slice(0, 10) : ''} onChange={e => setEditEvent(ev => ({ ...ev, date: e.target.value }))} min={new Date().toISOString().slice(0, 10)} />
                             <input className="border p-2" placeholder="Location" value={editEvent.location || ''} onChange={e => setEditEvent(ev => ({ ...ev, location: e.target.value }))} />
                             <select className="border p-2" value={editEvent.type || ''} onChange={e => setEditEvent(ev => ({ ...ev, type: e.target.value }))}>
                                 <option value="">Select Type</option>
