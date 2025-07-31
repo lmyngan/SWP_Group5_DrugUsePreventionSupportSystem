@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DrugsPrevention_Data.Migrations
 {
     /// <inheritdoc />
-    public partial class AddRatingCountToBlogs : Migration
+    public partial class InitiateCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -35,6 +35,7 @@ namespace DrugsPrevention_Data.Migrations
                     accountname = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     fullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     dateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: true),
                     gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     address = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -64,6 +65,7 @@ namespace DrugsPrevention_Data.Migrations
                     content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     rate = table.Column<double>(type: "float", nullable: false),
                     rating_count = table.Column<int>(type: "int", nullable: false),
+                    rated_user_ids = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     created_at = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>

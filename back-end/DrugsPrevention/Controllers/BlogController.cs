@@ -82,7 +82,15 @@ namespace DrugsPrevention_API.Controllers
 
             try
             {
-                await _blogService.RateBlogAsync(dto.BlogId, dto.Rating);
+                var accountIdClaim = User.FindFirst("id");
+                if (accountIdClaim == null)
+                {
+                    return Unauthorized(new { message = "Không thể xác định người dùng." });
+                }
+
+                int accountId = int.Parse(accountIdClaim.Value);
+
+                await _blogService.RateBlogAsync(dto.BlogId, accountId, dto.Rating);
                 return Ok(new { message = "Đánh giá blog thành công!" });
             }
             catch (Exception ex)
@@ -90,6 +98,7 @@ namespace DrugsPrevention_API.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
 
         [AuthorizeByRole(1, 2, 3, 4)]
         [HttpGet("{id}/rating-stats")]

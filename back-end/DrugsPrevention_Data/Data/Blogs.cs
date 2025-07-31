@@ -25,6 +25,8 @@ namespace DrugsPrevention_Data.Data
         public double Rate { get; set; }
         [Column("rating_count")]
         public int RatingCount { get; set; }
+        [Column("rated_user_ids")]
+        public string RatedUserIds { get; set; }
         [Column("created_at")]
         public DateTime CreatedAt { get; set; }
 

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DrugsPrevention_Data.Migrations
 {
     [DbContext(typeof(DrugsPrevention_DBContext))]
-    [Migration("20250723131343_AddRatingCountToBlogs")]
-    partial class AddRatingCountToBlogs
+    [Migration("20250730172436_InitiateCreate")]
+    partial class InitiateCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,6 +51,11 @@ namespace DrugsPrevention_Data.Migrations
                     b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime2")
                         .HasColumnName("dateOfBirth");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("email");
 
                     b.Property<string>("FullName")
                         .IsRequired()
@@ -165,6 +170,11 @@ namespace DrugsPrevention_Data.Migrations
                     b.Property<double>("Rate")
                         .HasColumnType("float")
                         .HasColumnName("rate");
+
+                    b.Property<string>("RatedUserIds")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("rated_user_ids");
 
                     b.Property<int>("RatingCount")
                         .HasColumnType("int")

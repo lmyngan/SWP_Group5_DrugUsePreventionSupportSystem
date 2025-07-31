@@ -49,6 +49,11 @@ namespace DrugsPrevention_Data.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("dateOfBirth");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("email");
+
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
@@ -162,6 +167,11 @@ namespace DrugsPrevention_Data.Migrations
                     b.Property<double>("Rate")
                         .HasColumnType("float")
                         .HasColumnName("rate");
+
+                    b.Property<string>("RatedUserIds")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("rated_user_ids");
 
                     b.Property<int>("RatingCount")
                         .HasColumnType("int")
