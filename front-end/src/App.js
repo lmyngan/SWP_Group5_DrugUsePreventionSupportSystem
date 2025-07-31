@@ -28,6 +28,8 @@ import ManageEvent from "./pages/ManageEvent"
 import ManageBlog from "./pages/ManageBlog"
 import Report from "./pages/Report"
 import CalendarPage from "./pages/CalendarPage"
+import ForgetPasswordPage from "./pages/ForgetPassword.js";
+
 
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import ManageSchedule from "./pages/ManageSchedule"
@@ -96,6 +98,8 @@ const App = () => {
         return <BlogPage />
       case "login":
         return <Login />
+      case "forget-password":
+        return <ForgetPasswordPage />
       case "register":
         return <Register />
       case "calendar":

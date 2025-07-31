@@ -2,11 +2,10 @@
 
 // src/pages/LoginPage.js
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom" // Import Link
 import { FaTimes, FaCheck } from "react-icons/fa"
 import "../styles/LoginPage.css"
 import { loginUser, getUserById } from "../service/api"
-
 
 const LoginPage = () => {
   const [accountname, setAccountname] = useState("")
@@ -59,7 +58,7 @@ const LoginPage = () => {
         localStorage.setItem("user", JSON.stringify(user))
 
         // Hiển thị thông báo thành công
-        showNotification("success", "LOGIN SUCCESSFUL", 1000)
+        showNotification("success", "LOGIN SUCCESSFUL", 3000)
 
         // Chuyển hướng sau khi hiển thị thông báo
         setTimeout(() => {
@@ -68,14 +67,16 @@ const LoginPage = () => {
           } else {
             window.location.href = "/dashboard"
           }
-        }, 1000)
+        }, 3000)
       } else {
-        const errorMessage = response.message || "Login failed! Please check your username or password."
+        // Hiển thị thông báo lỗi với nội dung cụ thể
+        const errorMessage = response.message || "Login failed! Please check your credentials and try again."
         showNotification("error", errorMessage)
       }
     } catch (error) {
       console.error("Login error:", error)
 
+      // Xử lý các loại lỗi khác nhau
       let errorMessage = "Login failed! Please try again."
 
       if (error.message) {
@@ -133,7 +134,7 @@ const LoginPage = () => {
         <form className="login-form" onSubmit={handleSubmit}>
           <h1>Login</h1>
           <div className="input-box">
-            <label htmlFor="title">Email/Username</label>
+            <label htmlFor="accountname">Email/Username</label>
             <input
               type="text"
               id="accountname"
@@ -145,7 +146,7 @@ const LoginPage = () => {
           </div>
 
           <div className="input-box">
-            <label htmlFor="title">Password</label>
+            <label htmlFor="password">Password</label>
             <input
               type="password"
               id="password"
@@ -156,13 +157,17 @@ const LoginPage = () => {
             />
           </div>
 
+          <div className="forgot-password">
+            <a href="/forget-password">Forgot Password?</a> {/* Thêm link quên mật khẩu */}
+          </div>
+
           <button type="submit" className="btn">
             Login
           </button>
         </form>
         <div className="register-link">
           <p>
-            Don't have an account? <a href="/register">Register</a>
+             Don't have an account? <a href="/register">Register</a>
           </p>
         </div>
       </div>
