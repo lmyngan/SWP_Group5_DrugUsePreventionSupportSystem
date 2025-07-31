@@ -63,6 +63,30 @@ export const registerUser = async (data) => {
     }
 };
 
+//POST: Forgot Password
+export const forgotPasswordUser = async (data) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/auth/forgot-password`, data, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
+//POST: Reset Password
+export const resetPasswordUser = async (data) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/api/auth/reset-password`, data, {
+            headers: getAuthHeader(),
+        });
+        return response.data;
+    } catch (error) {
+        return { error: error.message };
+    }
+}
+
 //GET: Full Account
 export const getFullAccount = async () => {
     try {
