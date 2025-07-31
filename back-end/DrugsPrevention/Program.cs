@@ -1,5 +1,4 @@
-﻿using DrugsPrevention.Utilities;
-using DrugsPrevention_Data;
+﻿using DrugsPrevention_Data;
 using DrugsPrevention_Data.IRepositories;
 using DrugsPrevention_Data.Repositories;
 using DrugsPrevention_Data.Repositories.Implementations;
@@ -92,7 +91,6 @@ namespace DrugsPrevention
             builder.Services.AddScoped<IMailtrapService, MailtrapService>();
             builder.Services.AddScoped<IForgotPasswordService, ForgotPasswordService>();
 
-            builder.Services.AddScoped<VNPayHelper>();
             // Swagger
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
