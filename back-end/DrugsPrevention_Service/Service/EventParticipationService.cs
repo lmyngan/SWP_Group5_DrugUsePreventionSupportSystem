@@ -22,6 +22,10 @@ namespace DrugsPrevention_Service.Service
 
         public async Task<bool> AddParticipationAsync(CreateEventParticipationDTO dto)
         {
+            var existing = await _repo.GetByAccountAndEventAsync(dto.AccountId, dto.EventId);
+            if (existing != null)
+                throw new Exception("Bạn đã tham gia sự kiện này rồi.");
+
             var participation = new EventParticipation
             {
                 AccountId = dto.AccountId,
